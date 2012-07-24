@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class TimelineViewController < UITableViewController
   def init
     self.navigationItem.title = "HBFav"
@@ -30,9 +31,13 @@ class TimelineViewController < UITableViewController
     return @bookmarks.size
   end
 
+  def tableView(tableView, heightForRowAtIndexPath:indexPath)
+    BookmarkCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+  end
+
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     bookmark = @bookmarks[indexPath.row]
-    bookmark.row = indexPath.row # FIXME
+    bookmark.row = indexPath.row # FIXME: モデルに row 持たせるのおかしい
     cell = BookmarkCell.cellForBookmark(bookmark, inTableView:tableView)
     return cell
   end
