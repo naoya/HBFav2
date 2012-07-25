@@ -11,22 +11,27 @@ class BookmarkCell < UITableViewCell
     return cell
   end
 
-  ## FIXME: layoutSubviews の中とDRYじゃない
+  ## FIXME: layoutSubviews の中とDRYじゃない -> def heightForName / heightForComment / def heightForTitle とか作るか
   def self.heightForBookmark(bookmark, width)
-    name_size = bookmark.user_name.sizeWithFont(UIFont.boldSystemFontOfSize(16))
+    side_width = 65
+    body_width = width - side_width - 10
+
+    name_size  = bookmark.user_name.sizeWithFont(UIFont.boldSystemFontOfSize(16))
 
     ## comment
     comment_height = 0
-    comment_constrain = CGSize.new(width - 65 - 10, 1000)
+    comment_constrain = CGSize.new(body_width, 1000)
     if bookmark.comment.length > 0
       comment_size = bookmark.comment.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:comment_constrain, lineBreakMode:UILineBreakModeCharacterWrap)
-      comment_height = comment_size.height + 10 # 10はmargin分
+      comment_height = comment_size.height
     end
 
     ## title
-    title_constrain = CGSize.new(width - 65 - 10 - 19, 1000)
+    margin = comment_height > 0 ? 10 : 0
+    title_constrain = CGSize.new(body_width - 19, 1000)
     text_size = bookmark.title.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:title_constrain, lineBreakMode:UILineBreakModeCharacterWrap)
-    [68, 10 + name_size.height + 5 + comment_height + text_size.height + 10].max
+
+    [68, 10 + name_size.height + 5 + comment_height + margin + text_size.height + 10].max
   end
 
   def initWithStyle(style, reuseIdentifier:cellid)
@@ -101,6 +106,7 @@ class BookmarkCell < UITableViewCell
     end
   end
 
+  ## セルは使い回されるので、この中でbookmarkインスタンスは扱ってはダメ
   def layoutSubviews
     super
 
@@ -135,7 +141,7 @@ class BookmarkCell < UITableViewCell
     ## favicon + title
     margin = comment_height > 0 ? 10 : 0
     self.faviconView.frame = [[side_width, 10 + name_size.height + 5 + comment_height + margin + 2], [16, 16]]
-    title_constrain = CGSize.new(body_width - 19, 1000)
+    title_constrain = CGSize.new(body_width - 19, 1000) # 19 ･･･ favicon 16 + margin 3
     text_size = self.textLabel.text.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:title_constrain, lineBreakMode:UILineBreakModeCharacterWrap)
     self.textLabel.frame = [[side_width + 19, 10 + name_size.height + 5 + comment_height + margin], [body_width - 19, text_size.height]]
   end
