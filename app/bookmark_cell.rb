@@ -86,21 +86,22 @@ class BookmarkCell < UITableViewCell
     self.dateLabel.text    = bookmark.created_at
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
 
+    ## FIXME: Dispatch Group で書き換える
     if not bookmark.profile_image or not bookmark.favicon
       self.imageView.image   = nil
       self.faviconView.image = nil
 
-      ## FIXME: プロフィールアイコン毎回取得するのは不毛
-      ## 何かパターン使って同じユーザーのものはローカルにキャッシュする
       Dispatch::Queue.concurrent.async do
-        profile_image_data = NSData.dataWithContentsOfURL(bookmark.profile_image_url.nsurl)
-        bookmark.profile_image = UIImage.alloc.initWithData(profile_image_data)
+        profile_factory = RemoteImageFactory.instance(:profile_image)
+        bookmark.profile_image = profile_factory.image(bookmark.profile_image_url)
 
-        favicon_data = NSData.dataWithContentsOfURL(bookmark.favicon_url.nsurl)
-        bookmark.favicon = UIImage.alloc.initWithData(favicon_data)
+        favicon_factory = RemoteImageFactory.instance(:favicon)
+        bookmark.favicon = favicon_factory.image(bookmark.favicon_url)
+
         Dispatch::Queue.main.sync do
           self.imageView.image   = bookmark.profile_image
           self.faviconView.image = bookmark.favicon
+
           ## FIXME: bookmark.row に代入しているのださいなあ
           tableView.reloadRowsAtIndexPaths([NSIndexPath.indexPathForRow(bookmark.row, inSection: 0)], withRowAnimation:false)
         end
