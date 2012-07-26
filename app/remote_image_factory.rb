@@ -14,6 +14,7 @@ class RemoteImageFactory
   end
 
   ## FIXME: キャッシュするインスタンス数に上限を設ける必要
+  ## pool 全体をロックしちゃうのも微妙か･･･、どっか1カ所で読み込み待ちスレッドがあると全部 wait しちゃう
   def image (url)
     if not @pool[url]
       @semaphore.wait(Dispatch::TIME_FOREVER)
