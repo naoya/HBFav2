@@ -1,14 +1,23 @@
 # -*- coding: utf-8 -*-
 class TimelineViewController < UITableViewController
   def init
-    self.navigationItem.title = "HBFav"
-    self.view.backgroundColor = UIColor.whiteColor
+    if super
+      self.navigationItem.title = "HBFav"
+      self.view.backgroundColor = UIColor.whiteColor
+    end
     return self
   end
 
   def viewDidLoad
     super
     @bookmarks = []
+
+    self.navigationItem.rightBarButtonItem =
+      UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+      UIBarButtonSystemItemBookmarks,
+      target:self,
+      action:'openProfile'
+    )
 
     BW::HTTP.get('http://hbfav.herokuapp.com/naoya') do |response|
       if response.ok?
@@ -46,5 +55,10 @@ class TimelineViewController < UITableViewController
     wv = WebViewController.new
     wv.bookmark = @bookmarks[indexPath.row]
     self.navigationController.pushViewController(wv, animated:true)
+  end
+
+  def openProfile
+    pv = ProfileViewController.new
+    self.navigationController.pushViewController(pv, animated:true)
   end
 end
