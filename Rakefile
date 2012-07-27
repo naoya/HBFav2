@@ -11,7 +11,7 @@ require 'sugarcube'
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
-  app.name = 'TableViewSample'
+  app.name = 'HBFav2'
 end
 
 desc "Checks the syntax"
