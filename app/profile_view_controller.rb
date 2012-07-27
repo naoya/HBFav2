@@ -13,10 +13,12 @@ class ProfileViewController < UIViewController
         :title => nil,
         :rows  => [
           {
-            :label => "ブックマーク",
+            :label         => "ブックマーク",
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator
           },
           {
-            :label => "フォロー",
+            :label         => "フォロー",
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator
           }
         ]
       },
@@ -73,9 +75,15 @@ class ProfileViewController < UIViewController
 
     cell = tableView.dequeueReusableCellWithIdentifier(id) || UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:id)
     cell.textLabel.text = rowData[:label]
+
     if (color = rowData[:color])
       cell.textLabel.textColor = color
     end
+
+    if (accessory = rowData[:accessoryType])
+      cell.accessoryType = accessory
+    end
+
     cell
   end
 
