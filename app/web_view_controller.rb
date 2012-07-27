@@ -1,10 +1,6 @@
 class WebViewController < UIViewController
   attr_accessor :bookmark
 
-  def init
-    return self
-  end
-
   def viewDidLoad
     super
 

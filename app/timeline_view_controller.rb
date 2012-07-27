@@ -59,6 +59,7 @@ class TimelineViewController < UITableViewController
 
   def openProfile
     pv = ProfileViewController.new
+    pv.user = User.new({:name => 'naoya'})
     self.navigationController.pushViewController(pv, animated:true)
   end
 end
