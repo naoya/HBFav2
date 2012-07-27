@@ -11,6 +11,33 @@ class ProfileViewController < UIViewController
   def viewDidLoad
     super
 
+    @dataSource = [
+      {
+        :title => nil,
+        :rows  => [
+          {
+            :label => "ブックマーク",
+          },
+          {
+            :label => "フォロー",
+          }
+        ]
+      },
+      {
+        :title => "設定",
+        :rows  => [
+          {
+            :label => "はてなID",
+            :color => '#385487'.uicolor
+          },
+          {
+            :label => "Instapaper",
+            :color => '#385487'.uicolor
+          }
+        ]
+      }
+    ]
+
     @imageView = UIImageView.new.tap do |v|
       v.frame = [[10, 10], [48, 48]]
       v.layer.tap do |l|
@@ -35,14 +62,6 @@ class ProfileViewController < UIViewController
       view << v
     end
 
-    # FIXME: この構造いまいちな気が
-    # section が番号で渡ってくるんだし、セクションは配列の方がよさそう
-    # [0] -> { :title => "hoge", :rows => ["foo", "bar"] }
-    @dataSource = {
-      "メニュー" => ["ブックマーク", "フォロー"],
-      "設定"     => ["はてなID", "Instapaper"]
-    }
-
     Dispatch::Queue.concurrent.async do
       image = RemoteImageFactory.instance(:profile_image).image('http://www.st-hatena.com/users/na/naoya/profile.gif')
       Dispatch::Queue.main.sync do
@@ -51,22 +70,29 @@ class ProfileViewController < UIViewController
     end
   end
 
-  def tableView(tableView, numberOfRowsInSection:section)
-    @dataSource[@dataSource.keys[section]].size
-  end
-
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     id = "basis-cell"
+    rowData = @dataSource[indexPath.section][:rows][indexPath.row]
+
     cell = tableView.dequeueReusableCellWithIdentifier(id) || UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:id)
-    cell.textLabel.text = @dataSource[@dataSource.keys[indexPath.section]][indexPath.row]
+    cell.textLabel.text = rowData[:label]
+    if (color = rowData[:color])
+      cell.textLabel.textColor = color
+    end
     cell
+  end
+
+  def tableView(tableView, titleForHeaderInSection:section)
+    if (title = @dataSource[section][:title])
+      return title
+    end
+  end
+
+  def tableView(tableView, numberOfRowsInSection:section)
+    @dataSource[section][:rows].size
   end
 
   def numberOfSectionsInTableView (tableView)
     @dataSource.size
-  end
-
-  def tableView(tableView, titleForHeaderInSection:section)
-    @dataSource.keys[section]
   end
 end
