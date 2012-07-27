@@ -14,11 +14,18 @@ class ProfileViewController < UIViewController
         :rows  => [
           {
             :label         => "ブックマーク",
-            :accessoryType => UITableViewCellAccessoryDisclosureIndicator
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
+            :action        => proc {
+              # TODO
+              puts "test1"
+            }
           },
           {
             :label         => "フォロー",
-            :accessoryType => UITableViewCellAccessoryDisclosureIndicator
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
+            :action        => proc {
+              self.navigationController.pushViewController(TimelineViewController.new, animated:true)
+            }
           }
         ]
       },
@@ -27,11 +34,19 @@ class ProfileViewController < UIViewController
         :rows  => [
           {
             :label => "はてなID",
-            :color => '#385487'.uicolor
+            :color => '#385487'.uicolor,
+            :action        => proc {
+              # TODO
+              puts "test3"
+            }
           },
           {
             :label => "Instapaper",
-            :color => '#385487'.uicolor
+            :color => '#385487'.uicolor,
+            :action        => proc {
+              # TODO
+              puts "test4"
+            }
           }
         ]
       }
@@ -57,7 +72,7 @@ class ProfileViewController < UIViewController
     end
 
     @menuTable = UITableView.alloc.initWithFrame([[0, 58], self.view.bounds.size], style:UITableViewStyleGrouped).tap do |v|
-      v.dataSource = self
+      v.dataSource = v.delegate = self
       view << v
     end
 
@@ -67,6 +82,11 @@ class ProfileViewController < UIViewController
         @imageView.image = image
       end
     end
+  end
+
+  def viewWillAppear(animated)
+    super(animated)
+    @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
@@ -99,5 +119,11 @@ class ProfileViewController < UIViewController
 
   def numberOfSectionsInTableView (tableView)
     @dataSource.size
+  end
+
+  def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+    if (action = @dataSource[indexPath.section][:rows][indexPath.row][:action])
+      action.call
+    end
   end
 end
