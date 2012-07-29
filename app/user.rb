@@ -12,4 +12,8 @@ class User
       return "http://www.st-hatena.com/users/" + @name[0, 2] + "/#{name}/profile.gif"
     end
   end
+
+  def timeline_feed_url
+    return "http://hbfav.herokuapp.com/#{@name}"
+  end
 end

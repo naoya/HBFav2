@@ -24,7 +24,10 @@ class ProfileViewController < UIViewController
             :label         => "フォロー",
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
             :action        => proc {
-              self.navigationController.pushViewController(TimelineViewController.new, animated:true)
+              self.navigationController.pushViewController(
+                TimelineViewController.new.tap { |c| c.user = self.user },
+                animated:true
+              )
             }
           }
         ]

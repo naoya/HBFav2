@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 class TimelineViewController < UITableViewController
-  def init
-    if super
-      self.navigationItem.title = "HBFav"
-      self.view.backgroundColor = UIColor.whiteColor
-    end
-    return self
-  end
+  attr_accessor :user
 
   def viewDidLoad
     super
+
+    self.navigationItem.title = "HBFav"
+    self.view.backgroundColor = UIColor.whiteColor
+
     @bookmarks = []
 
     self.navigationItem.rightBarButtonItem =
@@ -19,7 +17,7 @@ class TimelineViewController < UITableViewController
       action:'openProfile'
     )
 
-    BW::HTTP.get('http://hbfav.herokuapp.com/naoya') do |response|
+    BW::HTTP.get(@user.timeline_feed_url) do |response|
       if response.ok?
         json = BW::JSON.parse(response.body.to_str)
         json['bookmarks'].each { |dict| @bookmarks << Bookmark.new(dict) }
@@ -52,14 +50,16 @@ class TimelineViewController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    wv = WebViewController.new
-    wv.bookmark = @bookmarks[indexPath.row]
-    self.navigationController.pushViewController(wv, animated:true)
+    WebViewController.new.tap do |c|
+      c.bookmark = @bookmarks[indexPath.row]
+      self.navigationController.pushViewController(c, animated:true)
+    end
   end
 
   def openProfile
-    pv = ProfileViewController.new
-    pv.user = User.new({:name => 'naoya'})
-    self.navigationController.pushViewController(pv, animated:true)
+    ProfileViewController.new.tap do |c|
+      c.user = @user
+      self.navigationController.pushViewController(c, animated:true)
+    end
   end
 end
