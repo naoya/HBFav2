@@ -8,22 +8,26 @@ class TimelineViewController < UITableViewController
     self.navigationItem.title = "HBFav"
     self.view.backgroundColor = UIColor.whiteColor
 
-    @bookmarks = []
+    @bookmarks ||= []
 
     if home?
-      self.navigationItem.rightBarButtonItem =
-        UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+      self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
         UIBarButtonSystemItemBookmarks,
         target:self,
         action:'openProfile'
-        )
+      )
     end
 
+    # FIXME: 通信を発生させながら NavigationController で行き来してると高確率で落ちる･･･
     BW::HTTP.get(@feed_url) do |response|
       if response.ok?
         json = BW::JSON.parse(response.body.to_str)
-        json['bookmarks'].each { |dict| @bookmarks << Bookmark.new(dict) }
-        view.reloadData
+        @bookmarks = json['bookmarks'].collect { |dict| Bookmark.new(dict) }
+
+        ## すでにviewが破棄されてる時がある(通信中にpopViewした場合など)ので nil チェック
+        unless self.view.nil?
+          self.view.reloadData
+        end
       else
         App.alert(response.error_message)
       end
