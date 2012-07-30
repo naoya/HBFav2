@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class TimelineViewController < UITableViewController
-  attr_accessor :user, :feed_url
+  attr_accessor :user, :feed_url, :as_home
 
   def viewDidLoad
     super
@@ -10,13 +10,14 @@ class TimelineViewController < UITableViewController
 
     @bookmarks = []
 
-    ## フォロー閲覧画面ではこのボタンは出さない
-    self.navigationItem.rightBarButtonItem =
-      UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-      UIBarButtonSystemItemBookmarks,
-      target:self,
-      action:'openProfile'
-    )
+    if home?
+      self.navigationItem.rightBarButtonItem =
+        UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+        UIBarButtonSystemItemBookmarks,
+        target:self,
+        action:'openProfile'
+        )
+    end
 
     BW::HTTP.get(@feed_url) do |response|
       if response.ok?
@@ -62,5 +63,9 @@ class TimelineViewController < UITableViewController
       c.user = @user
       self.navigationController.pushViewController(c, animated:true)
     end
+  end
+
+  def home?
+    as_home ? true : false
   end
 end
