@@ -60,6 +60,7 @@ class BookmarkCell < UITableViewCell
 
       @commentLabel = UILabel.new.tap do |v|
         v.numberOfLines = 0
+        v.font = UIFont.systemFontOfSize(16)
         v.frame = CGRectZero
         v.text  = nil
         self.contentView << v
