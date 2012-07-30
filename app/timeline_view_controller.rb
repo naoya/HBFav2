@@ -56,7 +56,8 @@ class TimelineViewController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    WebViewController.new.tap do |c|
+    # WebViewController.new.tap do |c|
+    PermalinkViewController.new.tap do |c|
       c.bookmark = @bookmarks[indexPath.row]
       self.navigationController.pushViewController(c, animated:true)
     end

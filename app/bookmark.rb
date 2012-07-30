@@ -1,5 +1,5 @@
 class Bookmark
-  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :favicon_url
+  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :favicon_url, :user, :count
   attr_accessor :profile_image, :favicon, :row
 
   def initialize(dict)
@@ -13,5 +13,8 @@ class Bookmark
     @favicon_url       = dict[:favicon_url]
     @favicon           = nil
     @row               = nil
+    @count             = dict[:count]
+
+    @user = User.new({:name => @user_name})
   end
 end
