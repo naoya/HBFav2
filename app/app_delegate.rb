@@ -2,11 +2,13 @@ class AppDelegate
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds).tap do |w|
       w.rootViewController = UINavigationController.alloc.initWithRootViewController(
-        TimelineViewController.new.tap { |c| c.user = User.new({ :name => 'naoya' }) }
+        TimelineViewController.new.tap do |c|
+          c.user     = User.new({ :name => 'naoya' })
+          c.feed_url = c.user.timeline_feed_url
+        end
       )
       w.makeKeyAndVisible
     end
     true
   end
 end
-

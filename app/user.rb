@@ -16,4 +16,8 @@ class User
   def timeline_feed_url
     return "http://hbfav.herokuapp.com/#{@name}"
   end
+
+  def bookmark_feed_url
+    return "http://hbfav.herokuapp.com/#{@name}/bookmark"
+  end
 end

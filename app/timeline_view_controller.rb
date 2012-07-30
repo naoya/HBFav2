@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class TimelineViewController < UITableViewController
-  attr_accessor :user
+  attr_accessor :user, :feed_url
 
   def viewDidLoad
     super
@@ -10,6 +10,7 @@ class TimelineViewController < UITableViewController
 
     @bookmarks = []
 
+    ## フォロー閲覧画面ではこのボタンは出さない
     self.navigationItem.rightBarButtonItem =
       UIBarButtonItem.alloc.initWithBarButtonSystemItem(
       UIBarButtonSystemItemBookmarks,
@@ -17,7 +18,7 @@ class TimelineViewController < UITableViewController
       action:'openProfile'
     )
 
-    BW::HTTP.get(@user.timeline_feed_url) do |response|
+    BW::HTTP.get(@feed_url) do |response|
       if response.ok?
         json = BW::JSON.parse(response.body.to_str)
         json['bookmarks'].each { |dict| @bookmarks << Bookmark.new(dict) }
