@@ -41,7 +41,11 @@ class PermalinkViewController < UIViewController
     end
 
     ## ここから以降は ScrollView を作ってそこに add する必要
-    current_y = 79
+    @scrollView = UIScrollView.alloc.initWithFrame(
+      [[0, 69], [view.frame.size.width, view.frame.size.height - 69]]
+    )
+
+    current_y = 10
     if @bookmark.comment.length > 0
       constrain = CGSize.new(view.frame.size.width - 20, 1000)
       size = @bookmark.comment.sizeWithFont(
@@ -54,7 +58,7 @@ class PermalinkViewController < UIViewController
         v.numberOfLines = 0
         v.font  = UIFont.systemFontOfSize(18)
         v.text = @bookmark.comment
-        view << v
+        @scrollView << v
       end
 
       current_y += size.height + 10
@@ -63,7 +67,7 @@ class PermalinkViewController < UIViewController
     @faviconView = UIImageView.new.tap do |v|
       v.frame = [[10, current_y + 2], [16, 16]]
       v.image = bookmark.favicon
-      view << v
+      @scrollView << v
     end
 
     @titleLabel = UILabel.new.tap do |v|
@@ -79,7 +83,7 @@ class PermalinkViewController < UIViewController
       v.font = UIFont.systemFontOfSize(18)
       v.text = @bookmark.title
       v.textColor = '#3B5998'.to_color
-      view << v
+      @scrollView << v
 
       current_y += size.height + 4
 
@@ -104,7 +108,7 @@ class PermalinkViewController < UIViewController
       v.font = UIFont.systemFontOfSize(14)
       v.text = @bookmark.link
       v.textColor = '#666'.uicolor
-      view << v
+      @scrollView << v
 
       current_y += size.height + 4
     end
@@ -115,7 +119,7 @@ class PermalinkViewController < UIViewController
       v.text = @bookmark.created_at
       v.textColor = '#666'.uicolor
       v.sizeToFit
-      view << v
+      @scrollView << v
 
       current_y += v.frame.size.height + 10
     end
@@ -127,8 +131,15 @@ class PermalinkViewController < UIViewController
       v.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
       v.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
 
-      view << v
+      @scrollView << v
+
+      current_y += 40
     end
+
+    ## これでうまくいくけど何で +69 (headerViewの高さ) しないとダメなんだろう?
+    @scrollView.contentSize = [view.frame.size.width, current_y + 69]
+
+    view << @scrollView
   end
 
   def viewWillAppear(animated)
