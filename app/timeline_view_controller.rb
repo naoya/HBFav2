@@ -56,7 +56,6 @@ class TimelineViewController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    # WebViewController.new.tap do |c|
     PermalinkViewController.new.tap do |c|
       c.bookmark = @bookmarks[indexPath.row]
       self.navigationController.pushViewController(c, animated:true)
@@ -65,7 +64,8 @@ class TimelineViewController < UITableViewController
 
   def openProfile
     ProfileViewController.new.tap do |c|
-      c.user = @user
+      c.user    = @user
+      c.as_mine = true
       self.navigationController.pushViewController(c, animated:true)
     end
   end

@@ -12,6 +12,13 @@ class PermalinkViewController < UIViewController
       v.frame = [[0, 0], [view.frame.size.width, 68]]
       v.backgroundColor = UIColor.groupTableViewBackgroundColor
       view << v
+
+      v.whenTapped do
+        ProfileViewController.new.tap do |c|
+          c.user = bookmark.user
+          self.navigationController.pushViewController(c, animated:true)
+        end
+      end
     end
 
     @imageView = UIImageView.new.tap do |v|

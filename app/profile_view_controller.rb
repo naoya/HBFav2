@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class ProfileViewController < UIViewController
-  attr_accessor :user
+  attr_accessor :user, :as_mine
 
   def viewDidLoad
     super
@@ -123,12 +123,18 @@ class ProfileViewController < UIViewController
   end
 
   def numberOfSectionsInTableView (tableView)
-    @dataSource.size
+    # @dataSource.size
+    # ↓ ちょっとこの書き方はどうかなあ
+    mine? ? 2 : 1
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     if (action = @dataSource[indexPath.section][:rows][indexPath.row][:action])
       action.call
     end
+  end
+
+  def mine?
+    as_mine ? true : false
   end
 end
