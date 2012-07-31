@@ -4,6 +4,7 @@ require 'motion/project'
 
 require 'rubygems'
 require 'bubble-wrap'
+require 'bubble-wrap/core'
 require 'bubble-wrap/http'
 # require 'bubble-wrap/ui'
 # require 'bubble-wrap/reactor'
