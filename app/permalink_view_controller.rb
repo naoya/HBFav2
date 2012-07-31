@@ -131,21 +131,27 @@ class PermalinkViewController < UIViewController
       current_y += v.frame.size.height + 10
     end
 
-    @usersButton = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |v|
-      v.frame = [[10, current_y], [view.frame.size.width - 20, 40]]
-      v.setTitle(bookmark.count + " users", forState:UIControlStateNormal)
+    @usersButton = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |button|
+      button.frame = [[10, current_y], [view.frame.size.width - 20, 40]]
+      button.setTitle(bookmark.count.to_s, forState:UIControlStateNormal)
 
-      v.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
-      v.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
+      button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
+      button.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
 
-      @scrollView << v
+      @scrollView << button
 
       current_y += 40
+
+      button.when(UIControlEventTouchUpInside) do
+        BookmarksViewController.new.tap do |c|
+          c.entry = @bookmark
+          self.navigationController.pushViewController(c, animated:true)
+        end
+      end
     end
 
     ## これでうまくいくけど何で +69 (headerViewの高さ) しないとダメなんだろう?
     @scrollView.contentSize = [view.frame.size.width, current_y + 69]
-
     view << @scrollView
   end
 

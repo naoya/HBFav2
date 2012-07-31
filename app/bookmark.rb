@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Bookmark
   attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :favicon_url, :user, :count
   attr_accessor :profile_image, :favicon, :row
@@ -13,8 +14,20 @@ class Bookmark
     @favicon_url       = dict[:favicon_url]
     @favicon           = nil
     @row               = nil
-    @count             = dict[:count]
+    @count             = Count.new(dict[:count].to_i)
 
     @user = User.new({:name => @user_name})
+  end
+
+  class Count
+    attr_reader :count
+
+    def initialize(n)
+      @count = n
+    end
+
+    def to_s
+      @count == 1 ? "#{@count} user" : "#{@count} users"
+    end
   end
 end
