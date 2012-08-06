@@ -28,7 +28,7 @@ class BookmarksViewController < UIViewController
     end
 
     @titleLabel = UILabel.new.tap do |v|
-      constrain = CGSize.new(view.frame.size.width - 19 - 10, 68)
+      constrain = CGSize.new(view.frame.size.width - 19 - 10, 68 - 10)
       size = entry.title.sizeWithFont(UIFont.boldSystemFontOfSize(13), constrainedToSize:constrain, lineBreakMode:UILineBreakModeCharacterWrap)
       v.frame = [[5 + 19, 5], size]
       v.numberOfLines = 0
