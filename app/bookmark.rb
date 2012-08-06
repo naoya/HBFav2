@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class Bookmark
-  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :favicon_url, :user, :count
+  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count
   attr_accessor :profile_image, :favicon, :row
 
   def initialize(dict)
@@ -11,7 +11,7 @@ class Bookmark
     @comment           = dict[:comment]
     @profile_image_url = dict[:user][:profile_image_url]
     @profile_image     = nil
-    @favicon_url       = dict[:favicon_url]
+    # @favicon_url       = dict[:favicon_url]
     @favicon           = nil
     @row               = nil
     @count             = Count.new(dict[:count].to_i)
@@ -29,5 +29,9 @@ class Bookmark
     def to_s
       @count == 1 ? "#{@count} user" : "#{@count} users"
     end
+  end
+
+  def favicon_url
+    return "http://favicon.st-hatena.com/?url=#{@link}"
   end
 end

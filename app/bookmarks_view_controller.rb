@@ -46,7 +46,11 @@ class BookmarksViewController < UIViewController
     end
 
     @bookmarksTable = UITableView.new.tap do |v|
-      v.frame = [[0, 69], self.view.bounds.size]
+      frame_size = self.view.frame.size
+
+      ## FIXME: frame.height が -69 だと見切れる。かといって200とかだと小さすぎる。なんで?
+      v.frame = [[0, 69], [frame_size.width, frame_size.height - 69]]
+
       v.dataSource = v.delegate = self
       view << v
     end
@@ -63,6 +67,7 @@ class BookmarksViewController < UIViewController
             {
               :title => entry.title,
               :link  => entry.link,
+              :count => entry.count.to_s,
               :user => {
                 :name => dict[:user]
               },
@@ -80,20 +85,30 @@ class BookmarksViewController < UIViewController
     end
   end
 
+  def viewWillAppear(animated)
+    super(animated)
+    @bookmarksTable.deselectRowAtIndexPath(@bookmarksTable.indexPathForSelectedRow, animated:animated)
+  end
+
   def tableView(tableView, numberOfRowsInSection:section)
     return @bookmarks.size
+  end
+
+  def tableView(tableView, heightForRowAtIndexPath:indexPath)
+    ## FIXME: ここの引数最後のわかりづらい
+    BookmarkCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width, true)
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     bookmark = @bookmarks[indexPath.row]
     bookmark.row = indexPath.row # FIXME: モデルに row 持たせるのおかしい
+    BookmarkCell.cellForBookmarkNoTitle(bookmark, inTableView:tableView)
+  end
 
-    # cell = BookmarkCell.cellForBookmark(bookmark, inTableView:tableView)
-
-    ## とりあえず.
-    cell = tableView.dequeueReusableCellWithIdentifier('commentCell') ||
-      UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:'commentCell')
-    cell.textLabel.text = bookmark.comment
-    cell
+  def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+    PermalinkViewController.new.tap do |c|
+      c.bookmark = @bookmarks[indexPath.row]
+      self.navigationController.pushViewController(c, animated:true)
+    end
   end
 end
