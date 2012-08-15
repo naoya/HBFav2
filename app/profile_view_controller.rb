@@ -41,8 +41,8 @@ class ProfileViewController < UIViewController
             :label => "はてなID",
             :color => '#385487'.uicolor,
             :action        => proc {
-              # TODO
-              puts "test3"
+              diag = UINavigationController.alloc.initWithRootViewController(AccountConfigViewController.new)
+              self.presentModalViewController(diag, animated:true)
             }
           },
           {
