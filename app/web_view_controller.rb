@@ -6,8 +6,13 @@ class WebViewController < UIViewController
 
     ## Toolbar
     self.navigationController.toolbarHidden = false
-    button = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemRefresh, target:self, action:'refresh')
-    self.toolbarItems = [button]
+    # refresh button
+    refreshButton = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemRefresh, target:self, action:'refresh')
+    # spacer
+    spacer = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemFlexibleSpace, target:nil, action:nil)
+    # XX users button
+    usersButton = UIBarButtonItem.alloc.initWithTitle(bookmark.count.to_s, style:UIBarButtonItemStyleBordered, target:self, action:'openBookmarks')
+    self.toolbarItems = [refreshButton, spacer, usersButton]
 
     ## Title
     self.navigationItem.title = @bookmark.title
@@ -30,6 +35,13 @@ class WebViewController < UIViewController
       v.style = UIActivityIndicatorViewStyleGray
       # self.view.addSubview(v)
       view << v
+    end
+  end
+
+  def openBookmarks
+    BookmarksViewController.new.tap do |c|
+      c.entry = @bookmark
+      self.navigationController.pushViewController(c, animated:true)
     end
   end
 
