@@ -47,10 +47,9 @@ class BookmarksViewController < UIViewController
 
     @bookmarksTable = UITableView.new.tap do |v|
       frame_size = self.view.frame.size
-
       ## FIXME: frame.height が -69 だと見切れる。かといって200とかだと小さすぎる。なんで?
-      v.frame = [[0, 69], [frame_size.width, frame_size.height - 69]]
-
+      ## navigation bar の分が入ってる? : yes
+      v.frame = [[0, 69], [frame_size.width, frame_size.height - 69 - 42]]
       v.dataSource = v.delegate = self
       view << v
     end
