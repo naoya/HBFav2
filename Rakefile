@@ -8,6 +8,7 @@ require 'bubble-wrap/core'
 require 'bubble-wrap/http'
 # require 'bubble-wrap/ui'
 # require 'bubble-wrap/reactor'
+require 'formotion'
 require 'sugarcube'
 
 Motion::Project::App.setup do |app|

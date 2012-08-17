@@ -42,6 +42,7 @@ class ProfileViewController < UIViewController
             :color => '#385487'.uicolor,
             :action        => proc {
               diag = UINavigationController.alloc.initWithRootViewController(AccountConfigViewController.new)
+              # diag = UINavigationController.alloc.initWithRootViewController(@form_controller)
               self.presentModalViewController(diag, animated:true)
             }
           },

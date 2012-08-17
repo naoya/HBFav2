@@ -1,5 +1,32 @@
 # -*- coding: utf-8 -*-
-class AccountConfigViewController < UIViewController
+class AccountConfigViewController < Formotion::FormController
+  def init
+    if self
+      form = Formotion::Form.new({
+        sections: [{
+              title: "はてなID",
+              rows: [
+                {
+                  title: "ID",
+                  key: "hatena_id",
+                  type: :string,
+                  placeholder: '必須',
+                  auto_correction: :no,
+                  auto_capitalization: :none,
+                },
+                {
+                  title: "パスワード",
+                  key: "password",
+                  type: :string,
+                  secure: true
+                }
+              ]
+            }]
+      })
+      return self.class.alloc.initWithForm(form)
+    end
+  end
+
   def viewDidLoad
     super
 
@@ -24,6 +51,12 @@ class AccountConfigViewController < UIViewController
   end
 
   def save
+    data = self.form.render
+
+    ## なんでキーが string なんだ･･･
+    puts data["hatena_id"]
+    puts data["password"]
+
     self.dismissModalViewControllerAnimated(true)
   end
 end
