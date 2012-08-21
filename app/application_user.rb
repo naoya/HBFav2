@@ -7,17 +7,15 @@ class ApplicationUser
   end
 
   def save
-    App::Persistence['applicatoin_user'] = {
-      :hatena_id => @hatena_id,
-      :password  => @password
-    }
+    App::Persistence['hatena_id'] = @hatena_id
+    App::Persistence['password']  = @password
     self
   end
 
   def load
     user = App::Persistence['applicatoin_user'] || {}
-    self.hatena_id = user[:hatena_id]
-    self.password  = user[:password]
+    self.hatena_id = App::Persistence['hatena_id']
+    self.password  = App::Persistence['password']
     self
   end
 

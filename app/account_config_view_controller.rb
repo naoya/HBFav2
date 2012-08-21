@@ -13,6 +13,7 @@ class AccountConfigViewController < Formotion::FormController
                   placeholder: '必須',
                   auto_correction: :no,
                   auto_capitalization: :none,
+                  value: 'naoya' # FIXME
                 },
                 {
                   title: "パスワード",
@@ -53,9 +54,10 @@ class AccountConfigViewController < Formotion::FormController
   def save
     data = self.form.render
 
-    ## なんでキーが string なんだ･･･
-    puts data["hatena_id"]
-    puts data["password"]
+    user = ApplicationUser.new
+    user.hatena_id = data["hatena_id"]
+    user.password  = data["password"] || nil
+    user.save
 
     self.dismissModalViewControllerAnimated(true)
   end
