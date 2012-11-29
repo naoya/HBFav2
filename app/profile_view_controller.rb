@@ -6,7 +6,9 @@ class ProfileViewController < UIViewController
     super
 
     self.navigationItem.title = @user.name
-    self.view.backgroundColor = UIColor.groupTableViewBackgroundColor
+
+    # self.view.backgroundColor = UIColor.groupTableViewBackgroundColor
+    view << UITableView.alloc.initWithFrame(view.bounds, style:UITableViewStyleGrouped)
 
     @dataSource = [
       {
@@ -41,9 +43,12 @@ class ProfileViewController < UIViewController
             :label => "はてなID",
             :color => '#385487'.uicolor,
             :action        => proc {
-              diag = UINavigationController.alloc.initWithRootViewController(AccountConfigViewController.new)
-              # diag = UINavigationController.alloc.initWithRootViewController(@form_controller)
-              self.presentModalViewController(diag, animated:true)
+              AccountConfigViewController.new.tap do |c|
+                c.user = @user
+                diag = UINavigationController.alloc.initWithRootViewController(c)
+                # diag = UINavigationController.alloc.initWithRootViewController(@form_controller)
+                self.presentModalViewController(diag, animated:true)
+              end
             }
           },
           {
@@ -77,7 +82,7 @@ class ProfileViewController < UIViewController
       view << v
     end
 
-    @menuTable = UITableView.alloc.initWithFrame([[0, 58], self.view.bounds.size], style:UITableViewStyleGrouped).tap do |v|
+    @menuTable = UITableView.alloc.initWithFrame([[0, 59], self.view.bounds.size], style:UITableViewStyleGrouped).tap do |v|
       v.dataSource = v.delegate = self
       view << v
     end

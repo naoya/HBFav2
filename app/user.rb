@@ -1,5 +1,5 @@
 class User
-  attr_reader :name
+  attr_accessor :name
 
   def initialize(dict)
     @name = dict[:name]

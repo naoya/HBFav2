@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 class AccountConfigViewController < Formotion::FormController
+  attr_accessor :user
+
   def init
     if self
       form = Formotion::Form.new({
@@ -54,11 +56,15 @@ class AccountConfigViewController < Formotion::FormController
   def save
     data = self.form.render
 
+    ## この両者のユーザーを区別する必要があるのか?
     user = ApplicationUser.new
     user.hatena_id = data["hatena_id"]
     user.password  = data["password"] || nil
     user.save
 
+    @user.name = data["hatena_id"]
+
+    ## この後バックグラウンドの画面を再描画しないと･･･
     self.dismissModalViewControllerAnimated(true)
   end
 end

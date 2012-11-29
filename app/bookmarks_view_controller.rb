@@ -8,9 +8,10 @@ class BookmarksViewController < UIViewController
 
     self.navigationItem.title = entry.count.to_s
 
-    @headerView = UIView.new.tap do |v|
+    # @headerView = UIView.new.tap do |v|
+    @headerView = UITableView.alloc.initWithFrame([[0, 0], [view.frame.size.width, 68]], style:UITableViewStyleGrouped).tap do |v|
       v.frame = [[0, 0], [view.frame.size.width, 68]]
-      v.backgroundColor = UIColor.groupTableViewBackgroundColor
+      # v.backgroundColor = UIColor.groupTableViewBackgroundColor
       view << v
 
       v.whenTapped do

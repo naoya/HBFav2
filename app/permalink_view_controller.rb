@@ -8,9 +8,9 @@ class PermalinkViewController < UIViewController
     self.navigationItem.title = "ブックマーク"
     self.view.backgroundColor = UIColor.whiteColor
 
-    @headerView = UIView.new.tap do |v|
-      v.frame = [[0, 0], [view.frame.size.width, 68]]
-      v.backgroundColor = UIColor.groupTableViewBackgroundColor
+    ## iOS6 で UIColor.groupTableViewBackgroundColorがdeprecatedなので
+    ## UIView ではなく UITableView を使う
+    @headerView = UITableView.alloc.initWithFrame([[0, 0], [view.frame.size.width, 68]], style:UITableViewStyleGrouped).tap do |v|
       view << v
 
       v.whenTapped do

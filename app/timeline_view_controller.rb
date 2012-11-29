@@ -32,6 +32,26 @@ class TimelineViewController < UITableViewController
         App.alert(response.error_message)
       end
     end
+
+    # Dispatch::Queue.concurrent.async do
+    #   json = nil
+    #   begin
+    #     json = JSONParser.parse_from_url(@feed_url)
+    #   rescue RuntimeError => e
+    #     presentError e.message
+    #   end
+
+    #   @bookmarks = json['bookmarks'].collect { |dict| Bookmark.new(dict) }
+
+    #   Dispatch::Queue.main.sync do
+    #     ## すでにviewが破棄されてる時がある(通信中にpopViewした場合など)ので nil チェック
+    #     unless self.view.nil?
+    #       self.view.reloadData
+    #     end
+    #   end
+    # end
+
+
   end
 
   def viewWillAppear(animated)
