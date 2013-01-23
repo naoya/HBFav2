@@ -46,14 +46,17 @@ class WebViewController < UIViewController
   end
 
   def webViewDidStartLoad (webView)
+    App.shared.networkActivityIndicatorVisible = true
     @indicator.startAnimating
   end
 
   def webViewDidFinishLoad (webView)
+    App.shared.networkActivityIndicatorVisible = false
     @indicator.stopAnimating
   end
 
   def webView(webView, didFailLoadWithError:error)
+    App.shared.networkActivityIndicatorVisible = false
     @indicator.stopAnimating
   end
 
