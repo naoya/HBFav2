@@ -8,7 +8,13 @@ class TimelineViewController < UITableViewController
     self.navigationItem.title = "HBFav"
     self.view.backgroundColor = UIColor.whiteColor
 
+    ## 生の配列ではなく bookmarksManager とかになるべきな気が
+    ## インスタンスは feed の URL を受け取る
+    ## (/naoya/ とかも同じように処理できるようにするため)
     @bookmarks ||= []
+
+    # こういうフラグ要るのかな...
+    @loading = nil
 
     if home?
       self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
@@ -18,20 +24,30 @@ class TimelineViewController < UITableViewController
       )
     end
 
-    # FIXME: 通信を発生させながら NavigationController で行き来してると高確率で落ちる･･･
-    BW::HTTP.get(@feed_url) do |response|
-      if response.ok?
-        json = BW::JSON.parse(response.body.to_str)
-        @bookmarks = json['bookmarks'].collect { |dict| Bookmark.new(dict) }
-
-        ## すでにviewが破棄されてる時がある(通信中にpopViewした場合など)ので nil チェック
-        unless self.view.nil?
-          self.view.reloadData
-        end
-      else
-        App.alert(response.error_message)
+    tableView.tableFooterView = UIView.new.tap do |v|
+      v.frame = [[0, 0], [tableView.frame.size.width, 44]]
+      v.backgroundColor = '#fff'.uicolor
+      v << UIActivityIndicatorView.gray.tap do |i|
+        i.center = [v.frame.size.width / 2, v.frame.size.height / 2]
+        i.startAnimating
       end
     end
+
+    self.updateBookmarks
+    # # FIXME: 通信を発生させながら NavigationController で行き来してると高確率で落ちる･･･
+    # BW::HTTP.get(@feed_url) do |response|
+    #   if response.ok?
+    #     json = BW::JSON.parse(response.body.to_str)
+    #     @bookmarks = json['bookmarks'].collect { |dict| Bookmark.new(dict) }
+    #     @last
+    #     ## すでにviewが破棄されてる時がある(通信中にpopViewした場合など)ので nil チェック
+    #     unless self.view.nil?
+    #       self.view.reloadData
+    #     end
+    #   else
+    #     App.alert(response.error_message)
+    #   end
+    # end
 
     # Dispatch::Queue.concurrent.async do
     #   json = nil
@@ -50,8 +66,36 @@ class TimelineViewController < UITableViewController
     #     end
     #   end
     # end
+  end
 
+  ## これは bookmarksManager とかのクラスに生えてて、
+  ## bookmarksManager.update で通知を受け取って view.reloadData するべ
+  ## き箇所では?
+  def updateBookmarks
+    @loading = true
+    url = @feed_url + "?of=#{@bookmarks.size}"
 
+    # debug
+    puts url
+
+    BW::HTTP.get(url) do |response|
+      if response.ok?
+        json = BW::JSON.parse(response.body.to_str)
+        @bookmarks.concat(json['bookmarks'].collect { |dict| Bookmark.new(dict) })
+        unless self.view.nil?
+          self.view.reloadData
+        end
+      else
+        App.alert(response.error_message)
+      end
+      @loading = nil
+    end
+  end
+
+  def tableView(tableView, willDisplayCell:cell, forRowAtIndexPath:indexPath)
+    if (@loading.nil? and @bookmarks.size > 0 and indexPath.row == @bookmarks.size - 1)
+      self.updateBookmarks
+    end
   end
 
   def viewWillAppear(animated)
