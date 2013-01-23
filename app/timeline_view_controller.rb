@@ -8,6 +8,8 @@ class TimelineViewController < UITableViewController
     self.navigationItem.title = "HBFav"
     self.view.backgroundColor = UIColor.whiteColor
 
+    @pullToRefreshView = SSPullToRefreshView.alloc.initWithScrollView(tableView, delegate:self)
+
     ## 生の配列ではなく bookmarksManager とかになるべきな気が
     ## インスタンスは feed の URL を受け取る
     ## (/naoya/ とかも同じように処理できるようにするため)
@@ -68,12 +70,25 @@ class TimelineViewController < UITableViewController
     # end
   end
 
+  def viewDidUnload
+    super
+    @pullToRefreshView = nil
+  end
+
+  def pullToRefreshViewDidStartLoading(pullToRefreshView)
+    pullToRefreshView.startLoading
+    self.updateBookmarks(true) do
+      pullToRefreshView.finishLoading
+    end
+  end
+
   ## これは bookmarksManager とかのクラスに生えてて、
   ## bookmarksManager.update で通知を受け取って view.reloadData するべ
   ## き箇所では?
-  def updateBookmarks
+  def updateBookmarks(init=nil, &cb)
     @loading = true
-    url = @feed_url + "?of=#{@bookmarks.size}"
+    offset = init ? 0 : @bookmarks.size
+    url = @feed_url + "?of=#{offset}"
 
     # debug
     puts url
@@ -81,6 +96,9 @@ class TimelineViewController < UITableViewController
     BW::HTTP.get(url) do |response|
       if response.ok?
         json = BW::JSON.parse(response.body.to_str)
+        if (init)
+          @bookmarks = []
+        end
         @bookmarks.concat(json['bookmarks'].collect { |dict| Bookmark.new(dict) })
         unless self.view.nil?
           self.view.reloadData
@@ -88,6 +106,11 @@ class TimelineViewController < UITableViewController
       else
         App.alert(response.error_message)
       end
+
+      if (cb)
+        cb.call
+      end
+
       @loading = nil
     end
   end

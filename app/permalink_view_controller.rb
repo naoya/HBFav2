@@ -13,7 +13,7 @@ class PermalinkViewController < UIViewController
     @headerView = UITableView.alloc.initWithFrame([[0, 0], [view.frame.size.width, 68]], style:UITableViewStyleGrouped).tap do |v|
       view << v
 
-      v.whenTapped do
+      v.when_tapped do
         ProfileViewController.new.tap do |c|
           c.user = bookmark.user
           self.navigationController.pushViewController(c, animated:true)
@@ -94,7 +94,7 @@ class PermalinkViewController < UIViewController
 
       current_y += size.height + 4
 
-      v.whenTapped do
+      v.when_tapped do
         WebViewController.new.tap do |c|
           c.bookmark = @bookmark
           navigationController.pushViewController(c, animated:true)

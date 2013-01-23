@@ -14,7 +14,7 @@ class BookmarksViewController < UIViewController
       # v.backgroundColor = UIColor.groupTableViewBackgroundColor
       view << v
 
-      v.whenTapped do
+      v.when_tapped do
         WebViewController.new.tap do |c|
           c.bookmark = @entry
           navigationController.pushViewController(c, animated:true)
