@@ -9,14 +9,8 @@ class TimelineViewController < UITableViewController
     self.view.backgroundColor = UIColor.whiteColor
 
     @pullToRefreshView = SSPullToRefreshView.alloc.initWithScrollView(tableView, delegate:self)
-
-    ## 生の配列ではなく bookmarksManager とかになるべきな気が
-    ## インスタンスは feed の URL を受け取る
-    ## (/naoya/ とかも同じように処理できるようにするため)
-    @bookmarks ||= []
-
-    # こういうフラグ要るのかな...
-    @loading = nil
+    @bookmarks = BookmarkManager.new(self.feed_url)
+    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
 
     if home?
       self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
@@ -35,21 +29,11 @@ class TimelineViewController < UITableViewController
       end
     end
 
-    self.updateBookmarks
-    # # FIXME: 通信を発生させながら NavigationController で行き来してると高確率で落ちる･･･
-    # BW::HTTP.get(@feed_url) do |response|
-    #   if response.ok?
-    #     json = BW::JSON.parse(response.body.to_str)
-    #     @bookmarks = json['bookmarks'].collect { |dict| Bookmark.new(dict) }
-    #     @last
-    #     ## すでにviewが破棄されてる時がある(通信中にpopViewした場合など)ので nil チェック
-    #     unless self.view.nil?
-    #       self.view.reloadData
-    #     end
-    #   else
-    #     App.alert(response.error_message)
-    #   end
-    # end
+    @bookmarks.update do |res|
+      if not res.ok?
+        App.alert(res.error_message)
+      end
+    end
 
     # Dispatch::Queue.concurrent.async do
     #   json = nil
@@ -75,49 +59,33 @@ class TimelineViewController < UITableViewController
     @pullToRefreshView = nil
   end
 
-  def pullToRefreshViewDidStartLoading(pullToRefreshView)
-    pullToRefreshView.startLoading
-    self.updateBookmarks(true) do
-      pullToRefreshView.finishLoading
+  def dealloc
+    @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
+  end
+
+  def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
+    if (@bookmarks == object and keyPath == 'bookmarks')
+      view.reloadData
     end
   end
 
-  ## これは bookmarksManager とかのクラスに生えてて、
-  ## bookmarksManager.update で通知を受け取って view.reloadData するべ
-  ## き箇所では?
-  def updateBookmarks(init=nil, &cb)
-    @loading = true
-    offset = init ? 0 : @bookmarks.size
-    url = @feed_url + "?of=#{offset}"
-
-    # debug
-    puts url
-
-    BW::HTTP.get(url) do |response|
-      if response.ok?
-        json = BW::JSON.parse(response.body.to_str)
-        if (init)
-          @bookmarks = []
-        end
-        @bookmarks.concat(json['bookmarks'].collect { |dict| Bookmark.new(dict) })
-        unless self.view.nil?
-          self.view.reloadData
-        end
-      else
-        App.alert(response.error_message)
+  def pullToRefreshViewDidStartLoading(pullToRefreshView)
+    pullToRefreshView.startLoading
+    @bookmarks.update(true) do |res|
+      if not res.ok?
+        App.alert(res.error_message)
       end
-
-      if (cb)
-        cb.call
-      end
-
-      @loading = nil
+      @pullToRefreshView.finishLoading
     end
   end
 
   def tableView(tableView, willDisplayCell:cell, forRowAtIndexPath:indexPath)
-    if (@loading.nil? and @bookmarks.size > 0 and indexPath.row == @bookmarks.size - 1)
-      self.updateBookmarks
+    if (not @bookmarks.updating? and @bookmarks.size > 0 and indexPath.row == @bookmarks.size - 1)
+      @bookmarks.update do |res|
+        if not res.ok?
+          App.alert(res.error_message)
+        end
+      end
     end
   end
 
