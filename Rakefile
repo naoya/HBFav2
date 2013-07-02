@@ -4,16 +4,6 @@ require 'motion/project/template/ios'
 require 'bundler/setup'
 Bundler.require :default
 
-# require 'rubygems'
-# require 'bubble-wrap'
-# require 'bubble-wrap/core'
-# require 'bubble-wrap/http'
-# # require 'bubble-wrap/ui'
-# # require 'bubble-wrap/reactor'
-# require 'formotion'
-# require 'sugarcube'
-
-
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'HBFav2'
@@ -21,9 +11,10 @@ Motion::Project::App.setup do |app|
   app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'
   app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
 
-  app.pods do
-    pod 'SSPullToRefresh'
-  end
+  # app.pods do
+  #  pod 'SSPullToRefresh'
+  # end
+
   ## Keychain
   # app.frameworks += ['Security']
   # app.vendor_project('vendor/GenericKeychain', :xcode,

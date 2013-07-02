@@ -8,7 +8,10 @@ class TimelineViewController < UITableViewController
     self.navigationItem.title = "HBFav"
     self.view.backgroundColor = UIColor.whiteColor
 
-    @pullToRefreshView = SSPullToRefreshView.alloc.initWithScrollView(tableView, delegate:self)
+    self.refreshControl = UIRefreshControl.new.tap do |refresh|
+      refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged);
+    end
+
     @bookmarks = BookmarkManager.new(self.feed_url)
     @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
 
@@ -56,7 +59,7 @@ class TimelineViewController < UITableViewController
 
   def viewDidUnload
     super
-    @pullToRefreshView = nil
+    # @pullToRefreshView = nil
   end
 
   def dealloc
@@ -66,16 +69,6 @@ class TimelineViewController < UITableViewController
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (@bookmarks == object and keyPath == 'bookmarks')
       view.reloadData
-    end
-  end
-
-  def pullToRefreshViewDidStartLoading(pullToRefreshView)
-    pullToRefreshView.startLoading
-    @bookmarks.update(true) do |res|
-      if not res.ok?
-        App.alert(res.error_message)
-      end
-      @pullToRefreshView.finishLoading
     end
   end
 
@@ -127,5 +120,15 @@ class TimelineViewController < UITableViewController
 
   def home?
     as_home ? true : false
+  end
+
+  def on_refresh
+    self.refreshControl.beginRefreshing
+    @bookmarks.update(true) do |res|
+      if not res.ok?
+        App.alert(res.error_message)
+      end
+      self.refreshControl.endRefreshing
+    end
   end
 end
