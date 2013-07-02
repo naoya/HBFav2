@@ -127,9 +127,11 @@ class BookmarkCell < UITableViewCell
     self.imageView.frame = [[10, 10], [48, 48]]
 
     ## date (150決めうちとかだめすぎる･･･)
-    date_size = self.dateLabel.text.sizeWithFont(UIFont.systemFontOfSize(14))
-    self.dateLabel.frame = [[SideWidth + 150, 10], [body_width - 150, date_size.height]]
-    self.dateLabel.textAlignment = UITextAlignmentRight
+    unless (self.dateLabel.text.nil?)
+      date_size = self.dateLabel.text.sizeWithFont(UIFont.systemFontOfSize(14))
+      self.dateLabel.frame = [[SideWidth + 150, 10], [body_width - 150, date_size.height]]
+      self.dateLabel.textAlignment = UITextAlignmentRight
+    end
 
     ## ここから body (右サイド) ##
     current_y = 10

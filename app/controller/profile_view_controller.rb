@@ -19,7 +19,10 @@ class ProfileViewController < UIViewController
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
             :action        => proc {
               self.navigationController.pushViewController(
-                TimelineViewController.new.tap { |c| c.feed_url = user.bookmark_feed_url },
+                TimelineViewController.new.tap do |c|
+                  c.feed_url = user.bookmark_feed_url
+                  c.title = user.name
+                end,
                 animated:true
               )
             }
@@ -29,7 +32,10 @@ class ProfileViewController < UIViewController
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
             :action        => proc {
               self.navigationController.pushViewController(
-                TimelineViewController.new.tap { |c| c.feed_url = user.timeline_feed_url },
+                TimelineViewController.new.tap do |c|
+                  c.feed_url = user.timeline_feed_url
+                  c.title = user.name
+                end,
                 animated:true
               )
             }

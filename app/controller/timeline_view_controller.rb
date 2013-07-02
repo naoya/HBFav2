@@ -5,7 +5,7 @@ class TimelineViewController < UITableViewController
   def viewDidLoad
     super
 
-    self.navigationItem.title = "HBFav"
+    self.navigationItem.title ||= "HBFav"
     self.view.backgroundColor = UIColor.whiteColor
 
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
