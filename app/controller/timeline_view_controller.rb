@@ -98,7 +98,6 @@ class TimelineViewController < UITableViewController
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     bookmark = @bookmarks[indexPath.row]
-    bookmark.row = indexPath.row # FIXME: モデルに row 持たせるのおかしい
     cell = BookmarkCell.cellForBookmark(bookmark, inTableView:tableView)
     return cell
   end

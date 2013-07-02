@@ -25,6 +25,7 @@ class BookmarksViewController < UIViewController
     @faviconView = UIImageView.new.tap do |v|
       v.frame = [[5, 5 + 2], [14, 14]]
       v.image = entry.favicon
+      v.setImageWithURL(entry.favicon_url.nsurl, placeholderImage:nil)
       @headerView << v
     end
 
@@ -102,7 +103,6 @@ class BookmarksViewController < UIViewController
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     bookmark = @bookmarks[indexPath.row]
-    bookmark.row = indexPath.row # FIXME: モデルに row 持たせるのおかしい
     BookmarkCell.cellForBookmarkNoTitle(bookmark, inTableView:tableView)
   end
 

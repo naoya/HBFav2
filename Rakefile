@@ -11,9 +11,11 @@ Motion::Project::App.setup do |app|
   app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'
   app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
 
-  # app.pods do
-  #  pod 'SSPullToRefresh'
-  # end
+  app.pods do
+    pod 'SDWebImage'
+  end
+
+  app.frameworks += ['ImageIO', 'MapKit']
 
   ## Keychain
   # app.frameworks += ['Security']

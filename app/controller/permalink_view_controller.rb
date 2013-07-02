@@ -23,7 +23,8 @@ class PermalinkViewController < UIViewController
 
     @imageView = UIImageView.new.tap do |v|
       v.frame = [[10, 10], [48, 48]]
-      v.image = @bookmark.profile_image
+      # v.image = @bookmark.profile_image
+      v.setImageWithURL(@bookmark.user.profile_image_url.nsurl, placeholderImage:nil)
       v.layer.tap do |l|
         l.masksToBounds = true
         l.cornerRadius  = 5.0
@@ -73,7 +74,7 @@ class PermalinkViewController < UIViewController
 
     @faviconView = UIImageView.new.tap do |v|
       v.frame = [[10, current_y + 2], [16, 16]]
-      v.image = bookmark.favicon
+      v.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:nil)
       @scrollView << v
     end
 

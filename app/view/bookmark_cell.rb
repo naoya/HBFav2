@@ -106,30 +106,15 @@ class BookmarkCell < UITableViewCell
     self.dateLabel.text    = bookmark.created_at
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
 
-    ## FIXME: Dispatch Group で書き換える
-    if not bookmark.profile_image or not bookmark.favicon
-      self.imageView.image   = nil
-      self.faviconView.image = nil
-
-      Dispatch::Queue.concurrent.async do
-        profile_factory = RemoteImageFactory.instance(:profile_image)
-        bookmark.profile_image = profile_factory.image(bookmark.user.profile_image_url)
-
-        favicon_factory = RemoteImageFactory.instance(:favicon)
-        bookmark.favicon = favicon_factory.image(bookmark.favicon_url)
-
-        Dispatch::Queue.main.sync do
-          self.imageView.image   = bookmark.profile_image
-          self.faviconView.image = bookmark.favicon
-
-          ## FIXME: bookmark.row に代入しているのださいなあ
-          tableView.reloadRowsAtIndexPaths([NSIndexPath.indexPathForRow(bookmark.row, inSection: 0)], withRowAnimation:false)
-        end
+    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:nil, completed:lambda do |image, error, cacheType|
+      if (image)
+        ## remote から取得したとき (cacheType == 0) だけ layoutSubviews しようとしたけど、それじゃだめなようだ
+        self.layoutSubviews
       end
-    else
-      self.imageView.image   = bookmark.profile_image
-      self.faviconView.image = bookmark.favicon
-    end
+    end)
+
+    # なんでこっちは layoutSubviews しなくても表示されるのか謎
+    self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:nil)
   end
 
   ## セルは使い回されるので、この中でbookmarkインスタンスは扱ってはダメ

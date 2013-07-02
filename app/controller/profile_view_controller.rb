@@ -69,6 +69,7 @@ class ProfileViewController < UIViewController
         l.masksToBounds = true
         l.cornerRadius  = 5.0
       end
+      v.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
       view << v
     end
 
@@ -85,13 +86,6 @@ class ProfileViewController < UIViewController
     @menuTable = UITableView.alloc.initWithFrame([[0, 59], self.view.bounds.size], style:UITableViewStyleGrouped).tap do |v|
       v.dataSource = v.delegate = self
       view << v
-    end
-
-    Dispatch::Queue.concurrent.async do
-      image = RemoteImageFactory.instance(:profile_image).image(@user.profile_image_url)
-      Dispatch::Queue.main.sync do
-        @imageView.image = image
-      end
     end
   end
 
