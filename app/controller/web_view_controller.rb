@@ -6,13 +6,24 @@ class WebViewController < UIViewController
 
     ## Toolbar
     self.navigationController.toolbarHidden = false
-    # refresh button
-    refreshButton = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemRefresh, target:self, action:'refresh')
-    # spacer
-    spacer = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemFlexibleSpace, target:nil, action:nil)
-    # XX users button
-    usersButton = UIBarButtonItem.alloc.initWithTitle(bookmark.count.to_s, style:UIBarButtonItemStyleBordered, target:self, action:'openBookmarks')
-    self.toolbarItems = [refreshButton, spacer, usersButton]
+    spacer = UIBarButtonItem.flexiblespace
+
+    self.toolbarItems = [
+      @backButton = UIBarButtonItem.alloc.initWithBarButtonSystemItem(101, target:self, action:'on_back').tap { |b| b.enabled = false },
+      spacer,
+      @forwardButton = UIBarButtonItem.alloc.initWithBarButtonSystemItem(102, target:self, action:'on_forward').tap { |b| b.enabled = false },
+      spacer,
+      refreshButton = UIBarButtonItem.refresh { @webview.reload },
+      spacer,
+      UIBarButtonItem.action {}, # TODO
+      spacer,
+      UIBarButtonItem.titled(bookmark.count.to_s, :bordered) do
+        BookmarksViewController.new.tap do |c|
+          c.entry = @bookmark
+          self.navigationController.pushViewController(c, animated:true)
+        end
+      end
+    ]
 
     ## Title
     self.navigationItem.title = @bookmark.title
@@ -21,28 +32,30 @@ class WebViewController < UIViewController
     @webview = UIWebView.new.tap do |v|
       v.frame = self.view.bounds
       v.scalesPageToFit = true
-      # v.loadRequest(NSURLRequest.requestWithURL(NSURL.URLWithString(@bookmark[:link])))
       v.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
       v.delegate = self
-      # self.view.addSubview(v)
       view << v
     end
 
     ## Activity Indicator
     @indicator = UIActivityIndicatorView.new.tap do |v|
-      # v.frame = [[view.bounds.size.width / 2, view.bounds.size.height / 2], [20, 20]]
       v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
       v.style = UIActivityIndicatorViewStyleGray
-      # self.view.addSubview(v)
       view << v
     end
   end
 
-  def openBookmarks
-    BookmarksViewController.new.tap do |c|
-      c.entry = @bookmark
-      self.navigationController.pushViewController(c, animated:true)
+  def webView(webView, shouldStartLoadWithRequest:request, navigationType:navigationType)
+    @backButton.enabled    = webView.canGoBack
+    @forwardButton.enabled = webView.canGoForward
+    return true
+  end
+
+  def viewWillDisappear(animated)
+    if @webview.loading?
+      @webview.stopLoading
     end
+    super
   end
 
   def webViewDidStartLoad (webView)
@@ -60,7 +73,18 @@ class WebViewController < UIViewController
     @indicator.stopAnimating
   end
 
-  def refresh
-    @webview.reload
+  def on_back
+    @webview.goBack
+  end
+
+  def on_forward
+    @webview.goForward
+  end
+
+  def dealloc
+    if @webview.loading?
+      @webview.stopLoading
+    end
+    @webview.delegate = nil
   end
 end
