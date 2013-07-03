@@ -5,22 +5,27 @@ class TimelineViewController < UITableViewController
   def viewDidLoad
     super
 
+    @bookmarks = BookmarkManager.new(self.feed_url)
+    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
+
     self.navigationItem.title ||= "HBFav"
     self.view.backgroundColor = UIColor.whiteColor
 
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
-      refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged);
+      # refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged);
+      refresh.on(:value_changed) do |event|
+        refresh.beginRefreshing
+        @bookmarks.update(true) do |res|
+          if not res.ok?
+            App.alert(res.error_message)
+          end
+          refresh.endRefreshing
+        end
+      end
     end
 
-    @bookmarks = BookmarkManager.new(self.feed_url)
-    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
-
     if home?
-      self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-        UIBarButtonSystemItemBookmarks,
-        target:self,
-        action:'open_profile'
-      )
+      self.navigationItem.rightBarButtonItem = UIBarButtonItem.bookmarks { open_profile }
     end
 
     tableView.tableFooterView = UIView.new.tap do |v|
@@ -100,15 +105,5 @@ class TimelineViewController < UITableViewController
 
   def home?
     as_home ? true : false
-  end
-
-  def on_refresh
-    self.refreshControl.beginRefreshing
-    @bookmarks.update(true) do |res|
-      if not res.ok?
-        App.alert(res.error_message)
-      end
-      self.refreshControl.endRefreshing
-    end
   end
 end
