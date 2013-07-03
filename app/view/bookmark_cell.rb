@@ -131,6 +131,7 @@ class BookmarkCell < UITableViewCell
       date_size = self.dateLabel.text.sizeWithFont(UIFont.systemFontOfSize(14))
       self.dateLabel.frame = [[SideWidth + 150, 10], [body_width - 150, date_size.height]]
       self.dateLabel.textAlignment = UITextAlignmentRight
+      self.dateLabel.fit_to_size(14)
     end
 
     ## ここから body (右サイド) ##
