@@ -32,7 +32,6 @@ class WebViewController < UIViewController
 
     ## WebView
     @webview = UIWebView.new.tap do |v|
-      v.frame = self.view.bounds
       v.scalesPageToFit = true
       v.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
       v.delegate = self
@@ -51,6 +50,12 @@ class WebViewController < UIViewController
     @backButton.enabled    = webView.canGoBack
     @forwardButton.enabled = webView.canGoForward
     return true
+  end
+
+  # http://stackoverflow.com/questions/4492683/why-do-i-have-to-subtract-for-height-of-uinavigationbar-twice-to-get-uiwebview-t
+  def viewWillAppear(animated)
+    super
+    @webview.frame = self.view.bounds
   end
 
   def viewWillDisappear(animated)
