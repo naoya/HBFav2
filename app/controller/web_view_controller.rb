@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 class WebViewController < UIViewController
+  # include HBFav::URI::Escape
   attr_accessor :bookmark
 
   def viewDidLoad
@@ -15,7 +17,7 @@ class WebViewController < UIViewController
       spacer,
       refreshButton = UIBarButtonItem.refresh { @webview.reload },
       spacer,
-      UIBarButtonItem.action {}, # TODO
+      UIBarButtonItem.action { on_action },
       spacer,
       UIBarButtonItem.titled(bookmark.count.to_s, :bordered) do
         BookmarksViewController.new.tap do |c|
@@ -79,6 +81,28 @@ class WebViewController < UIViewController
 
   def on_forward
     @webview.goForward
+  end
+
+  def on_action
+    buttons = [
+      'キャンセル',
+      nil,
+      bookmark = 'B!',
+      pocket   = 'Pocket',
+      safari   = 'Safariで開く',
+      hatena   = '公式アプリで追加',
+    ]
+
+    UIActionSheet.alert(nil, buttons:buttons) do |pressed|
+      case pressed
+      when bookmark
+      when pocket
+      when safari
+        @bookmark.link.nsurl.open
+      when hatena
+        "hatenabookmark:/entry/add?backurl=hbfav2:/&url=#{@bookmark.link.escape_url}&title=#{@bookmark.title.escape_url}".nsurl.open
+      end
+    end
   end
 
   def dealloc
