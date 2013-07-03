@@ -1,0 +1,27 @@
+PODS:
+  - libwebp (0.3.0-rc7):
+    - libwebp/dec
+    - libwebp/dsp
+    - libwebp/utils
+    - libwebp/webp
+  - libwebp/dec (0.3.0-rc7)
+  - libwebp/dsp (0.3.0-rc7)
+  - libwebp/utils (0.3.0-rc7)
+  - libwebp/webp (0.3.0-rc7)
+  - PocketAPI (1.0.2)
+  - SDWebImage (3.3):
+    - libwebp
+    - SDWebImage/MapKit
+  - SDWebImage/MapKit (3.3):
+    - libwebp
+
+DEPENDENCIES:
+  - PocketAPI
+  - SDWebImage
+
+SPEC CHECKSUMS:
+  libwebp: 40517fa1fd3716eded73b4696c45fc0b66e4b414
+  PocketAPI: 2ed51391e6ea7a48c707528f782f5a2cb0eab80e
+  SDWebImage: 79a8bac9ccf85b269100b294f7b43684dab8bf8a
+
+COCOAPODS: 0.20.2

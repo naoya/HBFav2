@@ -10,16 +10,21 @@ Motion::Project::App.setup do |app|
   app.identifier = "org.bloghackers.net.HBFav2"
   app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'
   app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
-  
+
   app.info_plist['CFBundleURLTypes'] = [
     {
       'CFBundleURLName' => 'net.bloghackers.app',
       'CFBundleURLSchemes' => ['hbfav2']
+    },
+    {
+      'CFBundleURLName' => 'com.getpocket.sdk',
+      'CFBundleURLSchemes' => ['pocketapp16058']
     }
   ]
 
   app.pods do
     pod 'SDWebImage'
+    pod 'PocketAPI'
   end
 
   app.frameworks += ['ImageIO', 'MapKit']

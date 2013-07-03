@@ -3,7 +3,7 @@ build
 resources/*.nib
 resources/*.momd
 resources/*.storyboardc
-vendor/
+vendor/Pods/
 
 ### /Users/naoya/.gitignore-boilerplates/ruby.gitignore
 

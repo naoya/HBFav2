@@ -102,6 +102,15 @@ class WebViewController < UIViewController
       case pressed
       when bookmark
       when pocket
+        PocketAPI.sharedAPI.saveURL(@bookmark.link.nsurl, handler: lambda do |api, url, error|
+            if error
+              App.alert(error.localizedDescription)
+            else
+              ## success (TODO: better feedback)
+              puts url
+            end
+          end
+        )
       when safari
         @bookmark.link.nsurl.open
       when hatena

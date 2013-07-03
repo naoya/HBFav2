@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 class AppDelegate
   def application(application, didFinishLaunchingWithOptions:launchOptions)
+    ## initialize PocketAPI
+    PocketAPI.sharedAPI.setConsumerKey("16058-73f06a0629616ad0245bbfd0")
+
+    ## initialize HBFav2
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds).tap do |w|
       w.rootViewController = UINavigationController.alloc.initWithRootViewController(
         TimelineViewController.new.tap do |c|
@@ -19,5 +23,12 @@ class AppDelegate
       w.makeKeyAndVisible
     end
     true
+  end
+
+  def application(application, openURL:url, sourceApplication:sourceApplication, annotation:annotation)
+    if PocketAPI.sharedAPI.handleOpenURL(url)
+      return true
+    end
+    super
   end
 end
