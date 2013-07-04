@@ -106,7 +106,7 @@ class BookmarkCell < UITableViewCell
     self.dateLabel.text    = bookmark.created_at
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
 
-    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:nil, completed:lambda do |image, error, cacheType|
+    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage, completed:lambda do |image, error, cacheType|
       if (image)
         ## remote から取得したとき (cacheType == 0) だけ layoutSubviews しようとしたけど、それじゃだめなようだ
         self.layoutSubviews
@@ -114,7 +114,7 @@ class BookmarkCell < UITableViewCell
     end)
 
     # なんでこっちは layoutSubviews しなくても表示されるのか謎
-    self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:nil)
+    self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
   end
 
   ## セルは使い回されるので、この中でbookmarkインスタンスは扱ってはダメ
