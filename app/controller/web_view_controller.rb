@@ -102,12 +102,19 @@ class WebViewController < UIViewController
       case pressed
       when bookmark
       when pocket
+        @toast = ToastView.new.tap do |t|
+          t.frame = [[0, 0], [200, 40]]
+          t.center = [self.view.bounds.size.width / 2, 300]
+          t.textLabel.text = "Pocketに保存中..."
+        end
+        view << @toast
+
         PocketAPI.sharedAPI.saveURL(@bookmark.link.nsurl, handler: lambda do |api, url, error|
             if error
               App.alert(error.localizedDescription)
             else
-              ## success (TODO: better feedback)
-              puts url
+              @toast.done("保存しました")
+              @toast = nil
             end
           end
         )
