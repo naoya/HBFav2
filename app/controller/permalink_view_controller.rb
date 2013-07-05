@@ -91,11 +91,13 @@ class PermalinkViewController < UIViewController
       v.font = UIFont.systemFontOfSize(18)
       v.text = @bookmark.title
       v.textColor = '#3B5998'.to_color
+      v.highlightedTextColor = '#6699cc'.to_color
       @scrollView << v
 
       current_y += size.height + 4
 
       v.when_tapped do
+        v.highlighted = true
         WebViewController.new.tap do |c|
           c.bookmark = @bookmark
           navigationController.pushViewController(c, animated:true)
@@ -157,8 +159,6 @@ class PermalinkViewController < UIViewController
   end
 
   def viewWillAppear(animated)
-    super(animated)
-    self.navigationController.toolbarHidden = true
+    @titleLabel.highlighted = false
   end
-
 end

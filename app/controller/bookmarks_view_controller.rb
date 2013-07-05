@@ -87,8 +87,6 @@ class BookmarksViewController < UIViewController
   end
 
   def viewWillAppear(animated)
-    super
-    self.navigationController.toolbarHidden = true
     @bookmarksTable.deselectRowAtIndexPath(@bookmarksTable.indexPathForSelectedRow, animated:animated)
   end
 

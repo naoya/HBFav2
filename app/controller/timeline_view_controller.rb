@@ -69,8 +69,6 @@ class TimelineViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
-    super(animated)
-    self.navigationController.toolbarHidden = true
     view.deselectRowAtIndexPath(view.indexPathForSelectedRow, animated:animated)
   end
 

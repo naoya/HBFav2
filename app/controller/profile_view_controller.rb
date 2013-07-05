@@ -96,7 +96,6 @@ class ProfileViewController < UIViewController
   end
 
   def viewWillAppear(animated)
-    super(animated)
     @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)
   end
 
