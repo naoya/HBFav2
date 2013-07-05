@@ -10,8 +10,7 @@ class BookmarksViewController < UIViewController
 
     # @headerView = UIView.new.tap do |v|
     @headerView = UITableView.alloc.initWithFrame([[0, 0], [view.frame.size.width, 68]], style:UITableViewStyleGrouped).tap do |v|
-      v.frame = [[0, 0], [view.frame.size.width, 68]]
-      # v.backgroundColor = UIColor.groupTableViewBackgroundColor
+      v.scrollsToTop = false
       view << v
 
       v.when_tapped do
@@ -53,6 +52,7 @@ class BookmarksViewController < UIViewController
       ## navigation bar の分が入ってる? : yes
       v.frame = [[0, 69], [frame_size.width, frame_size.height - 69 - 42]]
       v.dataSource = v.delegate = self
+      v.scrollsToTop = true
       view << v
     end
 
