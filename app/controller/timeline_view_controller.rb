@@ -58,7 +58,7 @@ class TimelineViewController < UITableViewController
       view.reloadData
     end
 
-    if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.as_home == true)
+    if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
       self.user = ApplicationUser.sharedUser.to_bookmark_user
       self.feed_url = self.user.timeline_feed_url
       @bookmarks.url = self.feed_url
