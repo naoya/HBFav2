@@ -7,7 +7,6 @@ class WebViewController < UIViewController
     super
 
     ## Toolbar
-    self.navigationController.toolbarHidden = false
     spacer = UIBarButtonItem.flexiblespace
 
     self.toolbarItems = [
@@ -56,13 +55,14 @@ class WebViewController < UIViewController
   def viewWillAppear(animated)
     super
     @webview.frame = self.view.bounds
+    self.navigationController.setToolbarHidden(false, animated:false)
   end
 
   def viewWillDisappear(animated)
+    self.navigationController.setToolbarHidden(true, animated:animated)
     if @webview.loading?
       @webview.stopLoading
     end
-    super
   end
 
   def webViewDidStartLoad (webView)
