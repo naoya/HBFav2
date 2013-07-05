@@ -62,10 +62,6 @@ class AccountConfigViewController < Formotion::FormController
     user.password  = data["password"] || nil
     user.save
 
-    ## TODO
-    ## インスタンスごと入れ替えた方がいい
-    @user.name = data["hatena_id"]
-
     ## この後バックグラウンドの画面を再描画しないと･･･
     self.dismissModalViewControllerAnimated(true)
   end

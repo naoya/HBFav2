@@ -5,6 +5,7 @@ class ProfileViewController < UIViewController
   def viewDidLoad
     super
 
+    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
     self.navigationItem.title = @user.name
 
     # self.view.backgroundColor = UIColor.groupTableViewBackgroundColor
@@ -141,5 +142,21 @@ class ProfileViewController < UIViewController
 
   def mine?
     as_mine ? true : false
+  end
+
+  def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
+    if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.mine?)
+      self.user = ApplicationUser.sharedUser.to_bookmark_user
+
+      # これ手動で書く必要あるのがなあ
+      # モデル更新したら自動で update されるようにできないのか
+      navigationItem.title = @user.name
+      @imageView.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
+      @nameLabel.text = @user.name
+    end
+  end
+
+  def dealloc
+    ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
   end
 end
