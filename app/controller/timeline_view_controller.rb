@@ -13,7 +13,6 @@ class TimelineViewController < UITableViewController
     self.view.backgroundColor = UIColor.whiteColor
 
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
-      # refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged);
       refresh.on(:value_changed) do |event|
         refresh.beginRefreshing
         @bookmarks.update(true) do |res|
