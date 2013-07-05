@@ -41,6 +41,7 @@ class WebViewController < UIViewController
     @indicator = UIActivityIndicatorView.new.tap do |v|
       v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
       v.style = UIActivityIndicatorViewStyleGray
+      v.startAnimating
       view << v
     end
   end
@@ -67,7 +68,7 @@ class WebViewController < UIViewController
 
   def webViewDidStartLoad (webView)
     App.shared.networkActivityIndicatorVisible = true
-    @indicator.startAnimating
+    # @indicator.startAnimating
   end
 
   def webViewDidFinishLoad (webView)
