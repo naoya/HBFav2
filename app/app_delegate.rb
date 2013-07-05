@@ -8,8 +8,8 @@ class AppDelegate
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds).tap do |w|
       w.rootViewController = UINavigationController.alloc.initWithRootViewController(
         TimelineViewController.new.tap do |c|
-          app_user = ApplicationUser.new
-          app_user.load
+          # app_user = ApplicationUser.new
+          app_user = ApplicationUser.sharedUser.load
 
           # FIXME: 管理画面から初期化できるようになったら消す
           app_user.hatena_id ||= 'naoya'

@@ -57,11 +57,13 @@ class AccountConfigViewController < Formotion::FormController
     data = self.form.render
 
     ## この両者のユーザーを区別する必要があるのか?
-    user = ApplicationUser.new
+    user = ApplicationUser.sharedUser
     user.hatena_id = data["hatena_id"]
     user.password  = data["password"] || nil
     user.save
 
+    ## TODO
+    ## インスタンスごと入れ替えた方がいい
     @user.name = data["hatena_id"]
 
     ## この後バックグラウンドの画面を再描画しないと･･･
