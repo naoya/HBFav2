@@ -62,6 +62,7 @@ class TimelineViewController < UITableViewController
       self.user = ApplicationUser.sharedUser.to_bookmark_user
       self.feed_url = self.user.timeline_feed_url
       @bookmarks.url = self.feed_url
+      @bookmarks.update(true)
     end
   end
 
