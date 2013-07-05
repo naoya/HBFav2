@@ -56,13 +56,11 @@ class AccountConfigViewController < Formotion::FormController
   def save
     data = self.form.render
 
-    ## この両者のユーザーを区別する必要があるのか?
     user = ApplicationUser.sharedUser
     user.hatena_id = data["hatena_id"]
     user.password  = data["password"] || nil
     user.save
 
-    ## この後バックグラウンドの画面を再描画しないと･･･
     self.dismissModalViewControllerAnimated(true)
   end
 end
