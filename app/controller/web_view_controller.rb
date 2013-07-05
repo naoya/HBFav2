@@ -7,6 +7,7 @@ class WebViewController < UIViewController
     super
 
     ## Toolbar
+    self.navigationController.setToolbarHidden(false, animated:false)
     spacer = UIBarButtonItem.flexiblespace
 
     self.toolbarItems = [
@@ -55,8 +56,8 @@ class WebViewController < UIViewController
   # http://stackoverflow.com/questions/4492683/why-do-i-have-to-subtract-for-height-of-uinavigationbar-twice-to-get-uiwebview-t
   def viewWillAppear(animated)
     super
-    @webview.frame = self.view.bounds
     self.navigationController.setToolbarHidden(false, animated:false)
+    @webview.frame = self.view.bounds
   end
 
   def viewWillDisappear(animated)
