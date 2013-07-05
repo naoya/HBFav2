@@ -21,4 +21,8 @@ class ApplicationUser
     self.password  = App::Persistence['hatena_password']
     self
   end
+
+  def to_bookmark_user
+    User.new({ :name => @hatena_id })
+  end
 end

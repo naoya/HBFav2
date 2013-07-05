@@ -1,5 +1,5 @@
 class BookmarkManager
-  attr_accessor :bookmarks
+  attr_accessor :bookmarks, :url
 
   def initialize(url)
     @url = url

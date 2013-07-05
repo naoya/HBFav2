@@ -5,6 +5,7 @@ class TimelineViewController < UITableViewController
   def viewDidLoad
     super
 
+    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
     @bookmarks = BookmarkManager.new(self.feed_url)
     @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
 
@@ -50,11 +51,18 @@ class TimelineViewController < UITableViewController
 
   def dealloc
     @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
+    ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
   end
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (@bookmarks == object and keyPath == 'bookmarks')
       view.reloadData
+    end
+
+    if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.as_home == true)
+      self.user = ApplicationUser.sharedUser.to_bookmark_user
+      self.feed_url = self.user.timeline_feed_url
+      @bookmarks.url = self.feed_url
     end
   end
 
