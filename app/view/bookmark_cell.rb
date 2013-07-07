@@ -103,7 +103,7 @@ class BookmarkCell < UITableViewCell
   def fillWithBookmark(bookmark, inTableView:tableView)
     self.textLabel.text    = self.no_title ? nil : bookmark.title
     self.nameLabel.text    = bookmark.user_name
-    self.dateLabel.text    = bookmark.created_at
+    self.dateLabel.text    = bookmark.datetime.timeAgo
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
 
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage, completed:lambda do |image, error, cacheType|

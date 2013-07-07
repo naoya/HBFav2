@@ -63,6 +63,7 @@ class BookmarksViewController < UIViewController
     BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/?url=#{entry.link}") do |response|
       if response.ok?
         json = BW::JSON.parse(response.body.to_str)
+        ## FIXME: refactor with manager
         @bookmarks = json['bookmarks'].collect do |dict|
           Bookmark.new(
             {
@@ -73,7 +74,9 @@ class BookmarksViewController < UIViewController
                 :name => dict[:user]
               },
               :comment => dict[:comment],
-              :created_at => dict[:timestamp]
+              :created_at => dict[:timestamp],
+              # 2005/02/10 20:55:55 => 2005-02-10T20:55:55+09:00
+              :datetime =>  dict[:timestamp].gsub(/\//, '-').gsub(/ /, 'T') + '+09:00'
             }
           )
         end

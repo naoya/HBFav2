@@ -25,6 +25,7 @@ Motion::Project::App.setup do |app|
   app.pods do
     pod 'SDWebImage'
     pod 'PocketAPI'
+    pod 'NSDate+TimeAgo'
   end
 
   app.frameworks += ['ImageIO', 'MapKit']
