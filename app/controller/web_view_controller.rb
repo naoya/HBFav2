@@ -96,6 +96,7 @@ class WebViewController < UIViewController
       nil,
       bookmark = 'B!',
       pocket   = 'Pocket',
+      twitter  = 'Twitter',
       safari   = 'Safariで開く',
       hatena   = '公式アプリで追加',
     ]
@@ -120,6 +121,11 @@ class WebViewController < UIViewController
             end
           end
         )
+      when twitter
+        twt = TWTweetComposeViewController.new
+        twt.setInitialText(@bookmark.title)
+        twt.addURL(@bookmark.link.nsurl)
+        presentModalViewController(twt, animated:true)
       when safari
         @bookmark.link.nsurl.open
       when hatena

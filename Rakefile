@@ -28,7 +28,7 @@ Motion::Project::App.setup do |app|
     pod 'NSDate+TimeAgo'
   end
 
-  app.frameworks += ['ImageIO', 'MapKit']
+  app.frameworks += ['ImageIO', 'MapKit', 'Twitter']
 
   ## Keychain
   # app.frameworks += ['Security']
