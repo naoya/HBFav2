@@ -99,7 +99,7 @@ class PermalinkViewController < UIViewController
 
       v.when_tapped do
         v.highlighted = true
-        v.backgroundColor = '#e0e0e0'.to_color
+        v.backgroundColor = '#e5f0ff'.to_color
         WebViewController.new.tap do |c|
           c.bookmark = @bookmark
           navigationController.pushViewController(c, animated:true)
