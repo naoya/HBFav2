@@ -16,6 +16,7 @@ PODS:
     - SDWebImage/MapKit
   - SDWebImage/MapKit (3.3):
     - libwebp
+  - SVProgressHUD (0.9)
   - TUSafariActivity (1.0.0)
 
 DEPENDENCIES:
@@ -23,6 +24,7 @@ DEPENDENCIES:
   - NSDate+TimeAgo
   - PocketAPI
   - SDWebImage
+  - SVProgressHUD
   - TUSafariActivity
 
 SPEC CHECKSUMS:
@@ -31,6 +33,7 @@ SPEC CHECKSUMS:
   NSDate+TimeAgo: fe93d3042e83093ae3630bc47ae7d57f782733f6
   PocketAPI: 2ed51391e6ea7a48c707528f782f5a2cb0eab80e
   SDWebImage: 79a8bac9ccf85b269100b294f7b43684dab8bf8a
+  SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
   TUSafariActivity: bd9da588f5f9136ba445d89f8f86b6dccf4d46ba
 
 COCOAPODS: 0.20.2

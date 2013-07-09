@@ -15,12 +15,12 @@ class PocketActivity < UIActivity
   end
 
   def performActivity
+    SVProgressHUD.showWithStatus("保存中...")
     PocketAPI.sharedAPI.saveURL(@url, handler: lambda do |api, url, error|
         if error
-          App.alert(error.localizedDescription)
+          SVProgressHUD.showErrorWithStatus(error.localizedDescription)
         else
-#          @toast.done("保存しました")
-#          @toast = nil
+          SVProgressHUD.showSuccessWithStatus("保存しました")
         end
       end
     )

@@ -17,6 +17,7 @@ class AddBookmarkActivity < UIActivity
   end
 
   def performActivity
+    SVProgressHUD.showWithStatus("保存中...")
     url = @url.absoluteString.gsub(/&/, '&amp;') ## work around
 
     xml = <<"EOF"
@@ -27,7 +28,7 @@ class AddBookmarkActivity < UIActivity
 </entry>
 EOF
     ## debug
-    puts xml
+    # puts xml
 
     BW::HTTP.post(
       'http://b.hatena.ne.jp/atom/post', {
@@ -38,10 +39,15 @@ EOF
         }
       }
     ) do |response|
-      # TODO
-      puts response.status_code
-      puts response.error_message
-      puts response
+      if response.ok?
+        SVProgressHUD.showSuccessWithStatus("保存しました")
+      else
+        SVProgressHUD.showErrorWithStatus("失敗: " + response.status_code.to_s)
+      end
+
+      # puts response.status_code
+      # puts response.error_message
+      # puts response
     end
     activityDidFinish(true)
   end

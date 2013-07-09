@@ -28,6 +28,7 @@ Motion::Project::App.setup do |app|
     pod 'NSDate+TimeAgo'
     pod 'TUSafariActivity'
     pod 'Base64'
+    pod 'SVProgressHUD'
   end
 
   app.frameworks += ['ImageIO', 'MapKit']

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# NOT USED. REPLACED BY SVProgressHUD
 #
 # Example:
 # @v = ToastView.new.tap do |toast|
@@ -45,16 +46,12 @@ class ToastView < UIView
     @textLabel.text = message
     @indicator.stopAnimating
     self.fade_out(duration: 0.6, delay: 0.4) do |completed|
-      self.removeFromSuperview
+      # self.removeFromSuperview
     end
   end
 
   def layoutSubviews
     @textLabel.frame = self.bounds
     @indicator.center = [ 20 , self.frame.size.height / 2 ]
-  end
-
-  def dealloc
-    super
   end
 end

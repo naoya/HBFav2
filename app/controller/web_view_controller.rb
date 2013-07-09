@@ -110,6 +110,11 @@ class WebViewController < UIViewController
       ]
     )
     @activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo, UIActivityTypeCopyToPasteboard]
+    @activity.completionHandler = lambda do |activityType, completed|
+      if (completed)
+        puts activityType
+      end
+    end
     presentModalViewController(@activity, animated:true)
   end
 
