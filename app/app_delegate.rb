@@ -4,6 +4,14 @@ class AppDelegate
     ## initialize PocketAPI
     PocketAPI.sharedAPI.setConsumerKey("16058-73f06a0629616ad0245bbfd0")
 
+    ## Debugging PocketAPI
+    # defaults = NSUserDefaults.new
+    # data = defaults.dataForKey("PocketAPICurrentLogin")
+    # if (data)
+    #   login = NSKeyedUnarchiver.unarchiveObjectWithData(data)
+    #   App.alert(login.requestToken)
+    # end
+
     ## initialize HBFav2
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds).tap do |w|
       w.rootViewController = UINavigationController.alloc.initWithRootViewController(
@@ -27,6 +35,6 @@ class AppDelegate
     if PocketAPI.sharedAPI.handleOpenURL(url)
       return true
     end
-    return false
+    return true
   end
 end

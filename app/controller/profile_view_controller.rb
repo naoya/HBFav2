@@ -11,6 +11,7 @@ class ProfileViewController < UIViewController
     # self.view.backgroundColor = UIColor.groupTableViewBackgroundColor
     view << UITableView.alloc.initWithFrame(view.bounds, style:UITableViewStyleGrouped)
 
+    ## action は proc じゃなくて string にしてその名前のメソッド呼ぶとかにしたほうがよさそ
     @dataSource = [
       {
         :title => nil,
@@ -59,11 +60,14 @@ class ProfileViewController < UIViewController
             }
           },
           {
-            :label => "Instapaper",
+            :label => "Pocket",
             :color => '#385487'.uicolor,
             :action        => proc {
-              # TODO
-              puts "test4"
+              PocketAPI.sharedAPI.loginWithHandler(lambda do |api, error|
+                  if (error)
+                    App.alert(error.localizedDescription)
+                  end
+              end)
             }
           }
         ]
