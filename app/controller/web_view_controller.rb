@@ -91,47 +91,26 @@ class WebViewController < UIViewController
   end
 
   def on_action
-    buttons = [
-      'キャンセル',
-      nil,
-      bookmark = 'B!',
-      pocket   = 'Pocket',
-      twitter  = 'Twitter',
-      safari   = 'Safariで開く',
-      hatena   = '公式アプリで追加',
-    ]
-
-    UIActionSheet.alert(nil, buttons:buttons) do |pressed|
-      case pressed
-      when bookmark
-      when pocket
-        @toast = ToastView.new.tap do |t|
-          t.frame = [[0, 0], [200, 40]]
-          t.center = [self.view.bounds.size.width / 2, 300]
-          t.textLabel.text = "Pocketに保存中..."
-        end
-        view << @toast
-
-        PocketAPI.sharedAPI.saveURL(@bookmark.link.nsurl, handler: lambda do |api, url, error|
-            if error
-              App.alert(error.localizedDescription)
-            else
-              @toast.done("保存しました")
-              @toast = nil
-            end
-          end
-        )
-      when twitter
-        twt = TWTweetComposeViewController.new
-        twt.setInitialText(@bookmark.title)
-        twt.addURL(@bookmark.link.nsurl)
-        presentModalViewController(twt, animated:true)
-      when safari
-        @bookmark.link.nsurl.open
-      when hatena
-        "hatenabookmark:/entry/add?backurl=hbfav2:/&url=#{@bookmark.link.escape_url}&title=#{@bookmark.title.escape_url}".nsurl.open
-      end
+    @safari = TUSafariActivity.new
+    @pocket = PocketActivity.new
+    @hatena = HatenaBookmarkActivity.new
+    @add_bookmark = AddBookmarkActivity.new.tap do |activity|
+      user = ApplicationUser.sharedUser
+      activity.hatena_id = user.hatena_id
+      activity.password  = user.password
     end
+
+    @activity = UIActivityViewController.alloc.initWithActivityItems(
+      [@bookmark.title, @bookmark.link.nsurl],
+      applicationActivities:[
+        @add_bookmark,
+        @pocket,
+        @safari,
+        @hatena,
+      ]
+    )
+    @activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo, UIActivityTypeCopyToPasteboard]
+    presentModalViewController(@activity, animated:true)
   end
 
   def dealloc

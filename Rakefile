@@ -26,6 +26,8 @@ Motion::Project::App.setup do |app|
     pod 'SDWebImage'
     pod 'PocketAPI'
     pod 'NSDate+TimeAgo'
+    pod 'TUSafariActivity'
+    pod 'Base64'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Twitter']

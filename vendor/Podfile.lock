@@ -1,4 +1,5 @@
 PODS:
+  - Base64 (1.0.1)
   - libwebp (0.3.0-rc7):
     - libwebp/dec
     - libwebp/dsp
@@ -15,16 +16,21 @@ PODS:
     - SDWebImage/MapKit
   - SDWebImage/MapKit (3.3):
     - libwebp
+  - TUSafariActivity (1.0.0)
 
 DEPENDENCIES:
+  - Base64
   - NSDate+TimeAgo
   - PocketAPI
   - SDWebImage
+  - TUSafariActivity
 
 SPEC CHECKSUMS:
+  Base64: eaac9f2088ba659c5db1db960576eb0f2969ebaf
   libwebp: 40517fa1fd3716eded73b4696c45fc0b66e4b414
   NSDate+TimeAgo: fe93d3042e83093ae3630bc47ae7d57f782733f6
   PocketAPI: 2ed51391e6ea7a48c707528f782f5a2cb0eab80e
   SDWebImage: 79a8bac9ccf85b269100b294f7b43684dab8bf8a
+  TUSafariActivity: bd9da588f5f9136ba445d89f8f86b6dccf4d46ba
 
 COCOAPODS: 0.20.2

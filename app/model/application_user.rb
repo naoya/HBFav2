@@ -7,9 +7,6 @@ class ApplicationUser
     @instance
   end
 
-  def initialize
-  end
-
   def save
     App::Persistence['hatena_id'] = @hatena_id
     App::Persistence['hatena_password']  = @password
