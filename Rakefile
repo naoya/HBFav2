@@ -30,7 +30,7 @@ Motion::Project::App.setup do |app|
     pod 'Base64'
   end
 
-  app.frameworks += ['ImageIO', 'MapKit', 'Twitter']
+  app.frameworks += ['ImageIO', 'MapKit']
 
   ## Keychain
   # app.frameworks += ['Security']
