@@ -27,6 +27,6 @@ class AppDelegate
     if PocketAPI.sharedAPI.handleOpenURL(url)
       return true
     end
-    super
+    return false
   end
 end
