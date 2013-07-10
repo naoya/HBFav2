@@ -33,6 +33,10 @@ Motion::Project::App.setup do |app|
 
   app.frameworks += ['ImageIO', 'MapKit']
 
+  app.entitlements['keychain-access-groups'] = [
+    app.seed_id + '.' + app.identifier
+  ]
+
   ## Keychain
   # app.frameworks += ['Security']
   # app.vendor_project('vendor/GenericKeychain', :xcode,
