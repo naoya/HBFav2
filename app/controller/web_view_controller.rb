@@ -94,6 +94,9 @@ class WebViewController < UIViewController
     @safari = TUSafariActivity.new
     @pocket = PocketActivity.new
     @hatena = HatenaBookmarkActivity.new
+    @readability = ReadabilityActivity.new.tap do |activity|
+      activity.navigationController = self.navigationController
+    end
     @add_bookmark = AddBookmarkActivity.new.tap do |activity|
       user = ApplicationUser.sharedUser
       activity.hatena_id = user.hatena_id
@@ -106,15 +109,16 @@ class WebViewController < UIViewController
         @add_bookmark,
         @pocket,
         @safari,
+        @readability,
         @hatena,
       ]
     )
     @activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo, UIActivityTypeCopyToPasteboard]
-    @activity.completionHandler = lambda do |activityType, completed|
-      if (completed)
-        puts activityType
-      end
-    end
+    # @activity.completionHandler = lambda do |activityType, completed|
+    #   if (completed)
+    #     puts activityType
+    #   end
+    # end
     presentModalViewController(@activity, animated:true)
   end
 

@@ -27,7 +27,7 @@ Motion::Project::App.setup do |app|
     pod 'PocketAPI'
     pod 'NSDate+TimeAgo'
     pod 'TUSafariActivity'
-    # pod 'Base64'
+    pod 'Base64'
     pod 'SVProgressHUD'
   end
 
