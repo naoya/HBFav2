@@ -2,7 +2,6 @@
 class AddBookmarkActivity < UIActivity
   attr_accessor :hatena_id, :password
   include URLPerformable
-  include RmWsse
 
   def activityType
     "net.bloghackers.app.AddBookmarkActivity"
@@ -35,7 +34,7 @@ EOF
         :payload => xml,
         :headers => {
           'Accept' => 'application/x.atom+xml,application/xml,text/xml,*/*',
-          'X-WSSE' => wsse_header(self.hatena_id, self.password)
+          'X-WSSE' => RmWsse.wsse_header(self.hatena_id, self.password)
         }
       }
     ) do |response|

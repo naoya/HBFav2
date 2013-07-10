@@ -50,6 +50,10 @@ GEM
     open4 (1.3.0)
     rake (10.0.4)
     rm-digest (0.0.2)
+    rm-wsse (0.0.2)
+      cocoapods (= 0.20.2)
+      motion-cocoapods (= 1.3.2)
+      rm-digest
     sugarcube (0.20.25)
     xcodeproj (0.6.0)
       activesupport (~> 3.2.13)
@@ -63,5 +67,5 @@ DEPENDENCIES
   formotion
   motion-cocoapods
   rake
-  rm-digest
+  rm-wsse
   sugarcube
