@@ -2,8 +2,12 @@
 class TimelineViewController < UITableViewController
   attr_accessor :user, :feed_url, :as_home
 
+  include Motion::Pixate::Observer
+
   def viewDidLoad
     super
+
+    startObserving
 
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
     @bookmarks = BookmarkManager.new(self.feed_url)
@@ -26,7 +30,9 @@ class TimelineViewController < UITableViewController
     end
 
     if home?
-      self.navigationItem.rightBarButtonItem = UIBarButtonItem.bookmarks { open_profile }
+      btn = UIBarButtonItem.bookmarks { open_profile }
+      btn.styleClass = 'navigation-button'
+      self.navigationItem.rightBarButtonItem = btn
     end
 
     ## Activity Indicator for initial loading

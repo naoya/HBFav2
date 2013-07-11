@@ -1,0 +1,19 @@
+navigation-bar {
+  background-color: linear-gradient(#3072b3, #599bdc);
+  /* color: rgba(255, 255, 255, 0.6); */
+}
+
+nav-buttons {
+  /* background-color: #599bdc; */
+  background-color: linear-gradient(#3072b3, #599bdc);
+}
+
+.navigation-button {
+  /* background-color: #599bdc; */
+  background-color: linear-gradient(#3072b3, #599bdc);
+}
+
+toolbar {
+  background-color: #000;
+  opacity: 0.1;
+}

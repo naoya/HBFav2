@@ -37,6 +37,11 @@ Motion::Project::App.setup do |app|
     app.seed_id + '.' + app.identifier
   ]
 
+  ## Pixate
+  app.pixate.user = 'i.naoya@gmail.com'
+  app.pixate.key = 'EQ618-LJDLI-B8GN3-QBBU3-8M0JM-QUITT-NJRFC-U10SL-RL43M-SETVQ-0OA4D-5S24R-6SNQH-02OR8-KNK7T-R6'
+  app.pixate.framework = 'vendor/PXEngine.framework'
+
   ## Keychain
   # app.frameworks += ['Security']
   # app.vendor_project('vendor/GenericKeychain', :xcode,

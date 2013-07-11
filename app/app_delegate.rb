@@ -11,6 +11,7 @@ class AppDelegate
     #   login = NSKeyedUnarchiver.unarchiveObjectWithData(data)
     #   App.alert(login.requestToken)
     # end
+    UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
 
     ## initialize HBFav2
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds).tap do |w|

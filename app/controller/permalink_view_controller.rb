@@ -9,18 +9,18 @@ class PermalinkViewController < UIViewController
     self.view.backgroundColor = UIColor.whiteColor
 
     ## Readability Button
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
-      UIButton.custom.tap do |btn|
-        btn.frame = [[0, 0], [38, 38]]
-        btn.setImage(UIImage.imageNamed('readability-64'), forState: :normal.uicontrolstate)
-        btn.on(:touch) do
-          self.navigationController.pushViewController(
-            ReadabilityViewController.new.tap { |c| c.url = @bookmark.link },
-            animated:true
-          )
-        end
-      end
-    )
+    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+    #   UIButton.custom.tap do |btn|
+    #     btn.frame = [[0, 0], [38, 38]]
+    #     btn.setImage(UIImage.imageNamed('readability'), forState: :normal.uicontrolstate)
+    #     btn.on(:touch) do
+    #       self.navigationController.pushViewController(
+    #         ReadabilityViewController.new.tap { |c| c.url = @bookmark.link },
+    #         animated:true
+    #       )
+    #     end
+    #   end
+    # )
 
     ## iOS6 で UIColor.groupTableViewBackgroundColorがdeprecatedなので
     ## UIView ではなく UITableView を使う

@@ -4,6 +4,7 @@ resources/*.nib
 resources/*.momd
 resources/*.storyboardc
 vendor/Pods/
+vendor/bundle/
 
 ### /Users/naoya/.gitignore-boilerplates/ruby.gitignore
 
