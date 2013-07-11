@@ -7,6 +7,7 @@ class BookmarksViewController < UIViewController
     @bookmarks = []
 
     self.navigationItem.title = entry.count.to_s
+    view.backgroundColor = UIColor.whiteColor
 
     # @headerView = UIView.new.tap do |v|
     @headerView = UITableView.alloc.initWithFrame([[0, 0], [view.frame.size.width, 68]], style:UITableViewStyleGrouped).tap do |v|
@@ -53,8 +54,15 @@ class BookmarksViewController < UIViewController
       v.frame = [[0, 69], [frame_size.width, frame_size.height - 69 - 42]]
       v.dataSource = v.delegate = self
       v.scrollsToTop = true
-      view << v
+      # view << v
     end
+
+    @indicator = UIActivityIndicatorView.new.tap do |v|
+      v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
+      v.style = UIActivityIndicatorViewStyleGray
+      v.startAnimating
+    end
+    view << @indicator
 
     loadBookmarks()
   end
@@ -86,6 +94,8 @@ class BookmarksViewController < UIViewController
       else
         App.alert(response.error_message)
       end
+      @indicator.stopAnimating
+      view << @bookmarksTable
     end
   end
 
