@@ -30,19 +30,60 @@ class ReadabilityViewController < UIViewController
         self.navigationItem.title = data['title']
 
         html =<<"EOF"
+<!DOCTYPE html>
 <html>
-  <head>
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-  <style type="text/css">
-    img {
-      max-width: 100%;
-    }
-  </style>
-  </head>
-  <body>
-    <h1>#{data['title']}</h1>
-    #{data['content']}
-  </body>
+<head>
+<meta charset="utf-8">
+<title>#{data['title']}</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+<style type="text/css">
+body {
+  background-color: #fff;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+h1 {
+  font-size: 120%;
+  font-family: sans-serif;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 0;
+}
+
+p.domain {
+  color: #666;
+  font-family: serif;;
+  font-size: 80%;
+  margin-top: 10px;
+  padding-top: 0;
+}
+
+div.content {
+  margin-top: 3em;
+  font-size: 95%;
+  line-height: 180%;
+}
+</style>
+</head>
+<body>
+<h1>#{data['title']}</h1>
+<p class="domain">#{data['domain']}</p>
+<div class="content">
+#{data['content']}
+</div>
+</body>
 </html>
 EOF
         @webview.loadHTMLString(html, baseURL:nil)
