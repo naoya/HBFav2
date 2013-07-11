@@ -6,6 +6,7 @@ class TimelineViewController < UITableViewController
   def viewDidLoad
     super
 
+    ## for Pixate development
     # startObserving
 
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
@@ -14,6 +15,20 @@ class TimelineViewController < UITableViewController
 
     self.navigationItem.title ||= "HBFav"
     self.view.backgroundColor = UIColor.whiteColor
+
+    ## Navigation back button
+    # self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+    #   UIButton.custom.tap do |btn|
+    #     btn.frame = [[0, 0], [24, 24]]
+    #     btn.setImage("arrow".uiimage, forState: :normal.uicontrolstate)
+    #     btn.on(:touch) do
+    #       self.navigationController.popViewControllerAnimated(true)
+    #     end
+    #   end
+    # )
+    # self.navigationItem.hidesBackButton = true
+
+    # self.navigationItem.backBarButtonItem = UIBarButtonItem.alloc.initWithTitle("戻る", style:UIBarButtonItemStylePlain, target:nil, action:nil)
 
     ## Pull to Refresh
     self.refreshControl = UIRefreshControl.new.tap do |refresh|

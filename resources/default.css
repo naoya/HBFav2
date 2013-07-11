@@ -6,14 +6,18 @@ navigation-bar {
 nav-buttons {
   /* background-color: #599bdc; */
   background-color: linear-gradient(#3072b3, #599bdc);
+  border-radius: 5px;
 }
 
 .navigation-button {
   /* background-color: #599bdc; */
   background-color: linear-gradient(#3072b3, #599bdc);
+  border-radius: 5px;
 }
 
 toolbar {
+  /*
   background-color: #000;
   opacity: 0.1;
+  */
 }
