@@ -32,6 +32,7 @@ class TimelineViewController < UITableViewController
 
     ## Pull to Refresh
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
+      refresh.backgroundColor = '#e2e7ed'.uicolor
       refresh.on(:value_changed) do |event|
         refresh.beginRefreshing
         @bookmarks.update(true) do |res|
@@ -42,6 +43,13 @@ class TimelineViewController < UITableViewController
         end
       end
     end
+
+    ## Set RefreshControl background (work around)
+    frame = self.tableView.bounds
+    frame.origin.y = -frame.size.height
+    bgview = UIView.alloc.initWithFrame(frame)
+    bgview.backgroundColor = '#e2e7ed'.uicolor
+    self.tableView.insertSubview(bgview, atIndex: 0)
 
     if home?
       btn = UIBarButtonItem.bookmarks { open_profile }
