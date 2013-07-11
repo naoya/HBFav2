@@ -5,7 +5,6 @@ class ReadabilityViewController < UIViewController
   def viewDidLoad
     super
 
-    # self.navigationItem.title = data['title']
     self.navigationController.setToolbarHidden(true, animated:false)
 
     @webview = UIWebView.new.tap do |v|
@@ -14,18 +13,22 @@ class ReadabilityViewController < UIViewController
     end
     view << @webview
 
+    @indicator = UIActivityIndicatorView.new.tap do |v|
+      v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
+      v.style = UIActivityIndicatorViewStyleGray
+      v.startAnimating
+    end
+    view << @indicator
+
     ## Readability
     token = 'c523147005e6a6af0ec079ebb7035510b3409ee5'
     api = "https://www.readability.com/api/content/v1/parser?url=#{url}&token=#{token}"
 
-    ## debug
+    # debug
     puts api
-
-    SVProgressHUD.showWithStatus("変換中...")
 
     BW::HTTP.get(api) do |response|
       if response.ok?
-        SVProgressHUD.dismiss
         data = BW::JSON.parse(response.body.to_str)
         self.navigationItem.title = data['title']
 
@@ -88,8 +91,10 @@ div.content {
 EOF
         @webview.loadHTMLString(html, baseURL:nil)
       else
-        SVProgressHUD.showErrorWithStatus("失敗: " + response.status_code.to_s)
+        # SVProgressHUD.showErrorWithStatus("失敗: " + response.status_code.to_s)
+        App.alert("変換に失敗しました: " + response.status_code.to_s)
       end
+      @indicator.stopAnimating
     end
   end
 
