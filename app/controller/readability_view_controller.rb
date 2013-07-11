@@ -65,6 +65,18 @@ h1 {
   margin-bottom: 0;
 }
 
+h2, h3, h4 {
+  font-family: sans-serif;
+}
+
+h2 {
+  font-size: 110%;
+}
+
+h3, h4 {
+  font-size: 100%;
+}
+
 p.domain {
   color: #666;
   font-family: serif;;
