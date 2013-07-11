@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 class TimelineViewController < UITableViewController
   attr_accessor :user, :feed_url, :as_home
-
-  include Motion::Pixate::Observer
+  # include Motion::Pixate::Observer
 
   def viewDidLoad
     super
 
-    startObserving
+    # startObserving
 
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
     @bookmarks = BookmarkManager.new(self.feed_url)
