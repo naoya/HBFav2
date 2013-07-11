@@ -12,6 +12,7 @@ class TimelineViewController < UITableViewController
     self.navigationItem.title ||= "HBFav"
     self.view.backgroundColor = UIColor.whiteColor
 
+    ## Pull to Refresh
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
       refresh.on(:value_changed) do |event|
         refresh.beginRefreshing
@@ -28,18 +29,29 @@ class TimelineViewController < UITableViewController
       self.navigationItem.rightBarButtonItem = UIBarButtonItem.bookmarks { open_profile }
     end
 
-    tableView.tableFooterView = UIView.new.tap do |v|
-      v.frame = [[0, 0], [tableView.frame.size.width, 44]]
-      v.backgroundColor = '#fff'.uicolor
-      v << UIActivityIndicatorView.gray.tap do |i|
-        i.center = [v.frame.size.width / 2, v.frame.size.height / 2]
-        i.startAnimating
-      end
+    ## Activity Indicator for initial loading
+    @indicator = UIActivityIndicatorView.new.tap do |v|
+      v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
+      v.style = UIActivityIndicatorViewStyleGray
+      v.startAnimating
     end
+    view << @indicator
 
+    ## Finally, fetch latest timeline feed
     @bookmarks.update do |res|
+      @indicator.stopAnimating
+
       if not res.ok?
         App.alert(res.error_message)
+      else
+        tableView.tableFooterView = UIView.new.tap do |v|
+          v.frame = [[0, 0], [tableView.frame.size.width, 44]]
+          v.backgroundColor = '#fff'.uicolor
+          v << UIActivityIndicatorView.gray.tap do |i|
+            i.center = [v.frame.size.width / 2, v.frame.size.height / 2]
+            i.startAnimating
+          end
+        end
       end
     end
   end
@@ -66,8 +78,9 @@ class TimelineViewController < UITableViewController
     end
   end
 
+  ## 末尾付近に来たら次のフィードを読み込む
   def tableView(tableView, willDisplayCell:cell, forRowAtIndexPath:indexPath)
-    if (not @bookmarks.updating? and @bookmarks.size > 0 and indexPath.row == @bookmarks.size - 1)
+    if (not @bookmarks.updating? and @bookmarks.size > 0 and indexPath.row == @bookmarks.size - 5)
       @bookmarks.update do |res|
         if not res.ok?
           App.alert(res.error_message)
