@@ -16,27 +16,10 @@ class ReadabilityActivity < UIActivity
   end
 
   def performActivity
-    ## TODO: url escape
-    token = 'c523147005e6a6af0ec079ebb7035510b3409ee5'
-    api = "https://www.readability.com/api/content/v1/parser?url=#{@url}&token=#{token}"
-
-    SVProgressHUD.showWithStatus("変換中...")
-    BW::HTTP.get(api) do |response|
-      if response.ok?
-        SVProgressHUD.dismiss
-        data = BW::JSON.parse(response.body.to_str)
-        ReadabilityViewController.new.tap do |c|
-          c.data = data
-
-          ## debug
-          puts data
-
-          self.navigationController.pushViewController(c, animated:true)
-        end
-      else
-        SVProgressHUD.showErrorWithStatus("失敗: " + response.status_code.to_s)
-      end
-    end
+    self.navigationController.pushViewController(
+      ReadabilityViewController.new.tap { |c| c.url = @url },
+      animated:true
+    )
     activityDidFinish(true)
   end
 end

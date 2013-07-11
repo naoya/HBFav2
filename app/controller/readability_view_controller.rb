@@ -1,19 +1,35 @@
+# -*- coding: utf-8 -*-
 class ReadabilityViewController < UIViewController
-  attr_accessor :data
+  attr_accessor :url
 
   def viewDidLoad
     super
 
-    self.navigationItem.title = data['title']
+    # self.navigationItem.title = data['title']
     self.navigationController.setToolbarHidden(true, animated:false)
 
     @webview = UIWebView.new.tap do |v|
-      # v.scalesPageToFit = true
-      v.delegate = self
+      v.delegate =self
       v.frame = self.view.bounds
-      # resize = [ :width, :height ]
-      content = data['content']
-      html =<<"EOF"
+    end
+    view << @webview
+
+    ## Readability
+    token = 'c523147005e6a6af0ec079ebb7035510b3409ee5'
+    api = "https://www.readability.com/api/content/v1/parser?url=#{url}&token=#{token}"
+
+    ## debug
+    puts api
+
+    SVProgressHUD.showWithStatus("変換中...")
+
+    BW::HTTP.get(api) do |response|
+      if response.ok?
+        SVProgressHUD.dismiss
+        data = BW::JSON.parse(response.body.to_str)
+        self.navigationItem.title = data['title']
+
+        html =<<"EOF"
 <html>
   <head>
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
@@ -24,14 +40,16 @@ class ReadabilityViewController < UIViewController
   </style>
   </head>
   <body>
-#{content}
+    <h1>#{data['title']}</h1>
+    #{data['content']}
   </body>
 </html>
 EOF
-      v.loadHTMLString(html, baseURL:nil)
+        @webview.loadHTMLString(html, baseURL:nil)
+      else
+        SVProgressHUD.showErrorWithStatus("失敗: " + response.status_code.to_s)
+      end
     end
-
-    view << @webview
   end
 
   def viewWillAppear(animated)

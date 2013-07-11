@@ -6,6 +6,20 @@ class WebViewController < UIViewController
   def viewDidLoad
     super
 
+    ## Readability Button
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+      UIButton.custom.tap do |btn|
+        btn.frame = [[0, 0], [38, 38]]
+        btn.setImage(UIImage.imageNamed('readability-64'), forState: :normal.uicontrolstate)
+        btn.on(:touch) do
+          self.navigationController.pushViewController(
+            ReadabilityViewController.new.tap { |c| c.url = @bookmark.link },
+            animated:true
+          )
+        end
+      end
+    )
+
     ## Toolbar
     self.navigationController.setToolbarHidden(false, animated:false)
     spacer = UIBarButtonItem.flexiblespace
