@@ -76,9 +76,10 @@ class WebViewController < UIViewController
 
   def viewWillDisappear(animated)
     self.navigationController.setToolbarHidden(true, animated:animated)
-    if @webview.loading?
-      @webview.stopLoading
-    end
+    ## Readability を先に開くとローディングが止まっちゃうので
+    # if @webview.loading?
+    #  @webview.stopLoading
+    # end
   end
 
   def webViewDidStartLoad (webView)

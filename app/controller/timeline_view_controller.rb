@@ -84,10 +84,6 @@ class TimelineViewController < UITableViewController
     end
   end
 
-  def viewDidUnload
-    super
-  end
-
   def dealloc
     @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
     ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')

@@ -5,11 +5,15 @@ class ReadabilityViewController < UIViewController
   def viewDidLoad
     super
 
+    self.navigationController.navigationBar.translucent = true
     self.navigationController.setToolbarHidden(true, animated:false)
 
     @webview = UIWebView.new.tap do |v|
       v.delegate =self
       v.frame = self.view.bounds
+      tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_navbar')
+      tapGesture.delegate = self
+      v.addGestureRecognizer(tapGesture)
     end
     view << @webview
 
@@ -102,6 +106,7 @@ div.content {
 </html>
 EOF
         @webview.loadHTMLString(html, baseURL:self.url.nsurl)
+        self.hide_navbar
       else
         # SVProgressHUD.showErrorWithStatus("失敗: " + response.status_code.to_s)
         App.alert("変換に失敗しました: " + response.status_code.to_s)
@@ -113,5 +118,25 @@ EOF
   def viewWillAppear(animated)
     super
     @webview.frame = self.view.bounds
+  end
+
+  def viewWillDisappear(animated)
+    self.navigationController.navigationBar.translucent = false
+  end
+
+  def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
+    true
+  end
+
+  def toggle_navbar
+    self.navigationController.isNavigationBarHidden ? self.show_navbar : self.hide_navbar
+  end
+
+  def hide_navbar
+    self.navigationController.setNavigationBarHidden(true, animated:true)
+  end
+
+  def show_navbar
+    self.navigationController.setNavigationBarHidden(false, animated:true)
   end
 end
