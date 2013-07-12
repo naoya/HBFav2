@@ -9,13 +9,19 @@ class ApplicationUser
 
   def save
     App::Persistence['hatena_id'] = @hatena_id
-    App::Persistence['hatena_password']  = @password
+    if @hatena_id
+      if @password
+        SSKeychain.setPassword(@password, forService:'HBFav2', account: @hatena_id)
+      else
+        SSKeychain.deletePasswordForService('HBFav2', account: @hatena_id)
+      end
+    end
     self
   end
 
   def load
     self.hatena_id = App::Persistence['hatena_id']
-    self.password  = App::Persistence['hatena_password']
+    self.password = SSKeychain.passwordForService('HBFav2', account: self.hatena_id)
     self
   end
 

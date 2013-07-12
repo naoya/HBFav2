@@ -29,9 +29,10 @@ Motion::Project::App.setup do |app|
     pod 'TUSafariActivity'
     pod 'Base64'
     pod 'SVProgressHUD'
+    pod 'SSKeychain'
   end
 
-  app.frameworks += ['ImageIO', 'MapKit']
+  app.frameworks += ['ImageIO', 'MapKit', 'Security']
 
   app.entitlements['keychain-access-groups'] = [
     app.seed_id + '.' + app.identifier
@@ -42,14 +43,7 @@ Motion::Project::App.setup do |app|
   app.pixate.key = 'EQ618-LJDLI-B8GN3-QBBU3-8M0JM-QUITT-NJRFC-U10SL-RL43M-SETVQ-0OA4D-5S24R-6SNQH-02OR8-KNK7T-R6'
   app.pixate.framework = 'vendor/PXEngine.framework'
 
-  ## Keychain
-  # app.frameworks += ['Security']
-  # app.vendor_project('vendor/GenericKeychain', :xcode,
-  #   :headers_dir => 'GenericKeychain')
-  # app.entitlements['keychain-access-groups'] = [
-  #   app.seed_id + '.' + app.identifier
-  # ]
-
+  ## Reveal
   # app.vendor_project(
   #   'vendor/Reveal.framework',
   #   :static,
