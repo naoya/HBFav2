@@ -17,7 +17,7 @@ class ReadabilityActivity < UIActivity
 
   def performActivity
     self.navigationController.pushViewController(
-      ReadabilityViewController.new.tap { |c| c.url = @url },
+      ReadabilityViewController.new.tap { |c| c.url = @url.absoluteString },
       animated:true
     )
     activityDidFinish(true)
