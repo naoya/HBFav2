@@ -105,8 +105,8 @@ div.content {
 </body>
 </html>
 EOF
-        self.hide_navbar
         @webview.loadHTMLString(html, baseURL:self.url.nsurl)
+        self.hide_navbar
       else
         # SVProgressHUD.showErrorWithStatus("失敗: " + response.status_code.to_s)
         App.alert("変換に失敗しました: " + response.status_code.to_s)
