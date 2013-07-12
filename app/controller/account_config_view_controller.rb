@@ -4,6 +4,7 @@ class AccountConfigViewController < Formotion::FormController
 
   def init
     if self
+      user = ApplicationUser.sharedUser
       form = Formotion::Form.new({
         sections: [{
               title: "はてなID",
@@ -15,13 +16,14 @@ class AccountConfigViewController < Formotion::FormController
                   placeholder: '必須',
                   auto_correction: :no,
                   auto_capitalization: :none,
-                  value: 'naoya' # FIXME
+                  value: user.configured? ? user.hatena_id : nil
                 },
                 {
                   title: "パスワード",
                   key: "password",
                   type: :string,
-                  secure: true
+                  secure: true,
+                  value: user.configured? ? user.password : nil
                 }
               ]
             }]

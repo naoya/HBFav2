@@ -19,6 +19,10 @@ class ApplicationUser
     self
   end
 
+  def configured?
+    self.hatena_id ? true : false
+  end
+
   def to_bookmark_user
     User.new({ :name => @hatena_id })
   end
