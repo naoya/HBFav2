@@ -11,6 +11,8 @@ Motion::Project::App.setup do |app|
   app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'
   app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
 
+  app.interface_orientations = [:portrait]
+
   app.info_plist['CFBundleURLTypes'] = [
     {
       'CFBundleURLName' => 'net.bloghackers.app',
