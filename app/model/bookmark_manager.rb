@@ -1,10 +1,11 @@
 class BookmarkManager
-  attr_accessor :bookmarks, :url
+  attr_accessor :bookmarks, :url, :paging_method
 
   def initialize(url)
     @url = url
     @bookmarks = []
     @updating = nil
+    @paging_method = 'offset'
   end
 
   def size
@@ -26,8 +27,17 @@ class BookmarkManager
 
   def update(init = false, &cb)
     @updating = true
-    offset = init ? 0 : self.size
-    url = @url + "?of=#{offset}"
+
+    ## offset or until
+    url = @url
+    if not init and self.size != 0
+      if paging_method == 'until'
+        epoch = @bookmarks.last.datetime.timeIntervalSince1970.to_i
+        url += "?until=#{epoch}"
+      else
+        url += "?of=#{self.size}"
+      end
+    end
 
     # debug
     puts url

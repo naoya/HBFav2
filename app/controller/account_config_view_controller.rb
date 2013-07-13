@@ -7,10 +7,10 @@ class AccountConfigViewController < Formotion::FormController
       user = ApplicationUser.sharedUser
       form = Formotion::Form.new({
         sections: [{
-              title: "はてなID",
+              title: "はてなアカウント",
               rows: [
                 {
-                  title: "ID",
+                  title: "はてなID",
                   key: "hatena_id",
                   type: :string,
                   placeholder: '必須',
@@ -25,6 +25,16 @@ class AccountConfigViewController < Formotion::FormController
                   secure: true,
                   value: user.configured? ? user.password : nil
                 }
+              ]
+            }, {
+              title: "設定",
+              rows: [
+                {
+                  title: "新ユーザーページ",
+                  key: 'use_timeline',
+                  type: 'switch',
+                  value: user.use_timeline?
+                },
               ]
             }]
       })
@@ -61,6 +71,7 @@ class AccountConfigViewController < Formotion::FormController
     user = ApplicationUser.sharedUser
     user.hatena_id = data["hatena_id"]
     user.password  = data["password"] || nil
+    user.use_timeline = data["use_timeline"]
     user.save
 
     self.dismissModalViewControllerAnimated(true)

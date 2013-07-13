@@ -8,10 +8,14 @@ class TimelineViewController < UITableViewController
 
     ## for Pixate development
     # startObserving
+    # App.alert(user.use_timeline? ? "true" : "false")
 
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
     @bookmarks = BookmarkManager.new(self.feed_url)
     @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
+    if (user and user.use_timeline?)
+      @bookmarks.paging_method = 'until'
+    end
 
     self.navigationItem.title ||= "HBFav"
     self.view.backgroundColor = UIColor.whiteColor
