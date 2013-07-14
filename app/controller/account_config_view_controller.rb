@@ -1,6 +1,16 @@
 # -*- coding: utf-8 -*-
+module Formotion
+  module RowType
+    class AsciiRow <  StringRow
+      def keyboardType
+        UIKeyboardTypeASCIICapable
+      end
+    end
+  end
+end
+
 class AccountConfigViewController < Formotion::FormController
-  attr_accessor :user
+  attr_accessor :allow_cancellation
 
   def init
     if self
@@ -12,7 +22,7 @@ class AccountConfigViewController < Formotion::FormController
                 {
                   title: "はてなID",
                   key: "hatena_id",
-                  type: :string,
+                  type: :ascii,
                   placeholder: '必須',
                   auto_correction: :no,
                   auto_capitalization: :none,
@@ -54,11 +64,13 @@ class AccountConfigViewController < Formotion::FormController
       action:'save'
     )
 
-    self.navigationItem.leftBarButtonItem  = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-      UIBarButtonSystemItemCancel,
-      target:self,
-      action:'cancel'
-    )
+    if self.allow_cancellation
+      self.navigationItem.leftBarButtonItem  = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+        UIBarButtonSystemItemCancel,
+        target:self,
+        action:'cancel'
+      )
+    end
   end
 
   def cancel
@@ -67,13 +79,15 @@ class AccountConfigViewController < Formotion::FormController
 
   def save
     data = self.form.render
-
-    user = ApplicationUser.sharedUser
-    user.hatena_id = data["hatena_id"]
-    user.password  = data["password"] || nil
-    user.use_timeline = data["use_timeline"]
-    user.save
-
-    self.dismissModalViewControllerAnimated(true)
+    if data["hatena_id"].blank?
+      App.alert("はてなIDは必須です")
+    else
+      user = ApplicationUser.sharedUser
+      user.hatena_id = data["hatena_id"]
+      user.password  = data["password"] || nil
+      user.use_timeline = data["use_timeline"]
+      user.save
+      self.dismissModalViewControllerAnimated(true)
+    end
   end
 end

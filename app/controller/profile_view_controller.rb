@@ -52,10 +52,11 @@ class ProfileViewController < UIViewController
             :color => '#385487'.uicolor,
             :action        => proc {
               AccountConfigViewController.new.tap do |c|
-                c.user = @user
-                diag = UINavigationController.alloc.initWithRootViewController(c)
-                # diag = UINavigationController.alloc.initWithRootViewController(@form_controller)
-                self.presentModalViewController(diag, animated:true)
+                c.allow_cancellation = true
+                self.presentModalViewController(
+                  UINavigationController.alloc.initWithRootViewController(c),
+                  animated:true
+                )
               end
             }
           },

@@ -28,7 +28,7 @@ class ApplicationUser
   end
 
   def configured?
-    self.hatena_id ? true : false
+    self.hatena_id.present?
   end
 
   def use_timeline?

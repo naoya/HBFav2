@@ -69,21 +69,38 @@ class TimelineViewController < UITableViewController
     end
     view << @indicator
 
-    ## Finally, fetch latest timeline feed
+    ## Loading indicator for Paging
+    tableView.tableFooterView = UIView.new.tap do |v|
+      v.frame = [[0, 0], [tableView.frame.size.width, 44]]
+      v.backgroundColor = '#fff'.uicolor
+      v.hide
+      v << UIActivityIndicatorView.gray.tap do |i|
+        i.center = [v.frame.size.width / 2, v.frame.size.height / 2]
+        i.startAnimating
+      end
+    end
+
+    if ApplicationUser.sharedUser.configured?
+      ## Finally, fetch latest timeline feed
+      initialize_bookmarks
+    else
+      AccountConfigViewController.new.tap do |c|
+        c.allow_cancellation = false
+        self.presentModalViewController(
+          UINavigationController.alloc.initWithRootViewController(c),
+          animated:true
+        )
+      end
+    end
+  end
+
+  def initialize_bookmarks
     @bookmarks.update do |res|
       @indicator.stopAnimating
-
       if not res.ok?
         App.alert(res.error_message)
       else
-        tableView.tableFooterView = UIView.new.tap do |v|
-          v.frame = [[0, 0], [tableView.frame.size.width, 44]]
-          v.backgroundColor = '#fff'.uicolor
-          v << UIActivityIndicatorView.gray.tap do |i|
-            i.center = [v.frame.size.width / 2, v.frame.size.height / 2]
-            i.startAnimating
-          end
-        end
+        tableView.tableFooterView.show
       end
     end
   end
@@ -102,7 +119,7 @@ class TimelineViewController < UITableViewController
       self.user = ApplicationUser.sharedUser.to_bookmark_user
       self.feed_url = self.user.timeline_feed_url
       @bookmarks.url = self.feed_url
-      @bookmarks.update(true)
+      initialize_bookmarks
     end
   end
 
@@ -119,7 +136,6 @@ class TimelineViewController < UITableViewController
 
   def viewWillAppear(animated)
     view.deselectRowAtIndexPath(view.indexPathForSelectedRow, animated:animated)
- 
     ## 相対時刻を最新化するため reload
     view.reloadData
     super
