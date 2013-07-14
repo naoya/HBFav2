@@ -7,6 +7,13 @@ class ReadabilityViewController < UIViewController
 
     self.navigationController.navigationBar.translucent = true
     self.navigationController.setToolbarHidden(true, animated:false)
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+      UIButton.custom.tap do |btn|
+        btn.frame = [[0, 0], [24, 24]]
+        btn.setImage(UIImage.imageNamed('house'), forState: :normal.uicontrolstate)
+        btn.on(:touch) { self.navigationController.popToRootViewControllerAnimated(true) }
+      end
+    )
 
     @webview = UIWebView.new.tap do |v|
       v.delegate =self
@@ -34,7 +41,7 @@ class ReadabilityViewController < UIViewController
     BW::HTTP.get(api) do |response|
       if response.ok?
         data = BW::JSON.parse(response.body.to_str)
-        self.navigationItem.title = data['title']
+        # self.navigationItem.title = data['title']
 
         html =<<"EOF"
 <!DOCTYPE html>
@@ -133,7 +140,9 @@ EOF
   end
 
   def hide_navbar
-    self.navigationController.setNavigationBarHidden(true, animated:true)
+    if self.navigationController.present? # タイミングによっては nil のときがある
+      self.navigationController.setNavigationBarHidden(true, animated:true)
+    end
   end
 
   def show_navbar
