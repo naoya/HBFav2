@@ -26,6 +26,10 @@ class Bookmark
     @datetime = self.class.date_formatter.dateFromString(dict[:datetime])
   end
 
+  def id
+    @id ||= self.user_name + "-" + self.datetime.timeIntervalSince1970.to_i.to_s
+  end
+
   class Count
     attr_reader :count
 
