@@ -57,13 +57,17 @@ class AccountConfigViewController < Formotion::FormController
 
     self.navigationItem.title = "設定"
     self.view.backgroundColor = UIColor.groupTableViewBackgroundColor
+  end
 
+  def viewWillAppear(animated)
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
       UIBarButtonSystemItemSave,
       target:self,
       action:'save'
     )
-
+    
+    ## BUG: closure から起動しているせいか viewDidLoad では
+    ## allow_cancellation == true にならないので viewWillAppear で
     if self.allow_cancellation
       self.navigationItem.leftBarButtonItem  = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
         UIBarButtonSystemItemCancel,
@@ -71,6 +75,7 @@ class AccountConfigViewController < Formotion::FormController
         action:'cancel'
       )
     end
+    super
   end
 
   def cancel

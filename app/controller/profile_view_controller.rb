@@ -51,13 +51,12 @@ class ProfileViewController < UIViewController
             :label => "はてなID",
             :color => '#385487'.uicolor,
             :action        => proc {
-              AccountConfigViewController.new.tap do |c|
-                c.allow_cancellation = true
-                self.presentModalViewController(
-                  UINavigationController.alloc.initWithRootViewController(c),
-                  animated:true
-                )
-              end
+              self.presentModalViewController(
+                UINavigationController.alloc.initWithRootViewController(
+                  AccountConfigViewController.new.tap { |c| c.allow_cancellation = true }
+                ),
+                animated:true
+              )
             }
           },
           {
