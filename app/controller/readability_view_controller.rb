@@ -8,6 +8,7 @@ class ReadabilityViewController < UIViewController
 
     self.initialize_toolbar
 
+    self.wantsFullScreenLayout = true
     self.navigationController.navigationBar.translucent = true
     self.navigationController.toolbar.translucent = true
 
@@ -147,19 +148,33 @@ EOF
   end
 
   def toggle_bars
+    self.toggle_statbar
     self.toggle_navbar
     self.toggle_toolbar
   end
 
   def hide_bars
-    # UIApplication.sharedApplication.setStatusBarHidden(true, withAnimation:true)
+    self.hide_statbar
     self.hide_navbar
     self.hide_toolbar
   end
 
   def show_bars
+    self.show_statbar
     self.show_navbar
     self.show_toolbar
+  end
+
+  def toggle_statbar
+    UIApplication.sharedApplication.isStatusBarHidden ? self.show_statbar : self.hide_statbar
+  end
+
+  def hide_statbar
+    UIApplication.sharedApplication.setStatusBarHidden(true, withAnimation:true)
+  end
+
+  def show_statbar
+    UIApplication.sharedApplication.setStatusBarHidden(false, withAnimation:true)
   end
 
   def toggle_navbar
