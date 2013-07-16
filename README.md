@@ -14,9 +14,14 @@ HBFav2 - はてなブックマークお気に入りリーダー
 --------------------
 
 <img src="https://dl.dropboxusercontent.com/u/2586384/image/HBFav2/01.png" width="320" />
+
 <img src="https://dl.dropboxusercontent.com/u/2586384/image/HBFav2/02.png" width="320" />
+
 <img src="https://dl.dropboxusercontent.com/u/2586384/image/HBFav2/05.png" width="320" />
+
 <img src="https://dl.dropboxusercontent.com/u/2586384/image/HBFav2/03.png" width="320" />
+
 <img src="https://dl.dropboxusercontent.com/u/2586384/image/HBFav2/04.png" width="320" />
+
 <img src="https://dl.dropboxusercontent.com/u/2586384/image/HBFav2/06.png" width="320" />
 
