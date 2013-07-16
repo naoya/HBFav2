@@ -75,7 +75,7 @@ class BookmarksViewController < UIViewController
   end
 
   def loadBookmarks
-    BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/?url=#{entry.link}") do |response|
+    BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: entry.link}}) do |response|
       if response.ok?
         json = BW::JSON.parse(response.body.to_str)
         ## FIXME: refactor with manager
