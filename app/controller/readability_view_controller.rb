@@ -38,14 +38,16 @@ class ReadabilityViewController < UIViewController
 
     ## Readability
     token = 'c523147005e6a6af0ec079ebb7035510b3409ee5'
-    api = "https://www.readability.com/api/content/v1/parser?url=#{@bookmark.link}&token=#{token}"
+    api = "https://www.readability.com/api/content/v1/parser"
 
     # debug
     puts api
 
-    BW::HTTP.get(api) do |response|
+    BW::HTTP.get(api, {payload: {url: @bookmark.link, token: token}}) do |response|
       if response.ok?
         data = BW::JSON.parse(response.body.to_str)
+
+        ## 冗長なのでオフ
         # self.navigationItem.title = data['title']
 
         html =<<"EOF"
