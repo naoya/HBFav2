@@ -29,7 +29,7 @@ class ReadabilityViewController < UIViewController
     view << @webview
 
     @indicator = UIActivityIndicatorView.new.tap do |v|
-      v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
+      v.center = [view.frame.size.width / 2, view.frame.size.height / 2]
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating
     end
