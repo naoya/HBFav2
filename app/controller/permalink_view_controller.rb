@@ -56,6 +56,13 @@ class PermalinkViewController < UIViewController
       @headerView << v
     end
 
+    @headerView << UIImageView.new.tap do |v|
+      v.image = UIImage.imageNamed('disc2.png')
+      w = @headerView.bounds.size.width
+      h = @headerView.bounds.size.height
+      v.frame = [[w - 20, (h / 2) - 8], [12, 17]]
+    end
+
     @border = UIView.new.tap do |v|
       v.frame = [[0, 68], [view.frame.size.width, 1]]
       v.backgroundColor = '#ababab'.uicolor

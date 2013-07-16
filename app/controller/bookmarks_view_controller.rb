@@ -22,6 +22,13 @@ class BookmarksViewController < UIViewController
       end
     end
 
+    @headerView << UIImageView.new.tap do |v|
+      v.image = UIImage.imageNamed('disc2.png')
+      w = @headerView.bounds.size.width
+      h = @headerView.bounds.size.height
+      v.frame = [[w - 20, (h / 2) - 8], [12, 17]]
+    end
+
     @faviconView = UIImageView.new.tap do |v|
       v.frame = [[5, 5 + 2], [14, 14]]
       v.image = entry.favicon
@@ -30,7 +37,7 @@ class BookmarksViewController < UIViewController
     end
 
     @titleLabel = UILabel.new.tap do |v|
-      constrain = CGSize.new(view.frame.size.width - 19 - 10, 68 - 10)
+      constrain = CGSize.new(view.frame.size.width - 19 - 10 - 18, 68 - 10) # 18 ... disc.png の分の幅
       size = entry.title.sizeWithFont(UIFont.boldSystemFontOfSize(13), constrainedToSize:constrain, lineBreakMode:UILineBreakModeCharacterWrap)
       v.frame = [[5 + 19, 5], size]
       v.numberOfLines = 0
