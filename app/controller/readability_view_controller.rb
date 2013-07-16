@@ -12,13 +12,13 @@ class ReadabilityViewController < UIViewController
     self.navigationController.navigationBar.translucent = true
     self.navigationController.toolbar.translucent = true
 
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
-      UIButton.custom.tap do |btn|
-        btn.frame = [[0, 0], [24, 24]]
-        btn.setImage(UIImage.imageNamed('house'), forState: :normal.uicontrolstate)
-        btn.on(:touch) { self.navigationController.popToRootViewControllerAnimated(true) }
-      end
-    )
+    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+    #   UIButton.custom.tap do |btn|
+    #     btn.frame = [[0, 0], [24, 24]]
+    #     btn.setImage(UIImage.imageNamed('house'), forState: :normal.uicontrolstate)
+    #     btn.on(:touch) { self.navigationController.popToRootViewControllerAnimated(true) }
+    #   end
+    # )
 
     @webview = UIWebView.new.tap do |v|
       v.delegate =self
