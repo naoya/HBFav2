@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 class ReadabilityViewController < UIViewController
-  attr_accessor :url
+  attr_accessor :bookmark
+  include BrowserControl
 
   def viewDidLoad
     super
 
+    self.initialize_toolbar
+
     self.navigationController.navigationBar.translucent = true
-    self.navigationController.setToolbarHidden(true, animated:false)
+    self.navigationController.toolbar.translucent = true
+
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
       UIButton.custom.tap do |btn|
         btn.frame = [[0, 0], [24, 24]]
@@ -18,7 +22,7 @@ class ReadabilityViewController < UIViewController
     @webview = UIWebView.new.tap do |v|
       v.delegate =self
       v.frame = self.view.bounds
-      tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_navbar')
+      tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_bars')
       tapGesture.delegate = self
       v.addGestureRecognizer(tapGesture)
     end
@@ -33,7 +37,7 @@ class ReadabilityViewController < UIViewController
 
     ## Readability
     token = 'c523147005e6a6af0ec079ebb7035510b3409ee5'
-    api = "https://www.readability.com/api/content/v1/parser?url=#{url}&token=#{token}"
+    api = "https://www.readability.com/api/content/v1/parser?url=#{@bookmark.link}&token=#{token}"
 
     # debug
     puts api
@@ -112,8 +116,8 @@ div.content {
 </body>
 </html>
 EOF
-        @webview.loadHTMLString(html, baseURL:self.url.nsurl)
-        self.hide_navbar
+        @webview.loadHTMLString(html, baseURL:self.bookmark.link.nsurl)
+        self.hide_bars
       else
         # SVProgressHUD.showErrorWithStatus("失敗: " + response.status_code.to_s)
         App.alert("変換に失敗しました: " + response.status_code.to_s)
@@ -124,15 +128,38 @@ EOF
 
   def viewWillAppear(animated)
     super
+    self.navigationController.setToolbarHidden(false, animated:false)
+    self.navigationController.navigationBar.translucent = true
+    self.navigationController.toolbar.translucent = true
     @webview.frame = self.view.bounds
   end
 
   def viewWillDisappear(animated)
+    super
     self.navigationController.navigationBar.translucent = false
+    self.navigationController.toolbar.translucent = false
+    self.navigationController.setToolbarHidden(true, animated:animated)
+    self.show_bars
   end
 
   def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
     true
+  end
+
+  def toggle_bars
+    self.toggle_navbar
+    self.toggle_toolbar
+  end
+
+  def hide_bars
+    # UIApplication.sharedApplication.setStatusBarHidden(true, withAnimation:true)
+    self.hide_navbar
+    self.hide_toolbar
+  end
+
+  def show_bars
+    self.show_navbar
+    self.show_toolbar
   end
 
   def toggle_navbar
@@ -144,13 +171,27 @@ EOF
 #    if self.navigationController.present? # タイミングによっては nil のときがある
 #      self.navigationController.setNavigationBarHidden(true, animated:true)
     #    end
-    self.navigationController.navigationBar.fade_out(duration: 0.6)
+    self.navigationController.navigationBar.fade_out(duration: 0.5)
     @navbar_hidden = true
   end
 
   def show_navbar
-    self.navigationController.navigationBar.fade_in(duration: 0.6)
+    self.navigationController.navigationBar.fade_in(duration: 0.5)
     @navbar_hidden = false
 #    self.navigationController.setNavigationBarHidden(false, animated:true)
+  end
+
+  def toggle_toolbar
+    @toolbar_hidden ? self.show_toolbar : self.hide_toolbar
+  end
+
+  def hide_toolbar
+    self.navigationController.toolbar.fade_out(duration: 0.5)
+    @toolbar_hidden = true
+  end
+
+  def show_toolbar
+    self.navigationController.toolbar.fade_in(duration: 0.5)
+    @toolbar_hidden = false
   end
 end
