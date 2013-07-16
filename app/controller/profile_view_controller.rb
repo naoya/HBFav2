@@ -48,7 +48,7 @@ class ProfileViewController < UIViewController
         :title => "設定",
         :rows  => [
           {
-            :label => "はてなID",
+            :label => "はてなアカウント",
             :color => '#385487'.uicolor,
             :action        => proc {
               self.presentModalViewController(
@@ -59,17 +59,17 @@ class ProfileViewController < UIViewController
               )
             }
           },
-          {
-            :label => "Pocket",
-            :color => '#385487'.uicolor,
-            :action        => proc {
-              PocketAPI.sharedAPI.loginWithHandler(lambda do |api, error|
-                  if (error)
-                    App.alert(error.localizedDescription)
-                  end
-              end)
-            }
-          }
+          # {
+          #   :label => "Pocket",
+          #   :color => '#385487'.uicolor,
+          #   :action        => proc {
+          #     PocketAPI.sharedAPI.loginWithHandler(lambda do |api, error|
+          #         if (error)
+          #           App.alert(error.localizedDescription)
+          #         end
+          #     end)
+          #   }
+          # }
         ]
       }
     ]
