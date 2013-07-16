@@ -1,17 +1,19 @@
 ## some properties required: @webview, @indicator, @bookmark
 ## initilize_toolbar must be called at viewDidLoad
 module BrowserControl
-  def webView(webView, shouldStartLoadWithRequest:request, navigationType:navigationType)
-    @backButton.enabled    = webView.canGoBack
-    @forwardButton.enabled = webView.canGoForward
-    return true
-  end
+  # def webView(webView, shouldStartLoadWithRequest:request, navigationType:navigationType)
+  #   @backButton.enabled    = webView.canGoBack
+  #   @forwardButton.enabled = webView.canGoForward
+  #   return true
+  # end
 
   def webViewDidStartLoad (webView)
     App.shared.networkActivityIndicatorVisible = true
   end
 
   def webViewDidFinishLoad (webView)
+    @backButton.enabled    = webView.canGoBack
+    @forwardButton.enabled = webView.canGoForward
     App.shared.networkActivityIndicatorVisible = false
     @indicator.stopAnimating
   end
