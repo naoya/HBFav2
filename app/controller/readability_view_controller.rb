@@ -136,16 +136,21 @@ EOF
   end
 
   def toggle_navbar
-    self.navigationController.isNavigationBarHidden ? self.show_navbar : self.hide_navbar
+    #    self.navigationController.isNavigationBarHidden ? self.show_navbar : self.hide_navbar
+    @navbar_hidden ? self.show_navbar : self.hide_navbar
   end
 
   def hide_navbar
-    if self.navigationController.present? # タイミングによっては nil のときがある
-      self.navigationController.setNavigationBarHidden(true, animated:true)
-    end
+#    if self.navigationController.present? # タイミングによっては nil のときがある
+#      self.navigationController.setNavigationBarHidden(true, animated:true)
+    #    end
+    self.navigationController.navigationBar.fade_out(duration: 0.6)
+    @navbar_hidden = true
   end
 
   def show_navbar
-    self.navigationController.setNavigationBarHidden(false, animated:true)
+    self.navigationController.navigationBar.fade_in(duration: 0.6)
+    @navbar_hidden = false
+#    self.navigationController.setNavigationBarHidden(false, animated:true)
   end
 end
