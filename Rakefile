@@ -35,6 +35,7 @@ Motion::Project::App.setup do |app|
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security']
+  app.icons = ["default_app_logo.png", "default_app_logo@2x.png"]
 
   app.entitlements['keychain-access-groups'] = [
     app.seed_id + '.' + app.identifier
