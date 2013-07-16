@@ -95,11 +95,12 @@ class TimelineViewController < UITableViewController
   end
 
   def initialize_bookmarks
-    @bookmarks.update do |res|
+    @bookmarks.update(true) do |res|
       @indicator.stopAnimating
       if not res.ok?
         App.alert(res.error_message)
       else
+        tableView.reloadData
         tableView.tableFooterView.show
       end
     end
