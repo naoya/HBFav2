@@ -63,7 +63,8 @@ class BookmarkCell < UITableViewCell
       self.textLabel.tap do |v|
         v.numberOfLines = 0
         v.font = UIFont.systemFontOfSize(16)
-        v.textColor = '#3B5998'.to_color
+        v.textColor = '#3B5998'.uicolor
+        # v.backgroundColor = '#fff'.uicolor
       end
 
       self.imageView.layer.tap do |l|
@@ -74,6 +75,7 @@ class BookmarkCell < UITableViewCell
       @nameLabel = UILabel.new.tap do |v|
         v.frame = CGRectZero
         v.font  = UIFont.boldSystemFontOfSize(16)
+        v.backgroundColor = '#fff'.uicolor
         self.contentView << v
       end
 
@@ -82,18 +84,21 @@ class BookmarkCell < UITableViewCell
         v.font = UIFont.systemFontOfSize(16)
         v.frame = CGRectZero
         v.text  = nil
+        v.backgroundColor = '#fff'.uicolor
         self.contentView << v
       end
 
       @dateLabel = UILabel.new.tap do |v|
         v.frame = CGRectZero
         v.font  = UIFont.systemFontOfSize(14)
-        v.textColor = '#999'.to_color
+        v.textColor = '#999'.uicolor
+        v.backgroundColor = '#fff'.uicolor
         self.contentView << v
       end
 
       @faviconView = UIImageView.new.tap do |v|
         v.frame = CGRectZero
+        v.backgroundColor = '#fff'.uicolor
         self.contentView << v
       end
     end
