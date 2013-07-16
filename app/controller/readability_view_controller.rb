@@ -65,6 +65,7 @@ body {
   margin-right: auto;
   padding-top: 20px;
   padding-bottom: 20px;
+  word-wrap: break-word;
 }
 
 a {
@@ -107,6 +108,11 @@ div.content {
   margin-top: 3em;
   font-size: 95%;
   line-height: 180%;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 </style>
 </head>
