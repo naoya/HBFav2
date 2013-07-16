@@ -183,16 +183,17 @@ EOF
   end
 
   def hide_navbar
-#    if self.navigationController.present? # タイミングによっては nil のときがある
-#      self.navigationController.setNavigationBarHidden(true, animated:true)
-    #    end
-    self.navigationController.navigationBar.fade_out(duration: 0.5)
-    @navbar_hidden = true
+    if self.navigationController.present? # タイミングによっては nil のときがある
+      self.navigationController.navigationBar.fade_out(duration: 0.5)
+      @navbar_hidden = true
+    end
   end
 
   def show_navbar
-    self.navigationController.navigationBar.fade_in(duration: 0.5)
-    @navbar_hidden = false
+    if self.navigationController.present?
+      self.navigationController.navigationBar.fade_in(duration: 0.5)
+      @navbar_hidden = false
+    end
 #    self.navigationController.setNavigationBarHidden(false, animated:true)
   end
 
@@ -201,12 +202,16 @@ EOF
   end
 
   def hide_toolbar
-    self.navigationController.toolbar.fade_out(duration: 0.5)
-    @toolbar_hidden = true
+    if self.navigationController.present?
+      self.navigationController.toolbar.fade_out(duration: 0.5)
+      @toolbar_hidden = true
+    end
   end
 
   def show_toolbar
-    self.navigationController.toolbar.fade_in(duration: 0.5)
-    @toolbar_hidden = false
+    if self.navigationController.present?
+      self.navigationController.toolbar.fade_in(duration: 0.5)
+      @toolbar_hidden = false
+    end
   end
 end
