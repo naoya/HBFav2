@@ -30,7 +30,15 @@ class WebViewController < UIViewController
     self.initialize_toolbar
 
     ## Title
-    self.navigationItem.title = @bookmark.title
+    self.navigationItem.titleView = UILabel.new.tap do |label|
+      label.frame = [[0, 0], [400, 44]]
+      label.font = UIFont.boldSystemFontOfSize(14.0)
+      label.backgroundColor = UIColor.clearColor
+      label.shadowColor = UIColor.colorWithWhite(0.0, alpha: 0.5)
+      label.textAlignment = UITextAlignmentCenter
+      label.textColor = UIColor.whiteColor
+      label.text = @bookmark.title
+    end
 
     ## WebView
     @webview = UIWebView.new.tap do |v|

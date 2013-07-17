@@ -5,13 +5,22 @@ class ReadabilityViewController < UIViewController
   def viewDidLoad
     super
 
+    self.navigationItem.titleView = UILabel.new.tap do |label|
+      label.frame = [[0, 0], [400, 44]]
+      label.font = UIFont.boldSystemFontOfSize(14.0)
+      label.backgroundColor = UIColor.clearColor
+      label.shadowColor = UIColor.colorWithWhite(0.0, alpha: 0.5)
+      label.textAlignment = UITextAlignmentCenter
+      label.textColor = UIColor.whiteColor
+      label.text = @bookmark.title
+    end
+
     # self.initialize_toolbar
     self.view.backgroundColor = '#fff'.uicolor
 
     self.wantsFullScreenLayout = true
     self.navigationController.navigationBar.translucent = true
     # self.navigationController.toolbar.translucent = true
-    self.navigationItem.title = @bookmark.title
     self.navigationItem.leftBarButtonItem  =
       UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
 
