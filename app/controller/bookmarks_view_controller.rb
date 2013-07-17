@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 class BookmarksViewController < UITableViewController
   attr_accessor :entry
-  include SugarCube::Modal
 
   def viewDidLoad
     super
     @bookmarks = []
 
     self.navigationItem.title = entry.count.to_s
-    self.navigationItem.leftBarButtonItem  = UIBarButtonItem.titled('閉じる') { dismiss_modal }
+    self.navigationItem.leftBarButtonItem  =
+      UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
     view.backgroundColor = UIColor.whiteColor
 
     @indicator = UIActivityIndicatorView.new.tap do |v|

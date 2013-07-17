@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 class WebViewController < UIViewController
-  # include HBFav::URI::Escape
   attr_accessor :bookmark
   include BrowserControl
 
   def viewDidLoad
     super
+
+    self.view.backgroundColor = '#fff'.uicolor
 
     ## Readability Button
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
@@ -13,10 +14,14 @@ class WebViewController < UIViewController
         btn.frame = [[0, 0], [38, 38]]
         btn.setImage(UIImage.imageNamed('readability'), forState: :normal.uicontrolstate)
         btn.on(:touch) do
-          self.navigationController.pushViewController(
-            ReadabilityViewController.new.tap { |c| c.bookmark = @bookmark },
-            animated:true
-          )
+          ReadabilityViewController.new.tap do |c|
+            c.bookmark = @bookmark
+            self.presentViewController(
+              UINavigationController.alloc.initWithRootViewController(c),
+              animated:true,
+              completion:nil
+            )
+          end
         end
       end
     )

@@ -175,7 +175,7 @@ class PermalinkViewController < UIViewController
       button.on(:touch) do
         BookmarksViewController.new.tap do |c|
           c.entry = @bookmark
-          present_modal(UINavigationController.alloc.initWithRootViewController(c))
+          self.presentViewController(UINavigationController.alloc.initWithRootViewController(c), animated:true, completion:nil)
         end
       end
     end
