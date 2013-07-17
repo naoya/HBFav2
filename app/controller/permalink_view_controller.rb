@@ -126,10 +126,6 @@ class PermalinkViewController < UIViewController
           navigationController.pushViewController(c, animated:true)
         end
       end
-
-      # v.when_pressed do
-      #  v.backgroundColor = '#e0e0e0'.to_color
-      # end
     end
 
     @urlLabel = UILabel.new.tap do |v|

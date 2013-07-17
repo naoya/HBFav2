@@ -8,7 +8,7 @@ class ProfileViewController < UIViewController
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
     self.navigationItem.title = @user.name
 
-    # self.view.backgroundColor = UIColor.groupTableViewBackgroundColor
+    ## 背景
     view << UITableView.alloc.initWithFrame(view.bounds, style:UITableViewStyleGrouped)
 
     ## action は proc じゃなくて string にしてその名前のメソッド呼ぶとかにしたほうがよさそ
