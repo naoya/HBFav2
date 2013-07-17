@@ -7,6 +7,7 @@ class HatenaBookmarkActivity < UIActivity
   end
 
   def activityImage
+    # UIImage.imageNamed("HatenaBookmarkActivity")
     nil
   end
 
