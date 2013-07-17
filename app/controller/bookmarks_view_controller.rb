@@ -1,68 +1,15 @@
 # -*- coding: utf-8 -*-
-class BookmarksViewController < UIViewController
+class BookmarksViewController < UITableViewController
   attr_accessor :entry
+  include SugarCube::Modal
 
   def viewDidLoad
     super
     @bookmarks = []
 
     self.navigationItem.title = entry.count.to_s
+    self.navigationItem.leftBarButtonItem  = UIBarButtonItem.titled('閉じる') { dismiss_modal }
     view.backgroundColor = UIColor.whiteColor
-
-    # @headerView = UIView.new.tap do |v|
-    @headerView = UITableView.alloc.initWithFrame([[0, 0], [view.frame.size.width, 68]], style:UITableViewStyleGrouped).tap do |v|
-      v.scrollsToTop = false
-      view << v
-
-      v.when_tapped do
-        WebViewController.new.tap do |c|
-          c.bookmark = @entry
-          navigationController.pushViewController(c, animated:true)
-        end
-      end
-    end
-
-    @headerView << UIImageView.new.tap do |v|
-      v.image = UIImage.imageNamed('disc2.png')
-      w = @headerView.bounds.size.width
-      h = @headerView.bounds.size.height
-      v.frame = [[w - 20, (h / 2) - 8], [12, 17]]
-    end
-
-    @faviconView = UIImageView.new.tap do |v|
-      v.frame = [[5, 5 + 2], [14, 14]]
-      v.image = entry.favicon
-      v.setImageWithURL(entry.favicon_url.nsurl, placeholderImage:nil)
-      @headerView << v
-    end
-
-    @titleLabel = UILabel.new.tap do |v|
-      constrain = CGSize.new(view.frame.size.width - 19 - 10 - 18, 68 - 10) # 18 ... disc.png の分の幅
-      size = entry.title.sizeWithFont(UIFont.boldSystemFontOfSize(13), constrainedToSize:constrain, lineBreakMode:UILineBreakModeCharacterWrap)
-      v.frame = [[5 + 19, 5], size]
-      v.numberOfLines = 0
-      v.font = UIFont.boldSystemFontOfSize(13)
-      v.text = entry.title
-      v.backgroundColor = UIColor.clearColor
-
-      @headerView << v
-    end
-
-    @border = UIView.new.tap do |v|
-      v.frame = [[0, 68], [view.frame.size.width, 1]]
-      v.backgroundColor = '#ababab'.uicolor
-      view << v
-    end
-
-    @bookmarksTable = UITableView.new.tap do |v|
-      frame_size = self.view.frame.size
-      ## FIXME: frame.height が -69 だと見切れる。かといって200とかだと小さすぎる。なんで?
-      ## navigation bar の分が入ってる? : yes
-      v.frame = [[0, 69], [frame_size.width, frame_size.height - 69 - 42]]
-      v.dataSource = v.delegate = self
-      v.scrollsToTop = true
-      # view << v
-    end
 
     @indicator = UIActivityIndicatorView.new.tap do |v|
       v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
@@ -99,19 +46,16 @@ class BookmarksViewController < UIViewController
         else
           App.alert("ブックマークが全てプライベートモード、もしくはコメント非表示設定のエントリーです")
         end
-        unless @bookmarksTable.nil?
-          @bookmarksTable.reloadData
-        end
+        view.reloadData
       else
         App.alert(response.error_message)
       end
       @indicator.stopAnimating
-      view << @bookmarksTable
     end
   end
 
   def viewWillAppear(animated)
-    @bookmarksTable.deselectRowAtIndexPath(@bookmarksTable.indexPathForSelectedRow, animated:animated)
+    view.deselectRowAtIndexPath(view.indexPathForSelectedRow, animated:animated)
   end
 
   def tableView(tableView, numberOfRowsInSection:section)

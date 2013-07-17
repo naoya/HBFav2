@@ -172,10 +172,10 @@ class PermalinkViewController < UIViewController
 
       current_y += 40
 
-      button.when(UIControlEventTouchUpInside) do
+      button.on(:touch) do
         BookmarksViewController.new.tap do |c|
           c.entry = @bookmark
-          self.navigationController.pushViewController(c, animated:true)
+          present_modal(UINavigationController.alloc.initWithRootViewController(c))
         end
       end
     end

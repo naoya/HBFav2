@@ -1,6 +1,7 @@
 ## some properties required: @webview, @indicator, @bookmark
 ## initilize_toolbar must be called at viewDidLoad
 module BrowserControl
+  include SugarCube::Modal
   # def webView(webView, shouldStartLoadWithRequest:request, navigationType:navigationType)
   #   @backButton.enabled    = webView.canGoBack
   #   @forwardButton.enabled = webView.canGoForward
@@ -51,7 +52,7 @@ module BrowserControl
       UIBarButtonItem.titled(@bookmark.count.to_s, :bordered) do
         BookmarksViewController.new.tap do |c|
           c.entry = @bookmark
-          self.navigationController.pushViewController(c, animated:true)
+          present_modal(UINavigationController.alloc.initWithRootViewController(c))
         end
       end
     ]
@@ -81,6 +82,6 @@ module BrowserControl
       ]
     )
     @activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo, UIActivityTypeCopyToPasteboard]
-    presentModalViewController(@activity, animated:true)
+    present_modal(@activity)
   end
 end
