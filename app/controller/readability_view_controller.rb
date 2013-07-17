@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class ReadabilityViewController < UIViewController
-  attr_accessor :bookmark
+  attr_accessor :entry
 
   def viewDidLoad
     super
@@ -12,7 +12,9 @@ class ReadabilityViewController < UIViewController
       label.shadowColor = UIColor.colorWithWhite(0.0, alpha: 0.5)
       label.textAlignment = UITextAlignmentCenter
       label.textColor = UIColor.whiteColor
-      label.text = @bookmark.title
+      if entry[:title].present?
+        label.text = entry[:title]
+      end
     end
 
     # self.initialize_toolbar
@@ -42,12 +44,13 @@ class ReadabilityViewController < UIViewController
 
     rd = Readability::Parser.new
     rd.api_token = 'c523147005e6a6af0ec079ebb7035510b3409ee5'
-    rd.parse_url(@bookmark.link) do |response, html|
+    rd.parse_url(entry[:url]) do |response, html|
       if response.ok?
-        @webview.loadHTMLString(html, baseURL:self.bookmark.link.nsurl)
+        @webview.loadHTMLString(html, baseURL:entry[:url].nsurl)
         self.hide_bars
       else
-        App.alert("変換に失敗しました: " + response.status_code.to_s)
+        ## TODO: notify to user
+        # App.alert("変換に失敗しました: " + response.status_code.to_s)
       end
       @indicator.stopAnimating
     end
