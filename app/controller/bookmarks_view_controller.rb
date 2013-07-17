@@ -11,6 +11,22 @@ class BookmarksViewController < UITableViewController
       UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
     view.backgroundColor = UIColor.whiteColor
 
+    ## Pull to Refresh
+    self.refreshControl = UIRefreshControl.new.tap do |refresh|
+      refresh.backgroundColor = '#e2e7ed'.uicolor
+      refresh.on(:value_changed) do |event|
+        refresh.beginRefreshing
+        loadBookmarks
+      end
+    end
+
+    ## Set RefreshControl background (work around)
+    frame = self.tableView.bounds
+    frame.origin.y = -frame.size.height
+    bgview = UIView.alloc.initWithFrame(frame)
+    bgview.backgroundColor = '#e2e7ed'.uicolor
+    self.tableView.insertSubview(bgview, atIndex: 0)
+
     @indicator = UIActivityIndicatorView.new.tap do |v|
       v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
       v.style = UIActivityIndicatorViewStyleGray
@@ -18,7 +34,7 @@ class BookmarksViewController < UITableViewController
     end
     view << @indicator
 
-    loadBookmarks()
+    loadBookmarks
   end
 
   def loadBookmarks
@@ -51,6 +67,7 @@ class BookmarksViewController < UITableViewController
         App.alert(response.error_message)
       end
       @indicator.stopAnimating
+      self.refreshControl.endRefreshing
     end
   end
 
