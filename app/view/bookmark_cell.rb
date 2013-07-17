@@ -165,5 +165,4 @@ class BookmarkCell < UITableViewCell
       self.textLabel.frame = [[SideWidth + 19, current_y], [body_width - 19, title_height]]
     end
   end
-
 end

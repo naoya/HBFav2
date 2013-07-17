@@ -153,8 +153,8 @@ class PermalinkViewController < UIViewController
     @dateLabel = UILabel.new.tap do |v|
       v.frame = [[10 + 19, current_y], [0, 0]]
       v.font = UIFont.systemFontOfSize(14)
-      v.text = @bookmark.created_at
       v.textColor = '#666'.uicolor
+      v.text = @bookmark.datetime.timeAgo
       v.sizeToFit
       @scrollView << v
 
@@ -188,5 +188,7 @@ class PermalinkViewController < UIViewController
   def viewWillAppear(animated)
     @titleLabel.highlighted = false
     @titleLabel.backgroundColor = UIColor.whiteColor
+    @dateLabel.text = @bookmark.datetime.timeAgo
+    @dateLabel.sizeToFit
   end
 end
