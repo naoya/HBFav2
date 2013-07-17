@@ -31,7 +31,7 @@ class WebViewController < UIViewController
 
     ## Title
     self.navigationItem.titleView = UILabel.new.tap do |label|
-      label.frame = [[0, 0], [400, 44]]
+      label.frame = [[0, 0], [view.frame.size.width, 44]]
       label.font = UIFont.boldSystemFontOfSize(14.0)
       label.backgroundColor = UIColor.clearColor
       label.shadowColor = UIColor.colorWithWhite(0.0, alpha: 0.5)
