@@ -137,7 +137,10 @@ class TimelineViewController < UITableViewController
 
   def viewWillAppear(animated)
     view.deselectRowAtIndexPath(view.indexPathForSelectedRow, animated:animated)
-    ## 相対時刻を最新化するため reload
+    super
+  end
+
+  def viewDidAppear(animated)
     view.reloadData
     super
   end
