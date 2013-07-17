@@ -33,8 +33,6 @@ GEM
       sass
     motion-pixate-observer (0.5)
     motion-require (0.0.6)
-    motion-support (0.2.4)
-      motion-require (>= 0.0.6)
     multi_json (1.7.7)
     nap (0.5.1)
     open4 (1.3.0)
@@ -60,7 +58,6 @@ DEPENDENCIES
   motion-pixate
   motion-pixate-observer
   motion-require
-  motion-support
   rake
   rm-wsse
   sugarcube
