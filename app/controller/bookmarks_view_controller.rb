@@ -11,6 +11,14 @@ class BookmarksViewController < UITableViewController
       UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
     view.backgroundColor = UIColor.whiteColor
 
+    ## Scrolls to bottom button
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("下へ") do
+      if (tableView.contentSize.height > tableView.frame.size.height)
+        offset = CGPointMake(0, tableView.contentSize.height - tableView.frame.size.height)
+        tableView.setContentOffset(offset, animated:true)
+      end
+    end
+
     ## Pull to Refresh
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
       refresh.backgroundColor = '#e2e7ed'.uicolor
