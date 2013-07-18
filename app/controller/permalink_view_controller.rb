@@ -6,6 +6,7 @@ class PermalinkViewController < UIViewController
     super
 
     self.navigationItem.title = "ブックマーク"
+    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
 
     ## Readability Button

@@ -18,6 +18,7 @@ class TimelineViewController < UITableViewController
     end
 
     self.navigationItem.title ||= "HBFav"
+    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
 
     ## Navigation back button
@@ -31,8 +32,6 @@ class TimelineViewController < UITableViewController
     #   end
     # )
     # self.navigationItem.hidesBackButton = true
-
-    # self.navigationItem.backBarButtonItem = UIBarButtonItem.alloc.initWithTitle("戻る", style:UIBarButtonItemStylePlain, target:nil, action:nil)
 
     ## Pull to Refresh
     self.refreshControl = UIRefreshControl.new.tap do |refresh|

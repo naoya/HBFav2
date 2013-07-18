@@ -7,6 +7,7 @@ class ProfileViewController < UIViewController
 
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
     self.navigationItem.title = @user.name
+    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
     ## 背景
     view << UITableView.alloc.initWithFrame(view.bounds, style:UITableViewStyleGrouped)

@@ -6,6 +6,7 @@ class WebViewController < UIViewController
     super
 
     @document_title = nil
+    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = '#fff'.uicolor
 
     ## Toolbar
