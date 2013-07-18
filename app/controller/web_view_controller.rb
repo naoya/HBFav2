@@ -32,7 +32,6 @@ class WebViewController < UIViewController
 
     ## Activity Indicator
     @indicator = UIActivityIndicatorView.new.tap do |v|
-      v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating
       view << v
@@ -79,7 +78,8 @@ class WebViewController < UIViewController
   def viewWillAppear(animated)
     super
     self.navigationController.setToolbarHidden(false, animated:false)
-    @webview.frame = self.view.bounds
+    @webview.frame = view.bounds
+    @indicator.center = [view.bounds.size.width / 2, view.bounds.size.height / 2]
   end
 
   def viewWillDisappear(animated)

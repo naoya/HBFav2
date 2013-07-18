@@ -17,18 +17,14 @@ class ReadabilityViewController < UIViewController
       end
     end
 
-    # self.initialize_toolbar
     self.view.backgroundColor = '#fff'.uicolor
-
     self.wantsFullScreenLayout = true
     self.navigationController.navigationBar.translucent = true
-    # self.navigationController.toolbar.translucent = true
     self.navigationItem.leftBarButtonItem  =
       UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
 
     @webview = UIWebView.new.tap do |v|
       v.delegate =self
-      v.frame = self.view.bounds
       tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_bars')
       tapGesture.delegate = self
       v.addGestureRecognizer(tapGesture)
@@ -36,7 +32,6 @@ class ReadabilityViewController < UIViewController
     view << @webview
 
     @indicator = UIActivityIndicatorView.new.tap do |v|
-      v.center = [view.frame.size.width / 2, view.frame.size.height / 2]
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating
     end
@@ -69,14 +64,13 @@ class ReadabilityViewController < UIViewController
     super
     self.navigationController.setToolbarHidden(true, animated:false)
     self.navigationController.navigationBar.translucent = true
-    self.navigationController.toolbar.translucent = true
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
     @webview.frame = self.view.bounds
   end
 
   def viewWillDisappear(animated)
     super
     self.navigationController.navigationBar.translucent = false
-    # self.navigationController.toolbar.translucent = false
     self.navigationController.setToolbarHidden(false, animated:animated)
     self.show_bars
   end
@@ -97,19 +91,16 @@ class ReadabilityViewController < UIViewController
   def toggle_bars
     self.toggle_statbar
     self.toggle_navbar
-    self.toggle_toolbar
   end
 
   def hide_bars
     self.hide_statbar
     self.hide_navbar
-    self.hide_toolbar
   end
 
   def show_bars
     self.show_statbar
     self.show_navbar
-    self.show_toolbar
   end
 
   def toggle_statbar
@@ -125,7 +116,6 @@ class ReadabilityViewController < UIViewController
   end
 
   def toggle_navbar
-    #    self.navigationController.isNavigationBarHidden ? self.show_navbar : self.hide_navbar
     @navbar_hidden ? self.show_navbar : self.hide_navbar
   end
 
@@ -141,7 +131,6 @@ class ReadabilityViewController < UIViewController
       self.navigationController.navigationBar.fade_in(duration: 0.5)
       @navbar_hidden = false
     end
-#    self.navigationController.setNavigationBarHidden(false, animated:true)
   end
 
   def toggle_toolbar
