@@ -62,7 +62,6 @@ class TimelineViewController < UITableViewController
 
     ## Activity Indicator for initial loading
     @indicator = UIActivityIndicatorView.new.tap do |v|
-      v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating
     end
@@ -140,6 +139,7 @@ class TimelineViewController < UITableViewController
   end
 
   def viewDidAppear(animated)
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
     view.reloadData
     super
   end
