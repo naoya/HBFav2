@@ -110,15 +110,7 @@ class BookmarkCell < UITableViewCell
     self.nameLabel.text    = bookmark.user_name
     self.dateLabel.text    = bookmark.datetime.timeAgo
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
-
-    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage, completed:lambda do |image, error, cacheType|
-      if (image)
-        ## remote から取得したとき (cacheType == 0) だけ layoutSubviews しようとしたけど、それじゃだめなようだ
-        self.layoutSubviews
-      end
-    end)
-
-    # なんでこっちは layoutSubviews しなくても表示されるのか謎
+    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
     self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
   end
 
