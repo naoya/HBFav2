@@ -9,20 +9,6 @@ class PermalinkViewController < UIViewController
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
 
-    ## Readability Button
-    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
-    #   UIButton.custom.tap do |btn|
-    #     btn.frame = [[0, 0], [38, 38]]
-    #     btn.setImage(UIImage.imageNamed('readability'), forState: :normal.uicontrolstate)
-    #     btn.on(:touch) do
-    #       self.navigationController.pushViewController(
-    #         ReadabilityViewController.new.tap { |c| c.url = @bookmark.link },
-    #         animated:true
-    #       )
-    #     end
-    #   end
-    # )
-
     ## iOS6 で UIColor.groupTableViewBackgroundColorがdeprecatedなので
     ## UIView ではなく UITableView を使う
     @headerView = UITableView.alloc.initWithFrame([[0, 0], [view.frame.size.width, 68]], style:UITableViewStyleGrouped).tap do |v|
@@ -38,7 +24,6 @@ class PermalinkViewController < UIViewController
 
     @imageView = UIImageView.new.tap do |v|
       v.frame = [[10, 10], [48, 48]]
-      # v.image = @bookmark.profile_image
       v.setImageWithURL(@bookmark.user.profile_image_url.nsurl, placeholderImage:nil)
       v.layer.tap do |l|
         l.masksToBounds = true
