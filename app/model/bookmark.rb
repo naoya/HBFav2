@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class Bookmark
-  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime, :permalink
+  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime
 
   def self.date_formatter
     @@date_formatter ||= NSDateFormatter.new.tap do |f|
@@ -9,6 +9,7 @@ class Bookmark
   end
 
   def initialize(dict)
+    @eid               = dict[:eid]
     @title             = dict[:title]
     @link              = dict[:link]
     @user_name         = dict[:user][:name]
@@ -24,6 +25,17 @@ class Bookmark
 
   def id
     @id ||= self.user_name + "-" + self.datetime.timeIntervalSince1970.to_i.to_s
+  end
+
+  def permalink
+    if @permalink.present?
+      return @permalink
+    else
+      formatter = NSDateFormatter.new
+      formatter.dateFormat = "yyyyMMdd"
+      yyyymmdd = formatter.stringFromDate(self.datetime)
+      @permalink = "http://b.hatena.ne.jp/#{@user_name}/#{yyyymmdd}#bookmark-#{@eid}"
+    end
   end
 
   class Count

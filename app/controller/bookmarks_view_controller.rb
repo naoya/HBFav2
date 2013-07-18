@@ -57,6 +57,7 @@ class BookmarksViewController < UITableViewController
                 :title => entry.title,
                 :link  => entry.link,
                 :count => entry.count.to_s,
+                :eid   => json['eid'],
                 :user => {
                   :name => dict[:user]
                 },

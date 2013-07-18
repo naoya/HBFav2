@@ -2,7 +2,7 @@
 class BookmarkCell < UITableViewCell
   SideWidth = 65
 
-  attr_reader :nameLabel, :commentLabel, :dateLabel, :faviconView
+  attr_reader :nameLabel, :commentLabel, :dateLabel, :faviconView, :starView
   attr_accessor :no_title
 
   def self.cellForBookmark (bookmark, inTableView:tableView)
@@ -79,6 +79,12 @@ class BookmarkCell < UITableViewCell
         self.contentView << v
       end
 
+      @starView = UIImageView.new.tap do |v|
+        v.frame = CGRectZero
+        v.backgroundColor = '#fff'.uicolor
+        self.contentView << v
+      end
+
       @commentLabel = UILabel.new.tap do |v|
         v.numberOfLines = 0
         v.font = UIFont.systemFontOfSize(16)
@@ -112,6 +118,11 @@ class BookmarkCell < UITableViewCell
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
     self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
+
+    u = "http://s.st-hatena.com/entry.count.image?uri=#{bookmark.permalink.escape_url}"
+    self.starView.setImageWithURL(u.nsurl, placeholderImage:nil, options:SDWebImageRefreshCached, completed: lambda do |image, error, cacheType|
+      self.starView.sizeToFit
+    end)
   end
 
   ## セルは使い回されるので、この中でbookmarkインスタンスは扱ってはダメ
@@ -137,7 +148,13 @@ class BookmarkCell < UITableViewCell
     ## name
     name_size = self.nameLabel.text.sizeWithFont(UIFont.boldSystemFontOfSize(16))
     self.nameLabel.frame = [[SideWidth, current_y], [body_width, name_size.height]]
+    self.nameLabel.sizeToFit
     current_y += name_size.height + 5
+
+    ## star
+    name_origin = self.nameLabel.frame.origin
+    # UIView.origin なんてメソッドあったっけ... => sugarcube?
+    self.starView.origin = [name_origin.x + self.nameLabel.frame.size.width + 3, name_origin.y + 4.5]
 
     ## comment
     comment_height = 0
