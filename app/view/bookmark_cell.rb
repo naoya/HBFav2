@@ -79,7 +79,7 @@ class BookmarkCell < UITableViewCell
         self.contentView << v
       end
 
-      @starView = UIImageView.new.tap do |v|
+      @starView = HBFav2::HatenaStarView.new.tap do |v|
         v.frame = CGRectZero
         v.backgroundColor = '#fff'.uicolor
         self.contentView << v
@@ -118,13 +118,7 @@ class BookmarkCell < UITableViewCell
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
     self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
-
-    u = "http://s.st-hatena.com/entry.count.image?uri=#{bookmark.permalink.escape_url}&q=1"
-    self.starView.setImageWithURL(u.nsurl, placeholderImage:nil, options:SDWebImageCacheMemoryOnly, completed: lambda do |image, error, cacheType|
-      if image
-        self.starView.frame = [self.starView.frame.origin, [image.size.width / 2, image.size.height / 2]]
-      end
-    end)
+    self.starView.url = bookmark.permalink
   end
 
   ## セルは使い回されるので、この中でbookmarkインスタンスは扱ってはダメ
