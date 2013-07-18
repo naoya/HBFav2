@@ -76,7 +76,7 @@ class PermalinkViewController < UIViewController
         @scrollView << v
       end
 
-      current_y += size.height + 10
+      current_y += size.height + 4
     end
 
     @faviconView = UIImageView.new.tap do |v|
@@ -141,6 +141,16 @@ class PermalinkViewController < UIViewController
       @scrollView << v
 
       current_y += v.frame.size.height + 10
+    end
+
+    @starView = UIImageView.new.tap do |v|
+      origin = @dateLabel.frame.origin
+      v.frame =[[origin.x + @dateLabel.frame.size.width + 3, origin.y + 3.5], [320, 10]]
+      u = "http://s.st-hatena.com/entry.count.image?uri=#{@bookmark.permalink.escape_url}"
+      v.setImageWithURL(u.nsurl, placeholderImage:nil, options:SDWebImageRefreshCached, completed: lambda do |image, error, cacheType|
+        v.sizeToFit
+      end)
+      @scrollView << v
     end
 
     @usersButton = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |button|

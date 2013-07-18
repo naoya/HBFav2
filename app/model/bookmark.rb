@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 class Bookmark
-  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime
-  attr_accessor :profile_image, :favicon, :row
+  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime, :permalink
 
   def self.date_formatter
     @@date_formatter ||= NSDateFormatter.new.tap do |f|
@@ -16,10 +15,7 @@ class Bookmark
     @created_at        = dict[:created_at]
     @comment           = dict[:comment]
     @profile_image_url = dict[:user][:profile_image_url]
-    @profile_image     = nil
-    # @favicon_url       = dict[:favicon_url]
-    @favicon           = nil
-    @row               = nil
+    @permalink         = dict[:permalink]
 
     @count             = Count.new(dict[:count].to_i)
     @user = User.new({:name => @user_name})
