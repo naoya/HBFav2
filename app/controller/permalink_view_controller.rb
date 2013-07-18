@@ -145,10 +145,12 @@ class PermalinkViewController < UIViewController
 
     @starView = UIImageView.new.tap do |v|
       origin = @dateLabel.frame.origin
-      v.frame =[[origin.x + @dateLabel.frame.size.width + 3, origin.y + 3.5], [320, 10]]
-      u = "http://s.st-hatena.com/entry.count.image?uri=#{@bookmark.permalink.escape_url}"
-      v.setImageWithURL(u.nsurl, placeholderImage:nil, options:SDWebImageRefreshCached, completed: lambda do |image, error, cacheType|
-        v.sizeToFit
+      v.frame =[[origin.x + @dateLabel.frame.size.width + 3, origin.y + 3.5], [0, 0]]
+      u = "http://s.st-hatena.com/entry.count.image?uri=#{@bookmark.permalink.escape_url}&q=1"
+      v.setImageWithURL(u.nsurl, placeholderImage:nil, options:SDWebImageCacheMemoryOnly, completed: lambda do |image, error, cacheType|
+        if image
+          v.frame = [v.frame.origin, [image.size.width / 2, image.size.height / 2]]
+        end
       end)
       @scrollView << v
     end

@@ -119,9 +119,11 @@ class BookmarkCell < UITableViewCell
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
     self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
 
-    u = "http://s.st-hatena.com/entry.count.image?uri=#{bookmark.permalink.escape_url}"
-    self.starView.setImageWithURL(u.nsurl, placeholderImage:nil, options:SDWebImageRefreshCached, completed: lambda do |image, error, cacheType|
-      self.starView.sizeToFit
+    u = "http://s.st-hatena.com/entry.count.image?uri=#{bookmark.permalink.escape_url}&q=1"
+    self.starView.setImageWithURL(u.nsurl, placeholderImage:nil, options:SDWebImageCacheMemoryOnly, completed: lambda do |image, error, cacheType|
+      if image
+        self.starView.frame = [self.starView.frame.origin, [image.size.width / 2, image.size.height / 2]]
+      end
     end)
   end
 
