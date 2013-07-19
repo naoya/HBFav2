@@ -35,9 +35,10 @@ class AccountConfigViewController < Formotion::FormController
                   secure: true,
                   value: user.configured? ? user.password : nil
                 }
-              ]
+              ],
+              footer: "ブックマーク投稿機能を利用しない場合パスワード入力は不要です"
             }, {
-              title: "設定",
+              title: "オプション",
               rows: [
                 {
                   title: "新ユーザーページ",
@@ -45,7 +46,8 @@ class AccountConfigViewController < Formotion::FormController
                   type: 'switch',
                   value: user.use_timeline?
                 },
-              ]
+              ],
+              footer: "はてな上で新ユーザーページを利用している場合のみ有効にしてください。フィードの読み込み精度が向上します"
             }]
       })
       return self.class.alloc.initWithForm(form)
@@ -65,7 +67,7 @@ class AccountConfigViewController < Formotion::FormController
       target:self,
       action:'save'
     )
-    
+
     ## BUG: closure から起動しているせいか viewDidLoad では
     ## allow_cancellation == true にならないので viewWillAppear で
     if self.allow_cancellation
