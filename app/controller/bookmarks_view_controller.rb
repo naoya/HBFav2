@@ -7,17 +7,7 @@ class BookmarksViewController < UITableViewController
     @bookmarks = []
 
     self.navigationItem.title = entry.count.to_s
-    self.navigationItem.leftBarButtonItem  =
-      UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
     view.backgroundColor = UIColor.whiteColor
-
-    ## Scrolls to bottom button
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("下へ") do
-      if (tableView.contentSize.height > tableView.frame.size.height)
-        offset = CGPointMake(0, tableView.contentSize.height - tableView.frame.size.height)
-        tableView.setContentOffset(offset, animated:true)
-      end
-    end
 
     ## Pull to Refresh
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
@@ -36,7 +26,6 @@ class BookmarksViewController < UITableViewController
     self.tableView.insertSubview(bgview, atIndex: 0)
 
     @indicator = UIActivityIndicatorView.new.tap do |v|
-      v.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating
     end
@@ -77,10 +66,26 @@ class BookmarksViewController < UITableViewController
       end
       @indicator.stopAnimating
       self.refreshControl.endRefreshing
+      ## Show "scrolls to bottom" button
+      if (tableView.contentSize.height > tableView.frame.size.height)
+        button = UIBarButtonItem.titled("下へ") do
+          offset = CGPointMake(0, tableView.contentSize.height - tableView.frame.size.height)
+          tableView.setContentOffset(offset, animated:true)
+        end
+        self.navigationItem.setRightBarButtonItem(button, animated:true)
+      end
     end
   end
 
   def viewWillAppear(animated)
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
+
+    self.navigationItem.leftBarButtonItem  =
+      UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
+    super
+  end
+
+  def viewDidAppear(animated)
     super
   end
 
