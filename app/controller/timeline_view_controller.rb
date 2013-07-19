@@ -99,7 +99,15 @@ class TimelineViewController < UITableViewController
         App.alert(res.error_message)
       else
         tableView.reloadData
-        tableView.tableFooterView.show
+        if @bookmarks.size > 0
+          tableView.tableFooterView.show
+        else
+          if home?
+            App.alert("表示するブックマークがありません。はてな上でお気に入りユーザーを追加してください")
+          else
+            App.alert("表示するブックマークがありません。")
+          end
+        end
       end
     end
   end
