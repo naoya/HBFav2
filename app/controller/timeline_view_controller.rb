@@ -134,13 +134,15 @@ class TimelineViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
-    view.deselectRowAtIndexPath(view.indexPathForSelectedRow, animated:animated)
+    indexPath = tableView.indexPathForSelectedRow
+    tableView.reloadData
+    tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
+    tableView.deselectRowAtIndexPath(indexPath, animated:animated);
     super
   end
 
   def viewDidAppear(animated)
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
-    view.reloadData
     super
   end
 

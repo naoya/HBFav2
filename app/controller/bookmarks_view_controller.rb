@@ -81,7 +81,7 @@ class BookmarksViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
-    view.deselectRowAtIndexPath(view.indexPathForSelectedRow, animated:animated)
+    super
   end
 
   def tableView(tableView, numberOfRowsInSection:section)

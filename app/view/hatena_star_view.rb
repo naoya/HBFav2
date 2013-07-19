@@ -16,7 +16,8 @@ module HBFav2
         options:SDWebImageCacheMemoryOnly,
         completed: lambda do |image, error, cacheType|
           if image
-            self.frame = [self.frame.origin, [image.size.width / 2, image.size.height / 2]]
+            # self.frame = [self.frame.origin, [image.size.width / 2, image.size.height / 2]]
+            self.size = [image.size.width / 2, image.size.height / 2]
           end
         end
       )
