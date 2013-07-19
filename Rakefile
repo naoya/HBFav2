@@ -54,13 +54,3 @@ Motion::Project::App.setup do |app|
   #   :headers_dir => 'Headers'
   # )
 end
-
-desc "Checks the syntax"
-task :syntax do
-  Motion::Project::App.setup do |app|
-    app.files.each do |file|
-      result = `macruby -c #{file}`.chomp
-      raise "Syntax Error: #{file}" unless result == "Syntax OK"
-    end
-  end
-end
