@@ -28,6 +28,15 @@ class PermalinkViewController < UIViewController
         end
       end
 
+      v.starView.when_tapped do
+        StarsViewController.new.tap do |c|
+          c.url = @bookmark.permalink
+          v.starView.highlighted = true
+          v.starView.backgroundColor = '#e5f0ff'.to_color
+          self.presentViewController(UINavigationController.alloc.initWithRootViewController(c), animated:true, completion:nil)
+        end
+      end
+
       v.usersButton.on(:touch) do
         BookmarksViewController.new.tap do |c|
           c.entry = @bookmark
@@ -44,6 +53,8 @@ class PermalinkViewController < UIViewController
       v.bookmark = self.bookmark
       v.titleLabel.highlighted = false
       v.titleLabel.backgroundColor = UIColor.whiteColor
+      v.starView.highlighted = false
+      v.starView.backgroundColor = UIColor.whiteColor
     end
   end
 end

@@ -1,6 +1,6 @@
 module HBFav2
   class BookmarkView < UIView
-    attr_accessor :headerView, :titleLabel, :usersButton
+    attr_accessor :headerView, :titleLabel, :usersButton, :starView
 
     def initWithFrame(frame)
       if super
