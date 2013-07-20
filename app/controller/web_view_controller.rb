@@ -42,6 +42,7 @@ class WebViewController < UIViewController
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
       UIButton.custom.tap do |btn|
         btn.frame = [[0, 0], [38, 38]]
+        btn.showsTouchWhenHighlighted = true
         btn.setImage(UIImage.imageNamed('readability'), forState: :normal.uicontrolstate)
         btn.on(:touch) do
           ReadabilityViewController.new.tap do |c|

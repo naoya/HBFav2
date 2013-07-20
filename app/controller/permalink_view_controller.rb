@@ -19,9 +19,7 @@ class PermalinkViewController < UIViewController
         end
       end
 
-      v.titleLabel.when_tapped do
-        v.titleLabel.highlighted = true
-        v.titleLabel.backgroundColor = '#e5f0ff'.to_color
+      v.titleButton.on(:touch) do
         WebViewController.new.tap do |c|
           c.bookmark = @bookmark
           navigationController.pushViewController(c, animated:true)
@@ -51,8 +49,6 @@ class PermalinkViewController < UIViewController
     @bookmarkView.tap do |v|
       v.frame = self.view.bounds
       v.bookmark = self.bookmark
-      v.titleLabel.highlighted = false
-      v.titleLabel.backgroundColor = UIColor.whiteColor
       v.starView.highlighted = false
       v.starView.backgroundColor = UIColor.whiteColor
     end

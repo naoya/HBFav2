@@ -1,6 +1,6 @@
 module HBFav2
   class BookmarkView < UIView
-    attr_accessor :headerView, :titleLabel, :usersButton, :starView
+    attr_accessor :headerView, :usersButton, :starView, :titleButton
 
     def initWithFrame(frame)
       if super
@@ -47,12 +47,13 @@ module HBFav2
 
         @bodyView << @faviconView = UIImageView.new.tap {|v| v.frame = CGRectZero }
 
-        @bodyView << @titleLabel = UILabel.new.tap do |v|
-          v.frame = CGRectZero
-          v.numberOfLines = 0
-          v.numberOfLines = 0
-          v.font = UIFont.systemFontOfSize(18)
-          v.textColor = '#3B5998'.to_color
+        @bodyView << @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
+          btn.titleLabel.font = UIFont.systemFontOfSize(18)
+          btn.titleLabel.lineBreakMode = UILineBreakModeWordWrap
+          btn.titleLabel.numberOfLines = 0
+          btn.backgroundColor = UIColor.whiteColor
+          btn.setTitleColor('#3B5998'.to_color, forState:UIControlStateNormal)
+          btn.setTitleColor('#69c'.to_color, forState:UIControlStateHighlighted)
         end
 
         @bodyView << @urlLabel = UILabel.new.tap do |v|
@@ -81,7 +82,7 @@ module HBFav2
     def bookmark=(bookmark)
       @nameLabel.text    = bookmark.user.name
       @commentLabel.text = bookmark.comment if bookmark.comment.present?
-      @titleLabel.text   = bookmark.title
+      @titleButton.setTitle(bookmark.title, forState:UIControlStateNormal)
       @urlLabel.text     = bookmark.link
       @dateLabel.text    = bookmark.datetime.timeAgo
       @starView.url      = bookmark.permalink
@@ -128,12 +129,12 @@ module HBFav2
 
       # title
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000) # 19 = favicon (16) + margin (3)
-      size = @titleLabel.text.sizeWithFont(
+      size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
         UIFont.systemFontOfSize(18),
         constrainedToSize:constrain,
-        lineBreakMode:UILineBreakModeCharacterWrap
+        lineBreakMode:UILineBreakModeWordWrap
       )
-      @titleLabel.frame = [[10 + 19, current_y], size]
+      @titleButton.frame = [[10 + 19, current_y], size]
       current_y += size.height + 4
 
       # URL
