@@ -142,11 +142,26 @@ class TimelineViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
+    NSNotificationCenter.defaultCenter.addObserver(self, selector: :'open_bookmark:', name:'title_touched', object:nil)
+
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
     super
+  end
+
+  def viewWillDisappear(animated)
+    super
+    NSNotificationCenter.defaultCenter.removeObserver(self)
+  end
+
+  def open_bookmark (notification)
+    cell = notification.object
+    WebViewController.new.tap do |c|
+      c.bookmark = cell.bookmark
+      navigationController.pushViewController(c, animated:true)
+    end
   end
 
   def viewDidAppear(animated)
@@ -163,9 +178,7 @@ class TimelineViewController < UITableViewController
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    bookmark = @bookmarks[indexPath.row]
-    cell = BookmarkCell.cellForBookmark(bookmark, inTableView:tableView)
-    return cell
+    BookmarkCell.cellForBookmark(@bookmarks[indexPath.row], inTableView:tableView)
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)

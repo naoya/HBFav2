@@ -2,15 +2,16 @@
 class BookmarkCell < UITableViewCell
   SideWidth = 65
 
-  attr_reader :nameLabel, :commentLabel, :dateLabel, :faviconView, :starView
-  attr_accessor :no_title
+  attr_reader :nameLabel, :commentLabel, :dateLabel, :faviconView, :starView, :titleButton
+  attr_accessor :no_title, :bookmark
 
   def self.cellForBookmark (bookmark, inTableView:tableView)
     cell_id = 'bookmark_cell'
     cell = tableView.dequeueReusableCellWithIdentifier(cell_id) ||
       BookmarkCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:cell_id)
     cell.no_title = false
-    cell.fillWithBookmark(bookmark, inTableView:tableView)
+    cell.bookmark = bookmark
+    cell.fillWithBookmark(bookmark)
     cell
   end
 
@@ -19,7 +20,7 @@ class BookmarkCell < UITableViewCell
     cell = tableView.dequeueReusableCellWithIdentifier(cell_id) ||
       BookmarkCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:cell_id)
     cell.no_title = true
-    cell.fillWithBookmark(bookmark, inTableView:tableView)
+    cell.fillWithBookmark(bookmark)
     cell
   end
 
@@ -55,21 +56,29 @@ class BookmarkCell < UITableViewCell
   def self.heightForTitle(title, width)
     height     = 0
     constrain = CGSize.new(self.bodyWidth(width) - 19, 1000) # 19 ･･･ favicon (16) + margin (3)
-    title.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:constrain, lineBreakMode:UILineBreakModeCharacterWrap).height
+    title.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:constrain, lineBreakMode:UILineBreakModeWordWrap).height
   end
 
   def initWithStyle(style, reuseIdentifier:cellid)
     if super
-      self.textLabel.tap do |v|
-        v.numberOfLines = 0
-        v.font = UIFont.systemFontOfSize(16)
-        v.textColor = '#3B5998'.uicolor
-        # v.backgroundColor = '#fff'.uicolor
-      end
-
       self.imageView.layer.tap do |l|
         l.masksToBounds = true
         l.cornerRadius = 5.0
+      end
+
+      @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
+        btn.titleLabel.font = UIFont.systemFontOfSize(16)
+        btn.titleLabel.lineBreakMode = UILineBreakModeWordWrap
+        btn.titleLabel.numberOfLines = 0
+        btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
+        btn.backgroundColor = UIColor.whiteColor
+        btn.setTitleColor('#3B5998'.to_color, forState:UIControlStateNormal)
+        btn.setTitleColor('#69c'.to_color, forState:UIControlStateHighlighted)
+
+        btn.on(:touch) do
+          NSNotificationCenter.defaultCenter.postNotificationName('title_touched', object:self)
+        end
+        self.contentView << btn
       end
 
       @nameLabel = UILabel.new.tap do |v|
@@ -111,8 +120,10 @@ class BookmarkCell < UITableViewCell
     self
   end
 
-  def fillWithBookmark(bookmark, inTableView:tableView)
-    self.textLabel.text    = self.no_title ? nil : bookmark.title
+  def fillWithBookmark(bookmark)
+    unless self.no_title
+      self.titleButton.setTitle(bookmark.title, forState:UIControlStateNormal)
+    end
     self.nameLabel.text    = bookmark.user_name
     self.dateLabel.text    = bookmark.datetime.timeAgo
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
@@ -166,8 +177,8 @@ class BookmarkCell < UITableViewCell
     ## favicon + title
     unless self.no_title
       self.faviconView.frame = [[SideWidth, current_y + 2], [16, 16]]
-      title_height = self.class.heightForTitle(self.textLabel.text, frame_size.width)
-      self.textLabel.frame = [[SideWidth + 19, current_y], [body_width - 19, title_height]]
+      title_height = self.class.heightForTitle(self.titleButton.titleForState(UIControlStateNormal), frame_size.width)
+      self.titleButton.frame = [[SideWidth + 19, current_y], [body_width - 19, title_height]]
     end
   end
 end

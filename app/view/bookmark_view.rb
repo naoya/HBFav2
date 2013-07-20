@@ -51,6 +51,7 @@ module HBFav2
           btn.titleLabel.font = UIFont.systemFontOfSize(18)
           btn.titleLabel.lineBreakMode = UILineBreakModeWordWrap
           btn.titleLabel.numberOfLines = 0
+          btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
           btn.backgroundColor = UIColor.whiteColor
           btn.setTitleColor('#3B5998'.to_color, forState:UIControlStateNormal)
           btn.setTitleColor('#69c'.to_color, forState:UIControlStateHighlighted)
