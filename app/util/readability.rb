@@ -37,7 +37,7 @@ a {
   text-decoration: none;
 }
 
-img {
+img, video, iframe {
   max-width: 100%;
 }
 
