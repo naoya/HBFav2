@@ -70,6 +70,9 @@ class ReadabilityViewController < UIViewController
   def webViewDidFinishLoad (webView)
     App.shared.networkActivityIndicatorVisible = false
     @indicator.stopAnimating
+
+    ## 画面遷移後に begin_fullscreen が始まってしまい、ステータスバーが消えることがある
+    ## まだ応急処置で、完治できていない
     if !self.isBeingDismissed
       begin_fullscreen
     end
