@@ -86,6 +86,9 @@ class ReadabilityViewController < UIViewController
     super
     cleanup_fullscreen
     self.navigationController.setToolbarHidden(false, animated:animated)
+    if @webview.loading?
+      @webview.stopLoading
+    end
   end
 
   def toggle_fullscreen
@@ -98,7 +101,7 @@ class ReadabilityViewController < UIViewController
     UIView.beginAnimations(nil, context:nil)
     UIView.setAnimationDuration(0.3)
     UIApplication.sharedApplication.setStatusBarHidden(true, animated:true)
-    if navigationController.navigationBar.present?
+    if navigationController.present?
       navigationController.navigationBar.alpha = 0.0
     end
     UIView.commitAnimations
@@ -109,7 +112,7 @@ class ReadabilityViewController < UIViewController
     UIView.beginAnimations(nil, context:nil)
     UIView.setAnimationDuration(0.3)
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:true)
-    if navigationController.navigationBar.present?
+    if navigationController.present?
       navigationController.navigationBar.alpha = 1.0
     end
     UIView.commitAnimations
