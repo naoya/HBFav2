@@ -5,7 +5,7 @@ module Readability
     API = "https://www.readability.com/api/content/v1/parser"
 
     def parse_url(url, &cb)
-      BW::HTTP.get(API, {payload: {url: url, token: api_token}}) do |response|
+      query = BW::HTTP.get(API, {payload: {url: url, token: api_token}}) do |response|
         if response.ok?
           data = BW::JSON.parse(response.body.to_str)
           cb.call(response, html(data)) if cb
@@ -13,6 +13,7 @@ module Readability
           cb.call(response, nil) if cb
         end
       end
+      query
     end
 
     def html(data)

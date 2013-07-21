@@ -34,7 +34,9 @@ class ReadabilityViewController < UIViewController
 
     rd = Readability::Parser.new
     rd.api_token = 'c523147005e6a6af0ec079ebb7035510b3409ee5'
-    rd.parse_url(entry[:url]) do |response, html|
+    query = rd.parse_url(entry[:url]) do |response, html|
+      @connection = nil
+
       if response.ok? and @webview
         @webview.loadHTMLString(html, baseURL:entry[:url].nsurl)
       else
@@ -45,6 +47,7 @@ class ReadabilityViewController < UIViewController
         end
       end
     end
+    @connection = query.connection
   end
 
   def viewWillAppear(animated)
@@ -58,6 +61,12 @@ class ReadabilityViewController < UIViewController
     super
     cleanup_fullscreen
     self.navigationController.setToolbarHidden(false, animated:animated)
+
+    if @connection.present?
+      @connection.cancel
+      App.shared.networkActivityIndicatorVisible = false
+    end
+
     if @webview.loading?
       @webview.stopLoading
     end
