@@ -142,7 +142,7 @@ class TimelineViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
-    NSNotificationCenter.defaultCenter.addObserver(self, selector: :'open_bookmark:', name:'title_touched', object:nil)
+    # NSNotificationCenter.defaultCenter.addObserver(self, selector: :'open_bookmark:', name:'title_touched', object:nil)
 
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
@@ -153,7 +153,7 @@ class TimelineViewController < UITableViewController
 
   def viewWillDisappear(animated)
     super
-    NSNotificationCenter.defaultCenter.removeObserver(self)
+    # NSNotificationCenter.defaultCenter.removeObserver(self)
   end
 
   def open_bookmark (notification)
@@ -184,14 +184,6 @@ class TimelineViewController < UITableViewController
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     PermalinkViewController.new.tap do |c|
       c.bookmark = @bookmarks[indexPath.row]
-      self.navigationController.pushViewController(c, animated:true)
-    end
-  end
-
-  def open_profile
-    ProfileViewController.new.tap do |c|
-      c.user    = @user
-      c.as_mine = true
       self.navigationController.pushViewController(c, animated:true)
     end
   end

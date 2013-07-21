@@ -2,7 +2,7 @@
 class BookmarkCell < UITableViewCell
   SideWidth = 65
 
-  attr_reader :nameLabel, :commentLabel, :dateLabel, :faviconView, :starView, :titleButton
+  attr_reader :nameLabel, :commentLabel, :dateLabel, :faviconView, :starView
   attr_accessor :no_title, :bookmark
 
   def self.cellForBookmark (bookmark, inTableView:tableView)
@@ -61,25 +61,30 @@ class BookmarkCell < UITableViewCell
 
   def initWithStyle(style, reuseIdentifier:cellid)
     if super
+      self.textLabel.tap do |v|
+        v.numberOfLines = 0
+        v.font = UIFont.systemFontOfSize(16)
+        v.textColor = '#3B5998'.uicolor
+      end
+
       self.imageView.layer.tap do |l|
         l.masksToBounds = true
         l.cornerRadius = 5.0
       end
 
-      @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
-        btn.titleLabel.font = UIFont.systemFontOfSize(16)
-        btn.titleLabel.lineBreakMode = UILineBreakModeWordWrap
-        btn.titleLabel.numberOfLines = 0
-        btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
-        btn.backgroundColor = UIColor.whiteColor
-        btn.setTitleColor('#3B5998'.to_color, forState:UIControlStateNormal)
-        btn.setTitleColor('#69c'.to_color, forState:UIControlStateHighlighted)
-
-        btn.on(:touch) do
-          NSNotificationCenter.defaultCenter.postNotificationName('title_touched', object:self)
-        end
-        self.contentView << btn
-      end
+      # @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
+      #   btn.titleLabel.font = UIFont.systemFontOfSize(16)
+      #   btn.titleLabel.lineBreakMode = UILineBreakModeWordWrap
+      #   btn.titleLabel.numberOfLines = 0
+      #   btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
+      #   btn.backgroundColor = UIColor.whiteColor
+      #   btn.setTitleColor('#3B5998'.to_color, forState:UIControlStateNormal)
+      #   btn.setTitleColor('#69c'.to_color, forState:UIControlStateHighlighted)
+      #   btn.on(:touch) do
+      #     NSNotificationCenter.defaultCenter.postNotificationName('title_touched', object:self)
+      #   end
+      #   self.contentView << btn
+      # end
 
       @nameLabel = UILabel.new.tap do |v|
         v.frame = CGRectZero
@@ -122,7 +127,7 @@ class BookmarkCell < UITableViewCell
 
   def fillWithBookmark(bookmark)
     unless self.no_title
-      self.titleButton.setTitle(bookmark.title, forState:UIControlStateNormal)
+      self.textLabel.text = bookmark.title
     end
     self.nameLabel.text    = bookmark.user_name
     self.dateLabel.text    = bookmark.datetime.timeAgo
@@ -177,8 +182,8 @@ class BookmarkCell < UITableViewCell
     ## favicon + title
     unless self.no_title
       self.faviconView.frame = [[SideWidth, current_y + 2], [16, 16]]
-      title_height = self.class.heightForTitle(self.titleButton.titleForState(UIControlStateNormal), frame_size.width)
-      self.titleButton.frame = [[SideWidth + 19, current_y], [body_width - 19, title_height]]
+      title_height = self.class.heightForTitle(self.textLabel.text, frame_size.width)
+      self.textLabel.frame = [[SideWidth + 19, current_y], [body_width - 19, title_height]]
     end
   end
 end
