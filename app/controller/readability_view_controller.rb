@@ -98,7 +98,9 @@ class ReadabilityViewController < UIViewController
     UIView.beginAnimations(nil, context:nil)
     UIView.setAnimationDuration(0.3)
     UIApplication.sharedApplication.setStatusBarHidden(true, animated:true)
-    navigationController.navigationBar.alpha = 0.0
+    if navigationController.navigationBar.present?
+      navigationController.navigationBar.alpha = 0.0
+    end
     UIView.commitAnimations
   end
 
@@ -107,7 +109,9 @@ class ReadabilityViewController < UIViewController
     UIView.beginAnimations(nil, context:nil)
     UIView.setAnimationDuration(0.3)
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:true)
-    navigationController.navigationBar.alpha = 1.0
+    if navigationController.navigationBar.present?
+      navigationController.navigationBar.alpha = 1.0
+    end
     UIView.commitAnimations
   end
 
