@@ -8,7 +8,7 @@ class AddBookmarkActivity < UIActivity
   end
 
   def activityImage
-    nil
+    UIImage.imageNamed("addHatenaBookmark")
   end
 
   def activityTitle
