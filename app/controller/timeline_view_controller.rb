@@ -149,18 +149,18 @@ class TimelineViewController < UITableViewController
     super
   end
 
-  def viewWillDisappear(animated)
-    super
-    # NSNotificationCenter.defaultCenter.removeObserver(self)
-  end
+  # def viewWillDisappear(animated)
+  #   super
+  #   NSNotificationCenter.defaultCenter.removeObserver(self)
+  # end
 
-  def open_bookmark (notification)
-    cell = notification.object
-    WebViewController.new.tap do |c|
-      c.bookmark = cell.bookmark
-      navigationController.pushViewController(c, animated:true)
-    end
-  end
+  # def open_bookmark (notification)
+  #   cell = notification.object
+  #   WebViewController.new.tap do |c|
+  #     c.bookmark = cell.bookmark
+  #     navigationController.pushViewController(c, animated:true)
+  #   end
+  # end
 
   def viewDidAppear(animated)
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
@@ -182,6 +182,14 @@ class TimelineViewController < UITableViewController
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     PermalinkViewController.new.tap do |c|
       c.bookmark = @bookmarks[indexPath.row]
+      self.navigationController.pushViewController(c, animated:true)
+    end
+  end
+
+  def open_profile
+    ProfileViewController.new.tap do |c|
+      c.user    = @user
+      c.as_mine = true
       self.navigationController.pushViewController(c, animated:true)
     end
   end
