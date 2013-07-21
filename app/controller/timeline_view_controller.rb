@@ -70,7 +70,7 @@ class TimelineViewController < UITableViewController
       v.frame = [[0, 0], [tableView.frame.size.width, 44]]
       v.backgroundColor = '#fff'.uicolor
       v.hide
-      v << UIActivityIndicatorView.gray.tap do |i|
+      v << @footer_indicator = UIActivityIndicatorView.gray.tap do |i|
         i.center = [v.frame.size.width / 2, v.frame.size.height / 2]
         i.startAnimating
       end
@@ -151,6 +151,8 @@ class TimelineViewController < UITableViewController
     tableView.reloadData
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
+
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
     super
   end
 
@@ -163,7 +165,6 @@ class TimelineViewController < UITableViewController
   # end
 
   def viewDidAppear(animated)
-    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
     super
   end
 

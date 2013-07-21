@@ -78,7 +78,7 @@ class BookmarksViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
-    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
 
     self.navigationItem.leftBarButtonItem  =
       UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
