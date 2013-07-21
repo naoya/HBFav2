@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module Readability
   class Parser
     attr_accessor :api_token
@@ -31,6 +32,7 @@ body {
   padding-top: 20px;
   padding-bottom: 20px;
   word-wrap: break-word;
+  font-family: "Hiragino Mincho ProN", serif;
 }
 
 a {
@@ -43,14 +45,14 @@ img, video, iframe {
 
 h1 {
   font-size: 120%;
-  font-family: sans-serif;
+  // font-family: sans-serif;
   border-bottom: 1px solid #ccc;
   padding-bottom: 10px;
   margin-bottom: 0;
 }
 
 h2, h3, h4 {
-  font-family: sans-serif;
+  // font-family: sans-serif;
 }
 
 h2 {
