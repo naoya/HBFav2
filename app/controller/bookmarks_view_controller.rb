@@ -39,7 +39,7 @@ class BookmarksViewController < UITableViewController
       if response.ok?
         json = BW::JSON.parse(response.body.to_str)
         ## FIXME: refactor with manager
-        if json['bookmarks'].present?
+        if json and json['bookmarks'].present?
           @bookmarks = json['bookmarks'].collect do |dict|
             Bookmark.new(
               {

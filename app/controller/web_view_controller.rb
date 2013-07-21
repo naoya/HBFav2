@@ -42,7 +42,7 @@ class WebViewController < UIViewController
         btn.on(:touch) do
           ReadabilityViewController.new.tap do |c|
             puts @webview.request.URL.absoluteString
-            c.entry = {:title => current_title, :url => current_url}
+            c.entry = {:title => @bookmark.title, :url => @bookmark.link}
 
             self.presentViewController(
               UINavigationController.alloc.initWithRootViewController(c),
@@ -53,22 +53,6 @@ class WebViewController < UIViewController
         end
       end
     )
-  end
-
-  def current_title
-    if @document_title.nil?
-      @bookmark.title
-    else
-      @document_title
-    end
-  end
-
-  def current_url
-    if @webview.request.URL.absoluteString.present?
-      @webview.request.URL.absoluteString
-    else
-      @bookmark.link
-    end
   end
 
   # http://stackoverflow.com/questions/4492683/why-do-i-have-to-subtract-for-height-of-uinavigationbar-twice-to-get-uiwebview-t
@@ -92,14 +76,40 @@ class WebViewController < UIViewController
   end
 
   def webViewDidFinishLoad (webView)
-    @document_title = webView.stringByEvaluatingJavaScriptFromString("document.title")
-    self.navigationItem.titleView.text = current_title
+    update_bookmark
+
     if @backButton.present? and @forwardButton.present?
       @backButton.enabled    = webView.canGoBack
       @forwardButton.enabled = webView.canGoForward
     end
     App.shared.networkActivityIndicatorVisible = false
     @indicator.stopAnimating
+  end
+
+  def update_bookmark
+    url = @webview.request.URL.absoluteString
+    BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
+      if response.ok?
+        data = BW::JSON.parse(response.body.to_str) || {}
+        @bookmark = Bookmark.new(
+          {
+            :eid   => data['eid'] || nil,
+            :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
+            :link  => url,
+            :count => data['count'] || 0,
+            :user => { :name => 'dummy' },
+            :datetime => '1977-01-01' # dummy
+          }
+        )
+
+        ## TODO: もっと複雑になるようなら Observer パターンに変更
+        self.navigationItem.titleView.text = @bookmark.title
+        @bookmarkButton.setTitle(@bookmark.count.to_s, forState:UIControlStateNormal)
+        @bookmarkButton.enabled = @bookmark.count.to_i > 0
+      else
+        # TODO:
+      end
+    end
   end
 
   def on_back
@@ -132,7 +142,7 @@ class WebViewController < UIViewController
       spacer,
       UIBarButtonItem.action { on_action },
       spacer,
-      UIBarButtonItem.titled(@bookmark.count.to_s, :bordered) do
+      @bookmarkButton = UIBarButtonItem.titled(@bookmark.count.to_s, :bordered) do
         BookmarksViewController.new.tap do |c|
           c.entry = @bookmark
           self.presentViewController(

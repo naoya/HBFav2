@@ -45,6 +45,10 @@ class Bookmark
       @count = n
     end
 
+    def to_i
+      @count
+    end
+
     def to_s
       @count == 1 ? "#{@count} user" : "#{@count} users"
     end
