@@ -46,6 +46,12 @@ class PermalinkViewController < UIViewController
   end
 
   def viewWillAppear(animated)
+    super
+    ## 応急処置
+    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
+    UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
+    self.wantsFullScreenLayout = false
+
     @bookmarkView.tap do |v|
       v.frame = self.view.bounds
       v.bookmark = self.bookmark

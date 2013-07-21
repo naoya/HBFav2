@@ -60,6 +60,12 @@ class WebViewController < UIViewController
   # http://stackoverflow.com/questions/4492683/why-do-i-have-to-subtract-for-height-of-uinavigationbar-twice-to-get-uiwebview-t
   def viewWillAppear(animated)
     super
+
+    ## 応急処置
+    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
+    UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
+    self.wantsFullScreenLayout = false
+
     self.navigationController.setToolbarHidden(false, animated:false)
     @webview.frame = view.bounds
     @indicator.center = [view.bounds.size.width / 2, view.bounds.size.height / 2]

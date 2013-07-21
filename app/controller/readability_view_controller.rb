@@ -35,13 +35,31 @@ class ReadabilityViewController < UIViewController
     rd = Readability::Parser.new
     rd.api_token = 'c523147005e6a6af0ec079ebb7035510b3409ee5'
     rd.parse_url(entry[:url]) do |response, html|
-      if response.ok?
+      if response.ok? and @webview
         @webview.loadHTMLString(html, baseURL:entry[:url].nsurl)
       else
         ## TODO: notify to user
         # App.alert("変換に失敗しました: " + response.status_code.to_s)
-        @indicator.stopAnimating
+        if @indicator
+          @indicator.stopAnimating
+        end
       end
+    end
+  end
+
+  def viewWillAppear(animated)
+    super
+    prepare_fullscreen
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
+    @webview.frame = self.view.frame
+  end
+
+  def viewWillDisappear(animated)
+    super
+    cleanup_fullscreen
+    self.navigationController.setToolbarHidden(false, animated:animated)
+    if @webview.loading?
+      @webview.stopLoading
     end
   end
 
@@ -51,8 +69,10 @@ class ReadabilityViewController < UIViewController
 
   def webViewDidFinishLoad (webView)
     App.shared.networkActivityIndicatorVisible = false
-    begin_fullscreen
     @indicator.stopAnimating
+    if !self.isBeingDismissed
+      begin_fullscreen
+    end
   end
 
   def prepare_fullscreen
@@ -74,37 +94,23 @@ class ReadabilityViewController < UIViewController
     self.wantsFullScreenLayout = false
   end
 
-  def viewWillAppear(animated)
-    super
-    prepare_fullscreen
-    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
-    @webview.frame = self.view.frame
-    @webview.layoutSubviews
-  end
-
-  def viewWillDisappear(animated)
-    super
-    cleanup_fullscreen
-    self.navigationController.setToolbarHidden(false, animated:animated)
-    if @webview.loading?
-      @webview.stopLoading
-    end
-  end
-
   def toggle_fullscreen
     @fullscreen = !@fullscreen
     @fullscreen ? begin_fullscreen : end_fullscreen
   end
 
   def begin_fullscreen
-    @fullscreen = true
-    UIView.beginAnimations(nil, context:nil)
-    UIView.setAnimationDuration(0.3)
-    UIApplication.sharedApplication.setStatusBarHidden(true, animated:true)
+    puts 'begin'
+    ## navigationController がある == まだ生き残ってる
     if navigationController.present?
+      puts 'act'
+      @fullscreen = true
+      UIView.beginAnimations(nil, context:nil)
+      UIView.setAnimationDuration(0.3)
+      UIApplication.sharedApplication.setStatusBarHidden(true, animated:true)
       navigationController.navigationBar.alpha = 0.0
+      UIView.commitAnimations
     end
-    UIView.commitAnimations
   end
 
   def end_fullscreen

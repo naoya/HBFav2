@@ -142,17 +142,17 @@ class TimelineViewController < UITableViewController
   def viewWillAppear(animated)
     # NSNotificationCenter.defaultCenter.addObserver(self, selector: :'open_bookmark:', name:'title_touched', object:nil)
 
+    ## 応急処置
+    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
+    UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
+    self.wantsFullScreenLayout = false
+
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
     super
   end
-
-  # def viewWillDisappear(animated)
-  #   super
-  #   NSNotificationCenter.defaultCenter.removeObserver(self)
-  # end
 
   # def open_bookmark (notification)
   #   cell = notification.object
