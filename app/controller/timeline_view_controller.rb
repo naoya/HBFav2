@@ -61,11 +61,9 @@ class TimelineViewController < UITableViewController
     end
 
     ## Activity Indicator for initial loading
-    @indicator = UIActivityIndicatorView.new.tap do |v|
-      v.style = UIActivityIndicatorViewStyleGray
+    view << @indicator = UIActivityIndicatorView.gray.tap do |v|
       v.startAnimating
     end
-    view << @indicator
 
     ## Loading indicator for Paging
     tableView.tableFooterView = UIView.new.tap do |v|
