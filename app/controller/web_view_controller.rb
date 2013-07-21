@@ -5,6 +5,8 @@ class WebViewController < UIViewController
   def viewDidLoad
     super
 
+    @link_clicked = nil
+
     @document_title = nil
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = '#fff'.uicolor
@@ -86,26 +88,36 @@ class WebViewController < UIViewController
     @indicator.stopAnimating
   end
 
+  def webView(webView, shouldStartLoadWithRequest:request, navigationType:navigationType)
+    if (navigationType == UIWebViewNavigationTypeLinkClicked)
+      @link_clicked = true
+    end
+    true
+  end
+
   def update_bookmark
     url = @webview.request.URL.absoluteString
     BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
       if response.ok?
-        data = BW::JSON.parse(response.body.to_str) || {}
-        @bookmark = Bookmark.new(
-          {
-            :eid   => data['eid'] || nil,
-            :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
-            :link  => url,
-            :count => data['count'] || 0,
-            :user => { :name => 'dummy' },
-            :datetime => '1977-01-01' # dummy
-          }
-        )
-
-        ## TODO: もっと複雑になるようなら Observer パターンに変更
-        self.navigationItem.titleView.text = @bookmark.title
-        @bookmarkButton.setTitle(@bookmark.count.to_s, forState:UIControlStateNormal)
-        @bookmarkButton.enabled = @bookmark.count.to_i > 0
+        ## まだ画面遷移が一度も発生してない場合はオブジェクトの更新は必要ない (リダイレクト対策)
+        ## ただし、その場合でもブックマークコメントの先読みのためにリクエストはしておく
+        if @link_clicked
+          data = BW::JSON.parse(response.body.to_str) || {}
+          @bookmark = Bookmark.new(
+            {
+              :eid   => data['eid'] || nil,
+              :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
+              :link  => url,
+              :count => data['count'] || 0,
+              :user => { :name => 'dummy' },
+              :datetime => '1977-01-01' # dummy
+            }
+          )
+          ## TODO: もっと複雑になるようなら Observer パターンに変更
+          self.navigationItem.titleView.text = @bookmark.title
+          @bookmarkButton.setTitle(@bookmark.count.to_s, forState:UIControlStateNormal)
+          @bookmarkButton.enabled = @bookmark.count.to_i > 0
+        end
       else
         # TODO:
       end
