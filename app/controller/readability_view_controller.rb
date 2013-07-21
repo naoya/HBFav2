@@ -5,6 +5,9 @@ class ReadabilityViewController < UIViewController
   def viewDidLoad
     super
 
+    ## 先に viewDidLoad でも設定しておかないと、webview が正しい高さを取れないみたい
+    prepare_fullscreen
+
     self.navigationItem.titleView = UILabel.new.tap do |label|
       label.frame = [[0, 0], [view.frame.size.width, 44]]
       label.font = UIFont.boldSystemFontOfSize(14.0)
@@ -17,37 +20,33 @@ class ReadabilityViewController < UIViewController
       end
     end
 
-    self.view.backgroundColor = '#fff'.uicolor
-    self.wantsFullScreenLayout = true
-    self.navigationController.navigationBar.translucent = true
+    self.view.backgroundColor = UIColor.redColor
     self.navigationItem.leftBarButtonItem  =
       UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
 
-    @webview = UIWebView.new.tap do |v|
-      v.delegate =self
-      tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_bars')
+    view << @webview = UIWebView.new.tap do |v|
+      v.frame = CGRectZero
+      v.delegate = self
+      tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_fullscreen')
       tapGesture.delegate = self
       v.addGestureRecognizer(tapGesture)
     end
-    view << @webview
 
-    @indicator = UIActivityIndicatorView.new.tap do |v|
+    view << @indicator = UIActivityIndicatorView.new.tap do |v|
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating
     end
-    view << @indicator
 
     rd = Readability::Parser.new
     rd.api_token = 'c523147005e6a6af0ec079ebb7035510b3409ee5'
     rd.parse_url(entry[:url]) do |response, html|
       if response.ok?
         @webview.loadHTMLString(html, baseURL:entry[:url].nsurl)
-        self.hide_bars
       else
         ## TODO: notify to user
         # App.alert("変換に失敗しました: " + response.status_code.to_s)
+        @indicator.stopAnimating
       end
-      @indicator.stopAnimating
     end
   end
 
@@ -57,22 +56,64 @@ class ReadabilityViewController < UIViewController
 
   def webViewDidFinishLoad (webView)
     App.shared.networkActivityIndicatorVisible = false
+    begin_fullscreen
     @indicator.stopAnimating
+  end
+
+  def prepare_fullscreen
+    @fullscreen = false
+    self.navigationController.setToolbarHidden(true, animated:false)
+    self.navigationController.setNavigationBarHidden(false, animated:false)
+    self.navigationController.navigationBar.translucent = true
+    self.navigationController.toolbar.translucent = true
+    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackTranslucent
+    self.wantsFullScreenLayout = true
+  end
+
+  def cleanup_fullscreen
+    @fullscreen = false
+    self.navigationController.setNavigationBarHidden(false, animated:false)
+    self.navigationController.navigationBar.translucent = false
+    self.navigationController.toolbar.translucent = false
+    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
+    self.wantsFullScreenLayout = false
   end
 
   def viewWillAppear(animated)
     super
-    self.navigationController.setToolbarHidden(true, animated:false)
-    self.navigationController.navigationBar.translucent = true
+    prepare_fullscreen
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
-    @webview.frame = self.view.bounds
+    @webview.frame = self.view.frame
+    @webview.layoutSubviews
   end
 
   def viewWillDisappear(animated)
     super
-    self.navigationController.navigationBar.translucent = false
+    cleanup_fullscreen
     self.navigationController.setToolbarHidden(false, animated:animated)
-    self.show_bars
+  end
+
+  def toggle_fullscreen
+    @fullscreen = !@fullscreen
+    @fullscreen ? begin_fullscreen : end_fullscreen
+  end
+
+  def begin_fullscreen
+    @fullscreen = true
+    UIView.beginAnimations(nil, context:nil)
+    UIView.setAnimationDuration(0.3)
+    UIApplication.sharedApplication.setStatusBarHidden(true, animated:true)
+    navigationController.navigationBar.alpha = 0.0
+    UIView.commitAnimations
+  end
+
+  def end_fullscreen
+    @fullscreen = false
+    UIView.beginAnimations(nil, context:nil)
+    UIView.setAnimationDuration(0.3)
+    UIApplication.sharedApplication.setStatusBarHidden(false, animated:true)
+    navigationController.navigationBar.alpha = 1.0
+    UIView.commitAnimations
   end
 
   def dealloc
@@ -80,74 +121,10 @@ class ReadabilityViewController < UIViewController
       @webview.stopLoading
     end
     @webview.delegate = nil
-
     super
   end
 
   def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
     true
-  end
-
-  def toggle_bars
-    self.toggle_statbar
-    self.toggle_navbar
-  end
-
-  def hide_bars
-    self.hide_statbar
-    self.hide_navbar
-  end
-
-  def show_bars
-    self.show_statbar
-    self.show_navbar
-  end
-
-  def toggle_statbar
-    UIApplication.sharedApplication.isStatusBarHidden ? self.show_statbar : self.hide_statbar
-  end
-
-  def hide_statbar
-    UIApplication.sharedApplication.setStatusBarHidden(true, withAnimation:true)
-  end
-
-  def show_statbar
-    UIApplication.sharedApplication.setStatusBarHidden(false, withAnimation:true)
-  end
-
-  def toggle_navbar
-    @navbar_hidden ? self.show_navbar : self.hide_navbar
-  end
-
-  def hide_navbar
-    if self.navigationController.present? # タイミングによっては nil のときがある
-      self.navigationController.navigationBar.fade_out(duration: 0.5)
-      @navbar_hidden = true
-    end
-  end
-
-  def show_navbar
-    if self.navigationController.present?
-      self.navigationController.navigationBar.fade_in(duration: 0.5)
-      @navbar_hidden = false
-    end
-  end
-
-  def toggle_toolbar
-    @toolbar_hidden ? self.show_toolbar : self.hide_toolbar
-  end
-
-  def hide_toolbar
-    if self.navigationController.present?
-      self.navigationController.toolbar.fade_out(duration: 0.5)
-      @toolbar_hidden = true
-    end
-  end
-
-  def show_toolbar
-    if self.navigationController.present?
-      self.navigationController.toolbar.fade_in(duration: 0.5)
-      @toolbar_hidden = false
-    end
   end
 end
