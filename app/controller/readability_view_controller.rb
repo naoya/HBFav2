@@ -8,13 +8,8 @@ class ReadabilityViewController < UIViewController
     ## 先に viewDidLoad でも設定しておかないと、webview が正しい高さを取れないみたい
     prepare_fullscreen
 
-    self.navigationItem.titleView = UILabel.new.tap do |label|
+    self.navigationItem.titleView = TitleLabel.new.tap do |label|
       label.frame = [[0, 0], [view.frame.size.width, 44]]
-      label.font = UIFont.boldSystemFontOfSize(14.0)
-      label.backgroundColor = UIColor.clearColor
-      label.shadowColor = UIColor.colorWithWhite(0.0, alpha: 0.5)
-      label.textAlignment = UITextAlignmentCenter
-      label.textColor = UIColor.whiteColor
       if entry[:title].present?
         label.text = entry[:title]
       end
