@@ -34,6 +34,7 @@ body {
   padding-bottom: 20px;
   word-wrap: break-word;
   font-family: "Hiragino Mincho ProN", serif;
+  color: #000;
 }
 
 a {
@@ -74,7 +75,7 @@ p.domain {
 
 div.content {
   margin-top: 3em;
-  font-size: 95%;
+  font-size: 100%;
   line-height: 180%;
 }
 
