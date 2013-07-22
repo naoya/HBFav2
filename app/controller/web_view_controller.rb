@@ -78,6 +78,10 @@ class WebViewController < UIViewController
     # if @webview.loading?
     #  @webview.stopLoading
     # end
+
+    if @connection.present?
+      @connection.cancel
+    end
   end
 
   def webViewDidStartLoad (webView)
@@ -104,7 +108,9 @@ class WebViewController < UIViewController
 
   def update_bookmark
     url = @webview.request.URL.absoluteString
-    BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
+    query = BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
+      @connection = query.connection
+
       if response.ok?
         ## まだ画面遷移が一度も発生してない場合はオブジェクトの更新は必要ない (リダイレクト対策)
         ## ただし、その場合でもブックマークコメントの先読みのためにリクエストはしておく
@@ -121,13 +127,14 @@ class WebViewController < UIViewController
             }
           )
           ## TODO: もっと複雑になるようなら Observer パターンに変更
-          self.navigationItem.titleView.text = @bookmark.title
+          self.navigationItem.titleView.text = @bookmark.title if self.navigationItem.present?
           @bookmarkButton.setTitle(@bookmark.count.to_s, forState:UIControlStateNormal)
           @bookmarkButton.enabled = @bookmark.count.to_i > 0
         end
       else
         # TODO:
       end
+      @connection = nil
     end
   end
 
