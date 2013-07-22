@@ -51,6 +51,10 @@ class PermalinkViewController < UIViewController
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
     self.wantsFullScreenLayout = false
+    self.navigationController.setToolbarHidden(true, animated:false)
+
+    # これないとダメなのかなあ。よくわからん･･･
+    self.navigationController.toolbar.translucent = true
 
     @bookmarkView.tap do |v|
       v.frame = self.view.bounds
