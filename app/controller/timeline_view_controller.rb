@@ -33,6 +33,13 @@ class TimelineViewController < UITableViewController
     # )
     # self.navigationItem.hidesBackButton = true
 
+    ## Loading indicator for Paging
+    tableView.tableFooterView = UIView.new.tap do |v|
+      v.frame = [[0, 0], [tableView.frame.size.width, 44]]
+      v.backgroundColor = '#fff'.uicolor
+      v << @footer_indicator = UIActivityIndicatorView.gray
+    end
+
     ## Pull to Refresh
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
       refresh.backgroundColor = '#e2e7ed'.uicolor
@@ -41,6 +48,8 @@ class TimelineViewController < UITableViewController
         @bookmarks.update(true) do |res|
           if not res.ok?
             App.alert(res.error_message)
+          else
+            @footer_indicator.startAnimating
           end
           refresh.endRefreshing
         end
@@ -65,17 +74,6 @@ class TimelineViewController < UITableViewController
       v.startAnimating
     end
 
-    ## Loading indicator for Paging
-    tableView.tableFooterView = UIView.new.tap do |v|
-      v.frame = [[0, 0], [tableView.frame.size.width, 44]]
-      v.backgroundColor = '#fff'.uicolor
-      v.hide
-      v << @footer_indicator = UIActivityIndicatorView.gray.tap do |i|
-        i.center = [v.frame.size.width / 2, v.frame.size.height / 2]
-        i.startAnimating
-      end
-    end
-
     if ApplicationUser.sharedUser.configured?
       ## Finally, fetch latest timeline feed
       initialize_bookmarks
@@ -98,7 +96,7 @@ class TimelineViewController < UITableViewController
       else
         tableView.reloadData
         if @bookmarks.size > 0
-          tableView.tableFooterView.show
+          @footer_indicator.startAnimating
         else
           if home?
             App.alert("表示するブックマークがありません。はてな上でお気に入りユーザーを追加してください")
@@ -153,6 +151,8 @@ class TimelineViewController < UITableViewController
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
 
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
+    @footer_indicator.center = [tableView.tableFooterView.frame.size.width / 2, tableView.tableFooterView.frame.size.height / 2]
+
     super
   end
 
