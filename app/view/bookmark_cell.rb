@@ -112,9 +112,10 @@ class BookmarkCell < UITableViewCell
 
       @dateLabel = UILabel.new.tap do |v|
         v.frame = CGRectZero
-        v.font  = UIFont.systemFontOfSize(14)
+        v.font  = UIFont.systemFontOfSize(13)
         v.textColor = '#999'.uicolor
         v.backgroundColor = '#fff'.uicolor
+        v.textAlignment = NSTextAlignmentRight
         self.contentView << v
       end
 
@@ -150,10 +151,12 @@ class BookmarkCell < UITableViewCell
 
     ## date (200決めうちとかだめすぎる･･･)
     unless (self.dateLabel.text.nil?)
-      date_size = self.dateLabel.text.sizeWithFont(UIFont.systemFontOfSize(14))
+      date_size = self.dateLabel.text.sizeWithFont(UIFont.systemFontOfSize(13))
       self.dateLabel.frame = [[SideWidth + 200, 10], [body_width - 200, date_size.height]]
       self.dateLabel.textAlignment = UITextAlignmentRight
-      self.dateLabel.fit_to_size(14)
+      # self.dateLabel.fit_to_size(14)
+      self.dateLabel.sizeToFit
+      self.dateLabel.right = contentView.right - 7
     end
 
     ## ここから body (右サイド) ##
