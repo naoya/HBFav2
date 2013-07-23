@@ -102,12 +102,12 @@ class BookmarksViewController < UITableViewController
 
   def tableView(tableView, heightForRowAtIndexPath:indexPath)
     ## FIXME: ここの引数最後のわかりづらい
-    BookmarkCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width, true)
+    BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width, true)
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     bookmark = @bookmarks[indexPath.row]
-    BookmarkCell.cellForBookmarkNoTitle(bookmark, inTableView:tableView)
+    BookmarkFastCell.cellForBookmarkNoTitle(bookmark, inTableView:tableView)
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
