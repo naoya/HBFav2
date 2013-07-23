@@ -48,11 +48,27 @@ class ProfileViewController < UIViewController
       {
         :rows  => [
           {
-            :label         => "人気エントリー (試験中)",
+            :label         => "人気エントリー",
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
             :action        => proc {
               self.navigationController.pushViewController(
-                HotentryViewController.new,
+                HotentryViewController.new.tap do |c|
+                  c.feed_url = "http://hbfav.herokuapp.com/hotentry"
+                  c.title    = "人気エントリー"
+                end,
+                animated:true
+              )
+            }
+          },
+          {
+            :label         => "新着エントリー",
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
+            :action        => proc {
+              self.navigationController.pushViewController(
+                HotentryViewController.new.tap do |c|
+                  c.feed_url = "http://hbfav.herokuapp.com/entrylist"
+                  c.title    = "新着エントリー"
+                end,
                 animated:true
               )
             }

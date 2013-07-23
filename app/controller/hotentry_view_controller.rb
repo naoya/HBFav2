@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 class HotentryViewController < UITableViewController
+  attr_accessor :feed_url
+
   def viewDidLoad
     @bookmarks = []
 
-    self.navigationItem.title = "人気エントリー"
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
 
@@ -29,7 +30,9 @@ class HotentryViewController < UITableViewController
   end
 
   def load_hotentry
-    query = BW::HTTP.get("http://hbfav.herokuapp.com/hotentry") do |response|
+    query = BW::HTTP.get(self.feed_url) do |response|
+      @connection = nil
+
       if response.ok?
         data = BW::JSON.parse(response.body.to_str)
         @bookmarks = data['bookmarks'].map do |dict|
@@ -44,11 +47,20 @@ class HotentryViewController < UITableViewController
       @indicator.stopAnimating
       self.refreshControl.endRefreshing
     end
+    @connection = query.connection
   end
 
   def viewWillAppear(animated)
     super
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 21]
+  end
+
+  def viewWillDisappear(animated)
+    super
+    if @connection.present?
+      @connection.cancel
+      App.shared.networkActivityIndicatorVisible = false
+    end
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
