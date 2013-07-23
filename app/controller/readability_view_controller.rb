@@ -40,8 +40,7 @@ class ReadabilityViewController < UIViewController
       if response.ok? and @webview
         @webview.loadHTMLString(html, baseURL:entry[:url].nsurl)
       else
-        ## TODO: notify to user
-        # App.alert("変換に失敗しました: " + response.status_code.to_s)
+        App.alert("変換に失敗しました: " + response.status_code.to_s)
         if @indicator
           @indicator.stopAnimating
         end
