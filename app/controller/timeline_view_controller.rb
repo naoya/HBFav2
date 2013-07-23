@@ -173,11 +173,11 @@ class TimelineViewController < UITableViewController
   end
 
   def tableView(tableView, heightForRowAtIndexPath:indexPath)
-    BookmarkCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+    BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    BookmarkCell.cellForBookmark(@bookmarks[indexPath.row], inTableView:tableView)
+    BookmarkFastCell.cellForBookmark(@bookmarks[indexPath.row], inTableView:tableView)
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
