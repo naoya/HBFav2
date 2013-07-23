@@ -42,12 +42,26 @@ class ProfileViewController < UIViewController
                 animated:true
               )
             }
-          }
+          },
+        ]
+      },
+      {
+        :rows  => [
+          {
+            :label         => "人気エントリー (試験中)",
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
+            :action        => proc {
+              self.navigationController.pushViewController(
+                HotentryViewController.new,
+                animated:true
+              )
+            }
+          },
         ]
       },
       {
         :title => "設定",
-        :rows  => [
+        :rows => [
           {
             :label => "はてなアカウント",
             :color => '#385487'.uicolor,
@@ -59,18 +73,7 @@ class ProfileViewController < UIViewController
                 animated:true
               )
             }
-          },
-          # {
-          #   :label => "Pocket",
-          #   :color => '#385487'.uicolor,
-          #   :action        => proc {
-          #     PocketAPI.sharedAPI.loginWithHandler(lambda do |api, error|
-          #         if (error)
-          #           App.alert(error.localizedDescription)
-          #         end
-          #     end)
-          #   }
-          # }
+          }
         ]
       }
     ]
@@ -136,7 +139,7 @@ class ProfileViewController < UIViewController
   def numberOfSectionsInTableView (tableView)
     # @dataSource.size
     # ↓ ちょっとこの書き方はどうかなあ
-    mine? ? 2 : 1
+    mine? ? 3 : 1
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
