@@ -39,6 +39,9 @@ body {
 
 a {
   text-decoration: none;
+  color: #000;
+  border-bottom: 1px dotted #ccc;
+  padding-bottom: 2px;
 }
 
 img, video, iframe {
@@ -82,6 +85,13 @@ div.content {
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+blockquote {
+  margin-left: 20px;
+  margin-right: 20px;
+  color: #333;
+  font-style: italic;
 }
 </style>
 </head>
