@@ -48,7 +48,7 @@ class BookmarkCell < UITableViewCell
     height     = 0
     constrain = CGSize.new(self.bodyWidth(width), 1000)
     if comment.length > 0
-      height = comment.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:constrain, lineBreakMode:UILineBreakModeCharacterWrap).height
+      height = comment.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:constrain, lineBreakMode:NSLineBreakByWordWrapping).height
     end
     height
   end
@@ -56,7 +56,7 @@ class BookmarkCell < UITableViewCell
   def self.heightForTitle(title, width)
     height     = 0
     constrain = CGSize.new(self.bodyWidth(width) - 19, 1000) # 19 ･･･ favicon (16) + margin (3)
-    title.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:constrain, lineBreakMode:UILineBreakModeWordWrap).height
+    title.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:constrain, lineBreakMode:NSLineBreakByWordWrapping).height
   end
 
   def initWithStyle(style, reuseIdentifier:cellid)
@@ -65,6 +65,7 @@ class BookmarkCell < UITableViewCell
         v.numberOfLines = 0
         v.font = UIFont.systemFontOfSize(16)
         v.textColor = '#3B5998'.uicolor
+        v.lineBreakMode = NSLineBreakByWordWrapping
       end
 
       self.imageView.layer.tap do |l|
@@ -105,6 +106,7 @@ class BookmarkCell < UITableViewCell
         v.frame = CGRectZero
         v.text  = nil
         v.backgroundColor = '#fff'.uicolor
+        v.lineBreakMode = NSLineBreakByWordWrapping
         self.contentView << v
       end
 

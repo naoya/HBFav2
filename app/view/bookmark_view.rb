@@ -42,6 +42,7 @@ module HBFav2
         @bodyView << @commentLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
+          v.lineBreakMode = NSLineBreakByWordWrapping
           v.font = UIFont.systemFontOfSize(18)
         end
 
@@ -49,7 +50,7 @@ module HBFav2
 
         @bodyView << @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
           btn.titleLabel.font = UIFont.systemFontOfSize(18)
-          btn.titleLabel.lineBreakMode = UILineBreakModeWordWrap
+          btn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping
           btn.titleLabel.numberOfLines = 0
           btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
           btn.backgroundColor = UIColor.whiteColor
@@ -62,6 +63,7 @@ module HBFav2
           v.numberOfLines = 0
           v.font = UIFont.systemFontOfSize(14)
           v.textColor = '#666'.uicolor
+          v.lineBreakMode = NSLineBreakByCharWrapping
         end
 
         @bodyView << @dateLabel = UILabel.new.tap do |v|
@@ -119,7 +121,7 @@ module HBFav2
         size = @commentLabel.text.sizeWithFont(
           UIFont.systemFontOfSize(18),
           constrainedToSize:constrain,
-          lineBreakMode:UILineBreakModeCharacterWrap
+          lineBreakMode:NSLineBreakByWordWrapping
         )
         @commentLabel.frame = [[10, current_y], size]
         current_y += size.height + 4
@@ -133,7 +135,7 @@ module HBFav2
       size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
         UIFont.systemFontOfSize(18),
         constrainedToSize:constrain,
-        lineBreakMode:UILineBreakModeWordWrap
+        lineBreakMode:NSLineBreakByWordWrapping
       )
       @titleButton.frame = [[10 + 19, current_y], size]
       current_y += size.height + 4
@@ -143,7 +145,7 @@ module HBFav2
       size = @urlLabel.text.sizeWithFont(
         UIFont.systemFontOfSize(14),
         constrainedToSize:constrain,
-        lineBreakMode:UILineBreakModeCharacterWrap
+        lineBreakMode:NSLineBreakByCharWrapping
       )
       @urlLabel.frame = [[10 + 19, current_y], size]
       current_y += size.height + 4
