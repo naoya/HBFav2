@@ -41,7 +41,7 @@ class ReadabilityViewController < UIViewController
         @webview.loadHTMLString(html, baseURL:entry[:url].nsurl)
       else
         App.alert("変換に失敗しました: " + response.status_code.to_s)
-        if @indicator
+        if @indicator.present?
           @indicator.stopAnimating
         end
       end
