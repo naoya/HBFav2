@@ -43,9 +43,7 @@ class WebViewController < UIViewController
         btn.setImage(UIImage.imageNamed('readability'), forState: :normal.uicontrolstate)
         btn.on(:touch) do
           ReadabilityViewController.new.tap do |c|
-            puts @webview.request.URL.absoluteString
             c.entry = {:title => @bookmark.title, :url => @bookmark.link}
-
             self.presentViewController(
               UINavigationController.alloc.initWithRootViewController(c),
               animated:true,
@@ -66,14 +64,15 @@ class WebViewController < UIViewController
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
     self.wantsFullScreenLayout = false
 
-    self.navigationController.setToolbarHidden(false, animated:false)
+    self.navigationController.setToolbarHidden(false, animated:animated)
+    self.navigationController.toolbar.translucent = false
+
     @webview.frame = view.bounds
     @indicator.center = [view.bounds.size.width / 2, view.bounds.size.height / 2]
   end
 
   def viewWillDisappear(animated)
-    self.navigationController.setToolbarHidden(true, animated:animated)
-
+    super
     ## これがあると Readability やブコメでローディングが止まっちゃう
     # if @webview.loading?
     #  @webview.stopLoading
@@ -157,6 +156,7 @@ class WebViewController < UIViewController
 
   def initialize_toolbar
     self.navigationController.setToolbarHidden(false, animated:false)
+    self.navigationController.toolbar.translucent = false
     spacer = UIBarButtonItem.flexiblespace
 
     self.toolbarItems = [

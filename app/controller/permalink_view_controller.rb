@@ -6,11 +6,14 @@ class PermalinkViewController < UIViewController
     super
 
     self.navigationItem.title = "ブックマーク"
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
+    self.navigationController.toolbar.translucent = true
+    self.navigationController.setToolbarHidden(true, animated:false)
+    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
     @bookmarkView = HBFav2::BookmarkView.new.tap do |v|
-      v.frame = CGRectZero
+      v.frame = self.view.bounds
+      v.backgroundColor = UIColor.whiteColor
 
       v.headerView.when_tapped do
         ProfileViewController.new.tap do |c|
@@ -47,20 +50,30 @@ class PermalinkViewController < UIViewController
 
   def viewWillAppear(animated)
     super
+
     ## 応急処置
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
-    UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
+    UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
     self.wantsFullScreenLayout = false
-    self.navigationController.setToolbarHidden(true, animated:false)
 
-    # これないとダメなのかなあ。よくわからん･･･
     self.navigationController.toolbar.translucent = true
+    self.navigationController.setToolbarHidden(true, animated:animated)
 
     @bookmarkView.tap do |v|
-      v.frame = self.view.bounds
+      ## ここでセットすると隠れた toolbar 部分のサイズが勘定されない、なぜ...
+      # v.frame = self.view.bounds
       v.bookmark = self.bookmark
       v.starView.highlighted = false
       v.starView.backgroundColor = UIColor.whiteColor
     end
+  end
+
+  def viewDidAppear(animated)
+    super
+  end
+
+  def viewWillDisappear(animated)
+    super
+    self.navigationController.toolbar.translucent = false
   end
 end
