@@ -77,6 +77,11 @@ class BookmarkFastCell < UITableViewCell
 
   def initWithStyle(style, reuseIdentifier:cellid)
     if super
+      @contentView = BookmarkFastCellContentView.alloc.initWithFrame(CGRectZero)
+      @contentView.backgroundColor = UIColor.whiteColor
+      @contentView.opaque = true
+      self.contentView << @contentView
+
       self.imageView.layer.tap do |l|
         l.masksToBounds = true
         l.cornerRadius = 5.0
@@ -85,18 +90,14 @@ class BookmarkFastCell < UITableViewCell
       @starView = HBFav2::HatenaStarView.new.tap do |v|
         v.frame = CGRectZero
         v.backgroundColor = '#fff'.uicolor
-        self.contentView << v
+        @contentView << v
       end
 
       @faviconView = UIImageView.new.tap do |v|
         v.frame = CGRectZero
         v.backgroundColor = '#fff'.uicolor
-        self.contentView << v
+        @contentView << v
       end
-
-      @contentView = BookmarkFastCellContentView.alloc.initWithFrame(CGRectZero)
-      @contentView.backgroundColor = UIColor.clearColor
-      self.contentView << @contentView
 
       ## 以下はただの入れ物。描画には利用しない
       @titleLabel = UILabel.new.tap do |v|
@@ -135,6 +136,10 @@ class BookmarkFastCell < UITableViewCell
     self.starView.url = bookmark.permalink
 
     self.setNeedsDisplay
+  end
+
+  def setNeedsDisplay
+    super
     if @contentView.present?
       @contentView.setNeedsDisplay
     end
@@ -150,9 +155,23 @@ class BookmarkFastCell < UITableViewCell
   def drawRectContent(rect)
     body_width = self.class.bodyWidth(self.frame.size.width)
 
+    if (self.selected? || self.highlighted?)
+      color = {
+        :date => '#fff',
+        :text => '#fff',
+        :link => '#fff',
+      }
+   else
+      color = {
+        :date => '#999',
+        :text => '#000',
+        :link => '#3B5998',
+      }
+    end
+
     ## date
     unless (self.dateLabel.text.nil?)
-      '#999'.uicolor.set
+      color[:date].uicolor.set
       size = self.dateLabel.text.sizeWithFont(self.dateLabel.font)
       x = self.contentView.frame.size.width - size.width - 7
       y = 10
@@ -160,7 +179,7 @@ class BookmarkFastCell < UITableViewCell
     end
 
     ## ここから body (右サイド) ##
-    UIColor.blackColor.set
+    color[:text].uicolor.set
     current_y = 10
 
     ## name
@@ -189,7 +208,7 @@ class BookmarkFastCell < UITableViewCell
     unless self.no_title
       self.faviconView.frame = [[SideWidth, current_y + 2], [16, 16]]
 
-      '#3B5998'.uicolor.set
+      color[:link].uicolor.set
       size = self.class.sizeForTitle(self.titleLabel.text, self.frame.size.width)
       self.titleLabel.text.drawInRect([[SideWidth + 19, current_y], size], withFont:self.titleLabel.font, lineBreakMode:NSLineBreakByWordWrapping)
     end
