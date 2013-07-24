@@ -83,8 +83,8 @@ class BookmarkFastCell < UITableViewCell
       self.contentView << @contentView
 
       self.imageView.layer.tap do |l|
-        l.masksToBounds = true
-        l.cornerRadius = 5.0
+       l.masksToBounds = true
+       l.cornerRadius = 5.0
       end
 
       ## 以下はただの入れ物。描画には利用しない
@@ -132,7 +132,7 @@ class BookmarkFastCell < UITableViewCell
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
     self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage, completed:lambda do |image, error, cacheType|
       self.setNeedsDisplay
-      end)
+    end)
     self.starView.set_url(bookmark.permalink) do |image, error, cacheType|
       if image.present? and image.size.height > 1.0
         self.setNeedsDisplay
@@ -164,7 +164,7 @@ class BookmarkFastCell < UITableViewCell
         :text => '#fff',
         :link => '#fff',
       }
-   else
+    else
       color = {
         :date => '#999',
         :text => '#000',
