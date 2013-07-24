@@ -87,19 +87,17 @@ class BookmarkFastCell < UITableViewCell
         l.cornerRadius = 5.0
       end
 
+      ## 以下はただの入れ物。描画には利用しない
       @starView = HBFav2::HatenaStarView.new.tap do |v|
         v.frame = CGRectZero
         v.backgroundColor = '#fff'.uicolor
-        # @contentView << v
       end
 
       @faviconView = UIImageView.new.tap do |v|
         v.frame = CGRectZero
         v.backgroundColor = '#fff'.uicolor
-        # @contentView << v
       end
 
-      ## 以下はただの入れ物。描画には利用しない
       @titleLabel = UILabel.new.tap do |v|
         v.frame = CGRectZero
         v.font  = UIFont.systemFontOfSize(16)
