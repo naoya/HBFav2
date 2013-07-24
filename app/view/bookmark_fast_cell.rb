@@ -130,9 +130,13 @@ class BookmarkFastCell < UITableViewCell
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
 
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
-    self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage, completed:lambda do |image, error, cacheType|
-      self.setNeedsDisplay
-    end)
+
+    unless self.no_title
+      self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage, completed:lambda do |image, error, cacheType|
+        self.setNeedsDisplay
+      end)
+    end
+
     self.starView.set_url(bookmark.permalink) do |image, error, cacheType|
       if image.present? and image.size.height > 1.0
         self.setNeedsDisplay
