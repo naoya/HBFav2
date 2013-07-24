@@ -51,8 +51,13 @@ class HotentryViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
-    super
+    indexPath = tableView.indexPathForSelectedRow
+    tableView.reloadData
+    tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
+    tableView.deselectRowAtIndexPath(indexPath, animated:animated);
+
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 21]
+    super
   end
 
   def viewWillDisappear(animated)
