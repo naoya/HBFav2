@@ -90,13 +90,13 @@ class BookmarkFastCell < UITableViewCell
       @starView = HBFav2::HatenaStarView.new.tap do |v|
         v.frame = CGRectZero
         v.backgroundColor = '#fff'.uicolor
-        @contentView << v
+        # @contentView << v
       end
 
       @faviconView = UIImageView.new.tap do |v|
         v.frame = CGRectZero
         v.backgroundColor = '#fff'.uicolor
-        @contentView << v
+        # @contentView << v
       end
 
       ## 以下はただの入れ物。描画には利用しない
@@ -132,9 +132,14 @@ class BookmarkFastCell < UITableViewCell
     self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
 
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
-    self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
-    self.starView.url = bookmark.permalink
-
+    self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage, completed:lambda do |image, error, cacheType|
+      self.setNeedsDisplay
+      end)
+    self.starView.set_url(bookmark.permalink) do |image, error, cacheType|
+      if image.present? and image.size.height > 1.0
+        self.setNeedsDisplay
+      end
+    end
     self.setNeedsDisplay
   end
 
@@ -189,7 +194,10 @@ class BookmarkFastCell < UITableViewCell
     ## Star
     x = SideWidth + size.width + 3
     y = current_y + 4.5
-    self.starView.origin = [x, y]
+    if starView.image.present?
+      star = self.starView.image
+      star.drawInRect([[x, y], [star.size.width / 2, star.size.height / 2]])
+    end
 
     current_y += size.height + 5
 
@@ -206,8 +214,7 @@ class BookmarkFastCell < UITableViewCell
 
     ## favicon + title
     unless self.no_title
-      self.faviconView.frame = [[SideWidth, current_y + 2], [16, 16]]
-
+      self.faviconView.image.drawInRect([[SideWidth, current_y + 2], [16, 16]])
       color[:link].uicolor.set
       size = self.class.sizeForTitle(self.titleLabel.text, self.frame.size.width)
       self.titleLabel.text.drawInRect([[SideWidth + 19, current_y], size], withFont:self.titleLabel.font, lineBreakMode:NSLineBreakByWordWrapping)

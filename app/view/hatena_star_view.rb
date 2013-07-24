@@ -7,8 +7,7 @@ module HBFav2
     #   end
     #   self
     # end
-
-    def url=(url)
+    def set_url(url, &cb)
       api_url = "http://s.st-hatena.com/entry.count.image?uri=#{url.escape_url}&q=1"
       self.setImageWithURL(
         api_url.nsurl,
@@ -19,8 +18,13 @@ module HBFav2
             # self.frame = [self.frame.origin, [image.size.width / 2, image.size.height / 2]]
             self.size = [image.size.width / 2, image.size.height / 2]
           end
+          cb.call(image, error, cacheType) if cb
         end
       )
+    end
+
+    def url=(url)
+      self.set_url(url)
     end
   end
 end
