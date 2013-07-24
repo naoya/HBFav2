@@ -6,8 +6,11 @@ Bundler.require :default
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
-  app.name = 'HBFav2'
-  app.identifier = "org.bloghackers.net.HBFav2"
+  app.name = 'HBFav'
+  app.version = "2.0"
+  app.deployment_target = '6.1'
+  app.device_family = [:iphone]
+  app.identifier = "HBFav"
   app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'
   app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
 
