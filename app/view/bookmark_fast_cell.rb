@@ -105,7 +105,7 @@ class BookmarkFastCell < UITableViewCell
   def fillWithBookmark(bookmark)
     @labels[:name]    = bookmark.user.name
     @labels[:date]    = bookmark.datetime.timeAgo
-    @labels[:comment] = bookmark.comment.present? ? bookmark.comment : nil
+    @labels[:comment] = bookmark.comment.length > 0 ? bookmark.comment : nil
     @labels[:title]   = bookmark.title unless self.no_title
 
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"profile_placeholder.png".uiimage, options:SDWebImageLowPriority)
@@ -191,7 +191,7 @@ class BookmarkFastCell < UITableViewCell
 
     ## comment
     comment_height = 0
-    if @labels[:comment].present?
+    if @labels[:comment]
       size = self.class.sizeForComment(@labels[:comment], self.frame.size.width)
       comment_height = size.height
       @labels[:comment].drawInRect([[SideWidth, current_y], size], withFont:attributes[:comment][:font], lineBreakMode:NSLineBreakByWordWrapping)
