@@ -121,8 +121,8 @@ class BookmarkFastCell < UITableViewCell
     end
 
     star_url = "http://s.st-hatena.com/entry.count.image?uri=#{bookmark.permalink.escape_url}&q=1"
-    sdmgr.downloadWithURL(star_url.nsurl, options:0, progress:nil, completed:lambda do |image, error, cacheType, finished|
-      if image.present? and image.size.height > 1.0
+    sdmgr.downloadWithURL(star_url.nsurl, options:SDWebImageCacheMemoryOnly, progress:nil, completed:lambda do |image, error, cacheType, finished|
+      if image.present?
         @star = image
         self.setNeedsDisplay
       end
