@@ -37,7 +37,7 @@ class StarCell < UITableViewCell
 
   def fillWithStar(star)
     self.nameLabel.text    = star.user.name
-    self.imageView.setImageWithURL(star.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
+    self.imageView.setImageWithURL(star.user.profile_image_url.nsurl, placeholderImage:"profile_placeholder.png.png".uiimage)
   end
 
   def layoutSubviews

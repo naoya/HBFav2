@@ -108,7 +108,7 @@ class BookmarkFastCell < UITableViewCell
     @labels[:comment] = bookmark.comment.present? ? bookmark.comment : nil
     @labels[:title]   = bookmark.title unless self.no_title
 
-    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage, options:SDWebImageLowPriority)
+    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"profile_placeholder.png".uiimage, options:SDWebImageLowPriority)
 
     sdmgr = SDWebImageManager.sharedManager
     unless self.no_title
