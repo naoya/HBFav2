@@ -1,0 +1,17 @@
+class BookmarkLabelAttributes
+  attr_reader :attributes
+
+  def self.sharedAttributes
+    Dispatch.once { @instance ||= new }
+    @instance
+  end
+
+  def initialize
+    @attributes = {
+      :name    => { :color => '#000',    :font => UIFont.boldSystemFontOfSize(16) },
+      :title   => { :color => '#3b5998', :font => UIFont.systemFontOfSize(16) },
+      :comment => { :color => '#000',    :font => UIFont.systemFontOfSize(16) },
+      :date    => { :color => '#999',    :font => UIFont.systemFontOfSize(13) },
+    }
+  end
+end

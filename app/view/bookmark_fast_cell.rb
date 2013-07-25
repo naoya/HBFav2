@@ -7,8 +7,6 @@ end
 
 class BookmarkFastCell < UITableViewCell
   SideWidth = 65
-
-  attr_reader :titleLabel, :nameLabel, :commentLabel, :dateLabel
   attr_accessor :no_title
 
   def self.cellForBookmark (bookmark, inTableView:tableView)
@@ -34,7 +32,9 @@ class BookmarkFastCell < UITableViewCell
   end
 
   def self.heightForBookmark(bookmark, width, no_title = false)
-    name_size      = bookmark.user_name.sizeWithFont(UIFont.boldSystemFontOfSize(16))
+    name_size      = bookmark.user.name.sizeWithFont(
+      BookmarkLabelAttributes.sharedAttributes.attributes[:name][:font]
+    )
     comment_height = self.heightForComment(bookmark.comment, width)
 
     title_height = 0
@@ -60,7 +60,11 @@ class BookmarkFastCell < UITableViewCell
   def self.sizeForComment(comment, width)
     constrain = CGSize.new(self.bodyWidth(width), 1000)
     if comment.length > 0
-      comment.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:constrain, lineBreakMode:NSLineBreakByWordWrapping)
+      comment.sizeWithFont(
+        BookmarkLabelAttributes.sharedAttributes.attributes[:comment][:font],
+        constrainedToSize:constrain,
+        lineBreakMode:NSLineBreakByWordWrapping
+      )
     else
       [0.0, 0.0]
     end
@@ -72,7 +76,11 @@ class BookmarkFastCell < UITableViewCell
 
   def self.sizeForTitle(title, width)
     constrain = CGSize.new(self.bodyWidth(width) - 19, 1000) # 19 ･･･ favicon (16) + margin (3)
-    title.sizeWithFont(UIFont.systemFontOfSize(16), constrainedToSize:constrain, lineBreakMode:NSLineBreakByWordWrapping)
+    title.sizeWithFont(
+      BookmarkLabelAttributes.sharedAttributes.attributes[:title][:font],
+      constrainedToSize:constrain,
+      lineBreakMode:NSLineBreakByWordWrapping
+    )
   end
 
   def initWithStyle(style, reuseIdentifier:cellid)
@@ -87,39 +95,18 @@ class BookmarkFastCell < UITableViewCell
        l.cornerRadius = 5.0
       end
 
+      @labels  = {}
       @star    = nil
       @favicon = nil
-
-      @titleLabel = UILabel.new.tap do |v|
-        v.frame = CGRectZero
-        v.font  = UIFont.systemFontOfSize(16)
-      end
-
-      @nameLabel = UILabel.new.tap do |v|
-        v.frame = CGRectZero
-        v.font  = UIFont.boldSystemFontOfSize(16)
-      end
-
-      @commentLabel = UILabel.new.tap do |v|
-        v.frame = CGRectZero
-        v.font = UIFont.systemFontOfSize(16)
-      end
-
-      @dateLabel = UILabel.new.tap do |v|
-        v.frame = CGRectZero
-        v.font  = UIFont.systemFontOfSize(13)
-      end
     end
     self
   end
 
   def fillWithBookmark(bookmark)
-    unless self.no_title
-      self.titleLabel.text   = bookmark.title
-    end
-    self.nameLabel.text    = bookmark.user_name
-    self.dateLabel.text    = bookmark.datetime.timeAgo
-    self.commentLabel.text = bookmark.comment.length > 0 ? bookmark.comment : nil
+    @labels[:name]    = bookmark.user.name
+    @labels[:date]    = bookmark.datetime.timeAgo
+    @labels[:comment] = bookmark.comment.present? ? bookmark.comment : nil
+    @labels[:title]   = bookmark.title unless self.no_title
 
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
 
@@ -160,6 +147,7 @@ class BookmarkFastCell < UITableViewCell
 
   def drawRectContent(rect)
     body_width = self.class.bodyWidth(self.frame.size.width)
+    attributes = BookmarkLabelAttributes.sharedAttributes.attributes
 
     if (self.selected? || self.highlighted?)
       color = {
@@ -169,19 +157,19 @@ class BookmarkFastCell < UITableViewCell
       }
     else
       color = {
-        :date => '#999',
-        :text => '#000',
-        :link => '#3B5998',
+        :date => attributes[:date][:color],
+        :text => attributes[:name][:color],
+        :link => attributes[:title][:color],
       }
     end
 
     ## date
-    unless (self.dateLabel.text.nil?)
+    if @labels[:date].present?
       color[:date].uicolor.set
-      size = self.dateLabel.text.sizeWithFont(self.dateLabel.font)
+      size = @labels[:date].sizeWithFont(attributes[:date][:font])
       x = self.contentView.frame.size.width - size.width - 7
       y = 10
-      self.dateLabel.text.drawInRect([[x, y], size], withFont:self.dateLabel.font)
+      @labels[:date].drawInRect([[x, y], size], withFont:attributes[:date][:font])
     end
 
     ## ここから body (右サイド) ##
@@ -189,8 +177,8 @@ class BookmarkFastCell < UITableViewCell
     current_y = 10
 
     ## name
-    size = self.nameLabel.text.sizeWithFont(self.nameLabel.font)
-    self.nameLabel.text.drawInRect([[SideWidth, current_y], size], withFont:self.nameLabel.font)
+    size = @labels[:name].sizeWithFont(attributes[:name][:font])
+    @labels[:name].drawInRect([[SideWidth, current_y], size], withFont:attributes[:name][:font])
 
     ## Star
     if @star.present?
@@ -203,10 +191,10 @@ class BookmarkFastCell < UITableViewCell
 
     ## comment
     comment_height = 0
-    if self.commentLabel.text
-      size = self.class.sizeForComment(self.commentLabel.text, self.frame.size.width)
+    if @labels[:comment].present?
+      size = self.class.sizeForComment(@labels[:comment], self.frame.size.width)
       comment_height = size.height
-      self.commentLabel.text.drawInRect([[SideWidth, current_y], size], withFont:self.commentLabel.font, lineBreakMode:NSLineBreakByWordWrapping)
+      @labels[:comment].drawInRect([[SideWidth, current_y], size], withFont:attributes[:comment][:font], lineBreakMode:NSLineBreakByWordWrapping)
     end
 
     margin = comment_height > 0 ? 10 : 0
@@ -218,8 +206,8 @@ class BookmarkFastCell < UITableViewCell
         @favicon.drawInRect([[SideWidth, current_y + 2], [16, 16]]) if @favicon.present?
       end
       color[:link].uicolor.set
-      size = self.class.sizeForTitle(self.titleLabel.text, self.frame.size.width)
-      self.titleLabel.text.drawInRect([[SideWidth + 19, current_y], size], withFont:self.titleLabel.font, lineBreakMode:NSLineBreakByWordWrapping)
+      size = self.class.sizeForTitle(@labels[:title], self.frame.size.width)
+      @labels[:title].drawInRect([[SideWidth + 19, current_y], size], withFont:attributes[:title][:font], lineBreakMode:NSLineBreakByWordWrapping)
     end
   end
 end
