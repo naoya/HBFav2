@@ -90,13 +90,15 @@ class BookmarkFastCell < UITableViewCell
       @contentView.opaque = true
       self.contentView << @contentView
 
+      ## プロフィール画像と Star は ImageView を使わないと安定した配信が難しい、ので使う
       self.imageView.layer.tap do |l|
        l.masksToBounds = true
        l.cornerRadius = 5.0
       end
+      @starView = HBFav2::HatenaStarView.new
 
+      ## それ以外は UIView を使わない
       @labels  = {}
-      @star    = nil
       @favicon = nil
     end
     self
@@ -120,13 +122,9 @@ class BookmarkFastCell < UITableViewCell
       end)
     end
 
-    star_url = "http://s.st-hatena.com/entry.count.image?uri=#{bookmark.permalink.escape_url}&q=1"
-    sdmgr.downloadWithURL(star_url.nsurl, options:SDWebImageCacheMemoryOnly|SDWebImageLowPriority, progress:nil, completed:lambda do |image, error, cacheType, finished|
-      if image.present?
-        @star = image
-        self.setNeedsDisplay
-      end
-    end)
+    @starView.set_url(bookmark.permalink) do |image, error, cacheType|
+      self.setNeedsDisplay
+    end
 
     self.setNeedsDisplay
   end
@@ -180,12 +178,9 @@ class BookmarkFastCell < UITableViewCell
     size = @labels[:name].sizeWithFont(attributes[:name][:font])
     @labels[:name].drawInRect([[SideWidth, current_y], size], withFont:attributes[:name][:font])
 
-    ## Star
-    if @star.present?
-      x = SideWidth + size.width + 3
-      y = current_y + 4.5
-      @star.drawInRect([[x, y], [@star.size.width / 2, @star.size.height / 2]])
-    end
+    x = SideWidth + size.width + 3
+    y = current_y + 4.5
+    @starView.image.drawInRect([[x, y], @starView.size])
 
     current_y += size.height + 5
 
