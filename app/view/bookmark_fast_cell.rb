@@ -112,7 +112,7 @@ class BookmarkFastCell < UITableViewCell
 
     sdmgr = SDWebImageManager.sharedManager
     unless self.no_title
-      sdmgr.downloadWithURL(bookmark.favicon_url.nsurl, options:0, progress:nil, completed:lambda do |image, error, cacheType, finished|
+      sdmgr.downloadWithURL(bookmark.favicon_url.nsurl, options:SDWebImageLowPriority, progress:nil, completed:lambda do |image, error, cacheType, finished|
         if image.present?
           @favicon = image
           self.setNeedsDisplay
@@ -121,7 +121,7 @@ class BookmarkFastCell < UITableViewCell
     end
 
     star_url = "http://s.st-hatena.com/entry.count.image?uri=#{bookmark.permalink.escape_url}&q=1"
-    sdmgr.downloadWithURL(star_url.nsurl, options:SDWebImageCacheMemoryOnly, progress:nil, completed:lambda do |image, error, cacheType, finished|
+    sdmgr.downloadWithURL(star_url.nsurl, options:SDWebImageCacheMemoryOnly|SDWebImageLowPriority, progress:nil, completed:lambda do |image, error, cacheType, finished|
       if image.present?
         @star = image
         self.setNeedsDisplay
