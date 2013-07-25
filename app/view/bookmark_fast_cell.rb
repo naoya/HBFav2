@@ -8,7 +8,7 @@ end
 class BookmarkFastCell < UITableViewCell
   SideWidth = 65
 
-  attr_reader :titleLabel, :nameLabel, :commentLabel, :dateLabel, :faviconView, :starView
+  attr_reader :titleLabel, :nameLabel, :commentLabel, :dateLabel
   attr_accessor :no_title
 
   def self.cellForBookmark (bookmark, inTableView:tableView)
@@ -87,16 +87,8 @@ class BookmarkFastCell < UITableViewCell
        l.cornerRadius = 5.0
       end
 
-      ## 以下はただの入れ物。描画には利用しない
-      @starView = HBFav2::HatenaStarView.new.tap do |v|
-        v.frame = CGRectZero
-        v.backgroundColor = '#fff'.uicolor
-      end
-
-      @faviconView = UIImageView.new.tap do |v|
-        v.frame = CGRectZero
-        v.backgroundColor = '#fff'.uicolor
-      end
+      @star    = nil
+      @favicon = nil
 
       @titleLabel = UILabel.new.tap do |v|
         v.frame = CGRectZero
@@ -131,17 +123,24 @@ class BookmarkFastCell < UITableViewCell
 
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"photoDefault.png".uiimage)
 
+    sdmgr = SDWebImageManager.sharedManager
     unless self.no_title
-      self.faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:"photoDefault.png".uiimage, completed:lambda do |image, error, cacheType|
-        self.setNeedsDisplay
+      sdmgr.downloadWithURL(bookmark.favicon_url.nsurl, options:0, progress:nil, completed:lambda do |image, error, cacheType, finished|
+        if image.present?
+          @favicon = image
+          self.setNeedsDisplay
+        end
       end)
     end
 
-    self.starView.set_url(bookmark.permalink) do |image, error, cacheType|
+    star_url = "http://s.st-hatena.com/entry.count.image?uri=#{bookmark.permalink.escape_url}&q=1"
+    sdmgr.downloadWithURL(star_url.nsurl, options:0, progress:nil, completed:lambda do |image, error, cacheType, finished|
       if image.present? and image.size.height > 1.0
+        @star = image
         self.setNeedsDisplay
       end
-    end
+    end)
+
     self.setNeedsDisplay
   end
 
@@ -194,11 +193,10 @@ class BookmarkFastCell < UITableViewCell
     self.nameLabel.text.drawInRect([[SideWidth, current_y], size], withFont:self.nameLabel.font)
 
     ## Star
-    x = SideWidth + size.width + 3
-    y = current_y + 4.5
-    if starView.image.present?
-      star = self.starView.image
-      star.drawInRect([[x, y], [star.size.width / 2, star.size.height / 2]])
+    if @star.present?
+      x = SideWidth + size.width + 3
+      y = current_y + 4.5
+      @star.drawInRect([[x, y], [@star.size.width / 2, @star.size.height / 2]])
     end
 
     current_y += size.height + 5
@@ -216,7 +214,9 @@ class BookmarkFastCell < UITableViewCell
 
     ## favicon + title
     unless self.no_title
-      self.faviconView.image.drawInRect([[SideWidth, current_y + 2], [16, 16]])
+      if @favicon.present?
+        @favicon.drawInRect([[SideWidth, current_y + 2], [16, 16]]) if @favicon.present?
+      end
       color[:link].uicolor.set
       size = self.class.sizeForTitle(self.titleLabel.text, self.frame.size.width)
       self.titleLabel.text.drawInRect([[SideWidth + 19, current_y], size], withFont:self.titleLabel.font, lineBreakMode:NSLineBreakByWordWrapping)
