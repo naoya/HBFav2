@@ -53,11 +53,12 @@ class TimelineViewController < UITableViewController
       refresh.backgroundColor = '#e2e7ed'.uicolor
       refresh.on(:value_changed) do |event|
         refresh.beginRefreshing
+        self.update_refresh_title("更新中...")
         @bookmarks.update(true) do |res|
           if not res.ok?
-            ## TODO:
-            # App.alert(res.error_message)
+            self.update_refresh_title(res.error_message)
           else
+            self.update_refresh_title
             @footer_indicator.startAnimating
           end
           refresh.endRefreshing
@@ -80,7 +81,7 @@ class TimelineViewController < UITableViewController
 
     ## Activity Indicator for initial loading
     view << @indicator = UIActivityIndicatorView.gray.tap do |v|
-      v.startAnimating
+      # v.startAnimating
     end
 
     if ApplicationUser.sharedUser.configured?
@@ -97,13 +98,32 @@ class TimelineViewController < UITableViewController
     end
   end
 
+  def update_refresh_title (msg = nil)
+    shadow = NSShadow.new
+    shadow.shadowOffset = [0, 0.5]
+    shadow.shadowColor = UIColor.whiteColor
+
+    if msg
+      self.refreshControl.attributedTitle = msg.attrd.shadow(shadow)
+    else
+      formatter = NSDateFormatter.new
+      formatter.dateFormat = "MM/dd HH:mm"
+      now = formatter.stringFromDate(NSDate.new)
+      self.refreshControl.attributedTitle = "最終更新 : #{now}".attrd.shadow(shadow)
+    end
+  end
+
   def initialize_bookmarks
+    self.refreshControl.beginRefreshing
     @bookmarks.update(true) do |res|
       @indicator.stopAnimating
+      self.refreshControl.endRefreshing
       if not res.ok?
+        ## TODO
         ## App.alert(res.error_message)
-        # tableView.reloadData
+        self.update_refresh_title(res.error_message)
       else
+        self.update_refresh_title
         tableView.reloadData
         if @bookmarks.size > 0
           @footer_indicator.startAnimating
