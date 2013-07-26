@@ -40,6 +40,14 @@ class TimelineViewController < UITableViewController
       v << @footer_indicator = UIActivityIndicatorView.gray
     end
 
+    tableView.tableFooterView << @footerErrorView = TableFooterErorView.new.tap do |v|
+      v.frame = tableView.tableFooterView.frame
+      v.hide
+      v.when_tapped do
+        self.paginate
+      end
+    end
+
     ## Pull to Refresh
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
       refresh.backgroundColor = '#e2e7ed'.uicolor
@@ -47,7 +55,8 @@ class TimelineViewController < UITableViewController
         refresh.beginRefreshing
         @bookmarks.update(true) do |res|
           if not res.ok?
-            App.alert(res.error_message)
+            ## TODO:
+            # App.alert(res.error_message)
           else
             @footer_indicator.startAnimating
           end
@@ -92,7 +101,8 @@ class TimelineViewController < UITableViewController
     @bookmarks.update(true) do |res|
       @indicator.stopAnimating
       if not res.ok?
-        App.alert(res.error_message)
+        ## App.alert(res.error_message)
+        # tableView.reloadData
       else
         tableView.reloadData
         if @bookmarks.size > 0
@@ -104,6 +114,20 @@ class TimelineViewController < UITableViewController
             App.alert("表示するブックマークがありません。")
           end
         end
+      end
+    end
+  end
+
+  def paginate
+    if (not @bookmarks.updating?)
+      @footerErrorView.hide
+      @footer_indicator.startAnimating
+      @bookmarks.update do |response|
+        if not response.ok?
+          puts 'error'
+          @footerErrorView.show
+        end
+        @footer_indicator.stopAnimating
       end
     end
   end
@@ -126,14 +150,10 @@ class TimelineViewController < UITableViewController
     end
   end
 
-  ## 末尾付近に来たら次のフィードを読み込む
+  ## 末尾付近に来たら次のフィードを読み込む (paging)
   def tableView(tableView, willDisplayCell:cell, forRowAtIndexPath:indexPath)
-    if (not @bookmarks.updating? and @bookmarks.size > 0 and indexPath.row == @bookmarks.size - 5)
-      @bookmarks.update do |res|
-        if not res.ok?
-          App.alert(res.error_message)
-        end
-      end
+    if (not @bookmarks.updating? and @bookmarks.size > 0 and indexPath.row >= @bookmarks.size - 5)
+      self.paginate
     end
   end
 
