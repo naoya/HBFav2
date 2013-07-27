@@ -8,10 +8,9 @@ class HotentryViewController < UITableViewController
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
 
-    self.view << @indicator = UIActivityIndicatorView.gray.tap { |v| v.startAnimating }
-
     ## Pull to Refresh
-    self.refreshControl = UIRefreshControl.new.tap do |refresh|
+    self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
+      refresh.update_title("フィード取得中...")
       refresh.backgroundColor = '#e2e7ed'.uicolor
       refresh.on(:value_changed) do |event|
         refresh.beginRefreshing
@@ -26,6 +25,7 @@ class HotentryViewController < UITableViewController
     bgview.backgroundColor = '#e2e7ed'.uicolor
     self.tableView.insertSubview(bgview, atIndex: 0)
 
+    self.refreshControl.beginRefreshing
     load_hotentry
   end
 
@@ -36,15 +36,14 @@ class HotentryViewController < UITableViewController
       if response.ok?
         data = BW::JSON.parse(response.body.to_str)
         @bookmarks = data['bookmarks'].map do |dict|
-          # dict[:comment] = '"' + dict[:comment].truncate(60) + '"'
           dict[:comment] = ''
           Bookmark.new(dict)
         end
-        view.reloadData
+        self.refreshControl.update_title
       else
-        App.alert(response.error_message)
+        self.refreshControl.update_title(response.error_message)
       end
-      @indicator.stopAnimating
+      tableView.reloadData
       self.refreshControl.endRefreshing
     end
     @connection = query.connection
@@ -55,8 +54,6 @@ class HotentryViewController < UITableViewController
     tableView.reloadData
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
-
-    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 21]
     super
   end
 
