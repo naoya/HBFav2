@@ -52,8 +52,8 @@ class TimelineViewController < UITableViewController
     self.refreshControl = UIRefreshControl.new.tap do |refresh|
       refresh.backgroundColor = '#e2e7ed'.uicolor
       refresh.on(:value_changed) do |event|
+        self.update_refresh_title("フィード取得中...")
         refresh.beginRefreshing
-        self.update_refresh_title("更新中...")
         @bookmarks.update(true) do |res|
           if not res.ok?
             self.update_refresh_title(res.error_message)
@@ -65,6 +65,7 @@ class TimelineViewController < UITableViewController
         end
       end
     end
+    self.update_refresh_title("フィード取得中...")
 
     ## Set RefreshControl background (work around)
     frame = self.tableView.bounds
