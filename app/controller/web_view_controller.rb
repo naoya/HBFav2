@@ -60,10 +60,17 @@ class WebViewController < UIViewController
 
   def viewWillDisappear(animated)
     super
-    ## これがあると Readability やブコメでローディングが止まっちゃう
-    # if @webview.loading?
-    #  @webview.stopLoading
-    # end
+
+    if (@view_pushed)
+      ## Flag indicates that view disappeared because we pushed another
+      ## controller onto the navigation controller, we acknowledge it here
+      @view_pushed = false
+    else
+      ## Here, you know that back button was pressed
+      if @webview.loading?
+        @webview.stopLoading
+      end
+    end
 
     if @connection.present?
       @connection.cancel
@@ -156,26 +163,23 @@ class WebViewController < UIViewController
     ]
   end
 
+  def present_modal (controller)
+    @view_pushed = true
+    self.presentViewController(controller, animated:true, completion:nil)
+  end
+
   def open_readability
     controller = ReadabilityViewController.new.tap do |c|
       c.entry = {:title => @bookmark.title, :url => @bookmark.link}
     end
-    self.presentViewController(
-      UINavigationController.alloc.initWithRootViewController(controller),
-      animated:true,
-      completion:nil
-    )
+    present_modal(UINavigationController.alloc.initWithRootViewController(controller))
   end
 
   def open_bookmark
     controller = BookmarksViewController.new.tap do |c|
       c.entry = @bookmark
     end
-    self.presentViewController(
-      UINavigationController.alloc.initWithRootViewController(controller),
-      animated:true,
-      completion:nil
-    )
+    present_modal(UINavigationController.alloc.initWithRootViewController(controller))
   end
 
   def on_action
@@ -198,15 +202,15 @@ class WebViewController < UIViewController
       ]
     )
     @activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
-    self.presentViewController(@activity, animated:true, completion:nil)
+    present_modal(@activity)
   end
 
   def dealloc
+    NSLog("dealloc: " + self.class.name)
     if @webview.loading?
       @webview.stopLoading
     end
     @webview.delegate = nil
-    NSLog("dealloc: " + self.class.name)
     super
   end
 end
