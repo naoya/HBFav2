@@ -55,4 +55,9 @@ class StarCell < UITableViewCell
     self.nameLabel.sizeToFit
     current_y += name_size.height + 5
   end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    super
+  end
 end

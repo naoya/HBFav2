@@ -33,9 +33,15 @@ class StarsViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
-    self.navigationItem.leftBarButtonItem  =
-      UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
+    self.navigationItem.leftBarButtonItem  = UIBarButtonItem.stop.tap do |btn|
+      btn.target = self
+      btn.action = 'on_close'
+    end
     super
+  end
+
+  def on_close
+    self.dismissViewControllerAnimated(true, completion:nil)
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
@@ -55,5 +61,10 @@ class StarsViewController < UITableViewController
       c.user = @stars[indexPath.row].user
       self.navigationController.pushViewController(c, animated:true)
     end
+  end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    super
   end
 end
