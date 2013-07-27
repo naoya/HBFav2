@@ -44,12 +44,14 @@ class BookmarkManager
 
     BW::HTTP.get(url) do |res|
       if res.ok?
-        json = BW::JSON.parse(res.body.to_str)
-        self.clear if init
+        autorelease_pool {
+          json = BW::JSON.parse(res.body.to_str)
+          self.clear if init
 
-        self.willChangeValueForKey('bookmarks')
-        self << json['bookmarks'].collect { |dict| Bookmark.new(dict) }
-        self.didChangeValueForKey('bookmarks')
+          self.willChangeValueForKey('bookmarks')
+          self << json['bookmarks'].collect { |dict| Bookmark.new(dict) }
+          self.didChangeValueForKey('bookmarks')
+        }
       end
       @updating = false
       cb.call(res) if cb
