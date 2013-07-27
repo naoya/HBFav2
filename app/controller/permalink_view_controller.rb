@@ -22,12 +22,7 @@ class PermalinkViewController < UIViewController
         end
       end
 
-      v.titleButton.on(:touch) do
-        WebViewController.new.tap do |c|
-          c.bookmark = @bookmark
-          navigationController.pushViewController(c, animated:true)
-        end
-      end
+      v.titleButton.addTarget(self, action:'open_webview', forControlEvents:UIControlEventTouchUpInside)
 
       v.starView.when_tapped do
         StarsViewController.new.tap do |c|
@@ -46,6 +41,12 @@ class PermalinkViewController < UIViewController
       end
     end
     view << @bookmarkView
+  end
+
+  def open_webview
+    controller = WebViewController.new
+    controller.bookmark = @bookmark
+    self.navigationController.pushViewController(controller, animated: true)
   end
 
   def viewWillAppear(animated)

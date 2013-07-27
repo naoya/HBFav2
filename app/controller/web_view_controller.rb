@@ -10,8 +10,6 @@ class WebViewController < UIViewController
     @document_title = nil
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = '#fff'.uicolor
-
-    ## Toolbar
     self.initialize_toolbar
 
     ## Title
@@ -21,18 +19,16 @@ class WebViewController < UIViewController
     end
 
     ## WebView
-    @webview = UIWebView.new.tap do |v|
+    self.view << @webview = HBFav2::WebView.new.tap do |v|
       v.scalesPageToFit = true
       v.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
       v.delegate = self
-      view << v
     end
 
     ## Activity Indicator
-    @indicator = UIActivityIndicatorView.new.tap do |v|
+    self.view << @indicator = UIActivityIndicatorView.new.tap do |v|
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating
-      view << v
     end
 
     ## Readability Button
@@ -41,16 +37,7 @@ class WebViewController < UIViewController
         btn.frame = [[0, 0], [38, 38]]
         btn.showsTouchWhenHighlighted = true
         btn.setImage(UIImage.imageNamed('readability'), forState: :normal.uicontrolstate)
-        btn.on(:touch) do
-          ReadabilityViewController.new.tap do |c|
-            c.entry = {:title => @bookmark.title, :url => @bookmark.link}
-            self.presentViewController(
-              UINavigationController.alloc.initWithRootViewController(c),
-              animated:true,
-              completion:nil
-            )
-          end
-        end
+        btn.addTarget(self, action:'open_readability', forControlEvents:UIControlEventTouchUpInside)
       end
     )
   end
@@ -108,8 +95,6 @@ class WebViewController < UIViewController
   def update_bookmark
     url = @webview.request.URL.absoluteString
     query = BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
-      @connection = query.connection
-
       if response.ok?
         ## まだ画面遷移が一度も発生してない場合はオブジェクトの更新は必要ない (リダイレクト対策)
         ## ただし、その場合でもブックマークコメントの先読みのためにリクエストはしておく
@@ -135,6 +120,7 @@ class WebViewController < UIViewController
       end
       @connection = nil
     end
+    @connection = query.connection
   end
 
   def on_back
@@ -145,13 +131,8 @@ class WebViewController < UIViewController
     @webview.goForward
   end
 
-  def dealloc
-    if @webview.loading?
-      @webview.stopLoading
-    end
-    @webview.delegate = nil
-
-    super
+  def on_refresh
+    @webview.reload
   end
 
   def initialize_toolbar
@@ -164,21 +145,37 @@ class WebViewController < UIViewController
       spacer,
       @forwardButton = UIBarButtonItem.alloc.initWithBarButtonSystemItem(102, target:self, action:'on_forward').tap { |b| b.enabled = false },
       spacer,
-      refreshButton = UIBarButtonItem.refresh { @webview.reload },
+      UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemRefresh, target:self, action:'on_refresh'),
       spacer,
-      UIBarButtonItem.action { on_action },
+      UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAction, target:self, action:'on_action'),
       spacer,
-      @bookmarkButton = UIBarButtonItem.titled(@bookmark.count.to_s, :bordered) do
-        BookmarksViewController.new.tap do |c|
-          c.entry = @bookmark
-          self.presentViewController(
-            UINavigationController.alloc.initWithRootViewController(c),
-            animated:true,
-            completion:nil
-          )
-        end
+      @bookmarkButton = UIBarButtonItem.titled(@bookmark.count.to_s, :bordered).tap do |btn|
+        btn.target = self
+        btn.action = 'open_bookmark'
       end
     ]
+  end
+
+  def open_readability
+    controller = ReadabilityViewController.new.tap do |c|
+      c.entry = {:title => @bookmark.title, :url => @bookmark.link}
+    end
+    self.presentViewController(
+      UINavigationController.alloc.initWithRootViewController(controller),
+      animated:true,
+      completion:nil
+    )
+  end
+
+  def open_bookmark
+    controller = BookmarksViewController.new.tap do |c|
+      c.entry = @bookmark
+    end
+    self.presentViewController(
+      UINavigationController.alloc.initWithRootViewController(controller),
+      animated:true,
+      completion:nil
+    )
   end
 
   def on_action
@@ -202,5 +199,14 @@ class WebViewController < UIViewController
     )
     @activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
     self.presentViewController(@activity, animated:true, completion:nil)
+  end
+
+  def dealloc
+    if @webview.loading?
+      @webview.stopLoading
+    end
+    @webview.delegate = nil
+    NSLog("dealloc: " + self.class.name)
+    super
   end
 end
