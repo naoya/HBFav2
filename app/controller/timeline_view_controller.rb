@@ -38,19 +38,7 @@ class TimelineViewController < UITableViewController
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
       refresh.update_title("フィード取得中...")
       refresh.backgroundColor = '#e2e7ed'.uicolor
-      refresh.on(:value_changed) do |event|
-        refresh.update_title("フィード取得中...")
-        refresh.beginRefreshing
-        @bookmarks.update(true) do |res|
-          if not res.ok?
-            refresh.update_title(res.error_message)
-          else
-            refresh.update_title
-            @footer_indicator.startAnimating
-          end
-          refresh.endRefreshing
-        end
-      end
+      refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged)
     end
 
     ## Set RefreshControl background (work around)
@@ -61,8 +49,11 @@ class TimelineViewController < UITableViewController
     self.tableView.insertSubview(bgview, atIndex: 0)
 
     if home?
-      btn = UIBarButtonItem.bookmarks { open_profile }
-      btn.styleClass = 'navigation-button'
+      btn = UIBarButtonItem.bookmarks.tap do |b|
+        b.target = self
+        b.action = 'open_profile'
+        b.styleClass = 'navigation-button'
+      end
       self.navigationItem.rightBarButtonItem = btn
     end
 
@@ -70,13 +61,7 @@ class TimelineViewController < UITableViewController
       ## Finally, fetch latest timeline feed
       initialize_bookmarks
     else
-      AccountConfigViewController.new.tap do |c|
-        c.allow_cancellation = false
-        self.presentModalViewController(
-          UINavigationController.alloc.initWithRootViewController(c),
-          animated:true
-        )
-      end
+      open_account_config
     end
   end
 
@@ -113,9 +98,7 @@ class TimelineViewController < UITableViewController
       @footerView << @footerErrorView = TableFooterErorView.new.tap do |v|
         v.frame = @footerView.frame
         v.hide
-        v.when_tapped do
-          self.paginate
-        end
+        v.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'paginate'))
       end
     end
   end
@@ -134,11 +117,6 @@ class TimelineViewController < UITableViewController
         @footer_indicator.stopAnimating
       end
     end
-  end
-
-  def dealloc
-    @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
-    ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
   end
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
@@ -179,14 +157,6 @@ class TimelineViewController < UITableViewController
     super
   end
 
-  # def open_bookmark (notification)
-  #   cell = notification.object
-  #   WebViewController.new.tap do |c|
-  #     c.bookmark = cell.bookmark
-  #     navigationController.pushViewController(c, animated:true)
-  #   end
-  # end
-
   def viewDidAppear(animated)
     super
   end
@@ -204,21 +174,48 @@ class TimelineViewController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    PermalinkViewController.new.tap do |c|
-      c.bookmark = @bookmarks[indexPath.row]
-      self.navigationController.pushViewController(c, animated:true)
-    end
+    controller = PermalinkViewController.new.tap { |c| c.bookmark = @bookmarks[indexPath.row] }
+    self.navigationController.pushViewController(controller, animated:true)
   end
 
   def open_profile
-    ProfileViewController.new.tap do |c|
+    controller = ProfileViewController.new.tap do |c|
       c.user    = @user
       c.as_mine = true
-      self.navigationController.pushViewController(c, animated:true)
+    end
+    self.navigationController.pushViewController(controller, animated:true)
+  end
+
+  def open_account_config
+    controller = AccountConfigViewController.new.tap { |c| c.allow_cancellation = false }
+    self.presentModalViewController(
+      UINavigationController.alloc.initWithRootViewController(controller),
+      animated:true
+    )
+  end
+
+  def on_refresh
+    self.refreshControl.update_title("フィード取得中...")
+    self.refreshControl.beginRefreshing
+    @bookmarks.update(true) do |res|
+      if not res.ok?
+        self.refreshControl.update_title(res.error_message)
+      else
+        self.refreshControl.update_title
+        @footer_indicator.startAnimating
+      end
+      self.refreshControl.endRefreshing
     end
   end
 
   def home?
     as_home ? true : false
+  end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
+    ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
+    super
   end
 end
