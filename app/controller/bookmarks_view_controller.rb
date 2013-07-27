@@ -9,15 +9,6 @@ class BookmarksViewController < UITableViewController
     self.navigationItem.title = entry.count.to_s
     view.backgroundColor = UIColor.whiteColor
 
-    ## Pull to Refresh
-    self.refreshControl = UIRefreshControl.new.tap do |refresh|
-      refresh.backgroundColor = '#e2e7ed'.uicolor
-      refresh.on(:value_changed) do |event|
-        refresh.beginRefreshing
-        loadBookmarks
-      end
-    end
-
     ## Set RefreshControl background (work around)
     frame = self.tableView.bounds
     frame.origin.y = -frame.size.height
@@ -67,7 +58,6 @@ class BookmarksViewController < UITableViewController
         App.alert(response.error_message)
       end
       @indicator.stopAnimating
-      self.refreshControl.endRefreshing
       ## Show "scrolls to bottom" button
       if (tableView.contentSize.height > tableView.frame.size.height)
         button = UIBarButtonItem.titled("下へ") do
