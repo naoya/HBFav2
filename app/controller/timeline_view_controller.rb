@@ -100,17 +100,18 @@ class TimelineViewController < UITableViewController
   end
 
   def update_refresh_title (msg = nil)
+    color = "#678"
     shadow = NSShadow.new
-    shadow.shadowOffset = [0, 0.5]
+    shadow.shadowOffset = [0, 1]
     shadow.shadowColor = UIColor.whiteColor
 
     if msg
-      self.refreshControl.attributedTitle = msg.attrd.shadow(shadow)
+      self.refreshControl.attributedTitle = msg.attrd.shadow(shadow).foreground_color(color)
     else
       formatter = NSDateFormatter.new
       formatter.dateFormat = "MM/dd HH:mm"
       now = formatter.stringFromDate(NSDate.new)
-      self.refreshControl.attributedTitle = "最終更新 : #{now}".attrd.shadow(shadow)
+      self.refreshControl.attributedTitle = "最終更新 : #{now}".attrd.shadow(shadow).foreground_color(color)
     end
   end
 
