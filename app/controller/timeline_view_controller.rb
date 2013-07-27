@@ -66,11 +66,6 @@ class TimelineViewController < UITableViewController
       self.navigationItem.rightBarButtonItem = btn
     end
 
-    ## Activity Indicator for initial loading
-    view << @indicator = UIActivityIndicatorView.gray.tap do |v|
-      # v.startAnimating
-    end
-
     if ApplicationUser.sharedUser.configured?
       ## Finally, fetch latest timeline feed
       initialize_bookmarks
@@ -88,7 +83,6 @@ class TimelineViewController < UITableViewController
   def initialize_bookmarks
     self.refreshControl.beginRefreshing
     @bookmarks.update(true) do |res|
-      @indicator.stopAnimating
       self.refreshControl.endRefreshing
       if not res.ok?
         self.refreshControl.update_title(res.error_message)
@@ -180,7 +174,6 @@ class TimelineViewController < UITableViewController
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
 
-    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 21]
     @footer_indicator.center = [@footerView.frame.size.width / 2, @footerView.frame.size.height / 2]
 
     super
