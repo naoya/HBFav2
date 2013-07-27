@@ -20,6 +20,7 @@ class TimelineViewController < UITableViewController
     self.navigationItem.title ||= "HBFav"
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
+    self.initialize_footerview
 
     ## Navigation back button
     # self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
@@ -32,21 +33,6 @@ class TimelineViewController < UITableViewController
     #   end
     # )
     # self.navigationItem.hidesBackButton = true
-
-    ## Loading indicator for Paging
-    tableView.tableFooterView = UIView.new.tap do |v|
-      v.frame = [[0, 0], [tableView.frame.size.width, 44]]
-      v.backgroundColor = '#fff'.uicolor
-      v << @footer_indicator = UIActivityIndicatorView.gray
-    end
-
-    tableView.tableFooterView << @footerErrorView = TableFooterErorView.new.tap do |v|
-      v.frame = tableView.tableFooterView.frame
-      v.hide
-      v.when_tapped do
-        self.paginate
-      end
-    end
 
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
@@ -108,7 +94,7 @@ class TimelineViewController < UITableViewController
         self.refreshControl.update_title(res.error_message)
       else
         self.refreshControl.update_title
-        # tableView.reloadData ## 要らない模様
+        # tableView.reloadData ## 要らない模様 (observerで更新される)
         if @bookmarks.size > 0
           @footer_indicator.startAnimating
         else
@@ -122,13 +108,33 @@ class TimelineViewController < UITableViewController
     end
   end
 
+  def initialize_footerview
+    if @footerView.nil?
+      @footerView = UIView.new.tap do |v|
+        v.frame = [[0, 0], [tableView.frame.size.width, 44]]
+        v.backgroundColor = '#fff'.uicolor
+        v << @footer_indicator = UIActivityIndicatorView.gray
+      end
+
+      @footerView << @footerErrorView = TableFooterErorView.new.tap do |v|
+        v.frame = @footerView.frame
+        v.hide
+        v.when_tapped do
+          self.paginate
+        end
+      end
+    end
+  end
+
   def paginate
     if (not @bookmarks.updating?)
+      if tableView.tableFooterView.nil?
+        tableView.tableFooterView = @footerView
+      end
       @footerErrorView.hide
       @footer_indicator.startAnimating
       @bookmarks.update do |response|
         if not response.ok?
-          puts 'error'
           @footerErrorView.show
         end
         @footer_indicator.stopAnimating
@@ -175,7 +181,7 @@ class TimelineViewController < UITableViewController
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
 
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 21]
-    @footer_indicator.center = [tableView.tableFooterView.frame.size.width / 2, tableView.tableFooterView.frame.size.height / 2]
+    @footer_indicator.center = [@footerView.frame.size.width / 2, @footerView.frame.size.height / 2]
 
     super
   end
