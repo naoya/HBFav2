@@ -205,4 +205,9 @@ class BookmarkFastCell < UITableViewCell
       @labels[:title].drawInRect([[SideWidth + 19, current_y], size], withFont:attributes[:title][:font], lineBreakMode:NSLineBreakByWordWrapping)
     end
   end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    super
+  end
 end

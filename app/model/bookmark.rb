@@ -57,4 +57,9 @@ class Bookmark
   def favicon_url
     return "http://favicon.st-hatena.com/?url=#{@link}"
   end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    super
+  end
 end
