@@ -12,7 +12,6 @@ class ProfileViewController < UIViewController
     ## 背景
     view << UITableView.alloc.initWithFrame(view.bounds, style:UITableViewStyleGrouped)
 
-    ## action は proc じゃなくて string にしてその名前のメソッド呼ぶとかにしたほうがよさそ
     @dataSource = [
       {
         :title => nil,
@@ -20,28 +19,12 @@ class ProfileViewController < UIViewController
           {
             :label         => "ブックマーク",
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
-            :action        => proc {
-              self.navigationController.pushViewController(
-                TimelineViewController.new.tap do |c|
-                  c.feed_url = user.bookmark_feed_url
-                  c.title = user.name
-                end,
-                animated:true
-              )
-            }
+            :action        => 'open_bookmarks'
           },
           {
             :label         => "フォロー",
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
-            :action        => proc {
-              self.navigationController.pushViewController(
-                TimelineViewController.new.tap do |c|
-                  c.feed_url = user.timeline_feed_url
-                  c.title = user.name
-                end,
-                animated:true
-              )
-            }
+            :action        => 'open_timeline'
           },
         ]
       },
@@ -50,28 +33,12 @@ class ProfileViewController < UIViewController
           {
             :label         => "人気エントリー",
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
-            :action        => proc {
-              self.navigationController.pushViewController(
-                HotentryViewController.new.tap do |c|
-                  c.feed_url = "http://hbfav.herokuapp.com/hotentry"
-                  c.title    = "人気エントリー"
-                end,
-                animated:true
-              )
-            }
+            :action        => 'open_hotentry'
           },
           {
             :label         => "新着エントリー",
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
-            :action        => proc {
-              self.navigationController.pushViewController(
-                HotentryViewController.new.tap do |c|
-                  c.feed_url = "http://hbfav.herokuapp.com/entrylist"
-                  c.title    = "新着エントリー"
-                end,
-                animated:true
-              )
-            }
+            :action        => 'open_entrylist'
           },
         ]
       },
@@ -79,16 +46,9 @@ class ProfileViewController < UIViewController
         :title => "設定",
         :rows => [
           {
-            :label => "はてなアカウント",
-            :color => '#385487'.uicolor,
-            :action        => proc {
-              self.presentModalViewController(
-                UINavigationController.alloc.initWithRootViewController(
-                  AccountConfigViewController.new.tap { |c| c.allow_cancellation = true }
-                ),
-                animated:true
-              )
-            }
+            :label  => "はてなアカウント",
+            :color  => '#385487'.uicolor,
+            :action => 'open_hatena_config'
           }
         ]
       }
@@ -160,7 +120,7 @@ class ProfileViewController < UIViewController
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     if (action = @dataSource[indexPath.section][:rows][indexPath.row][:action])
-      action.call
+      self.send(action)
     end
   end
 
@@ -172,15 +132,65 @@ class ProfileViewController < UIViewController
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.mine?)
       self.user = ApplicationUser.sharedUser.to_bookmark_user
 
-      # これ手動で書く必要あるのがなあ
-      # モデル更新したら自動で update されるようにできないのか
+      ## view 更新
       navigationItem.title = @user.name
       @imageView.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
       @nameLabel.text = @user.name
     end
   end
 
+  def open_bookmarks
+    self.navigationController.pushViewController(
+      TimelineViewController.new.tap do |c|
+        c.feed_url = user.bookmark_feed_url
+        c.title = user.name
+      end,
+      animated:true
+    )
+  end
+
+  def open_timeline
+    self.navigationController.pushViewController(
+      TimelineViewController.new.tap do |c|
+        c.feed_url = user.timeline_feed_url
+        c.title = user.name
+      end,
+      animated:true
+    )
+  end
+
+  def open_hotentry
+    self.navigationController.pushViewController(
+      HotentryViewController.new.tap do |c|
+        c.feed_url = "http://hbfav.herokuapp.com/hotentry"
+        c.title    = "人気エントリー"
+      end,
+      animated:true
+    )
+  end
+
+  def open_entrylist
+    self.navigationController.pushViewController(
+      HotentryViewController.new.tap do |c|
+        c.feed_url = "http://hbfav.herokuapp.com/entrylist"
+        c.title    = "新着エントリー"
+      end,
+      animated:true
+    )
+  end
+
+  def open_hatena_config
+    self.presentModalViewController(
+      UINavigationController.alloc.initWithRootViewController(
+        AccountConfigViewController.new.tap { |c| c.allow_cancellation = true }
+      ),
+      animated:true
+    )
+  end
+
   def dealloc
+    NSLog("dealloc: " + self.class.name)
     ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
+    super
   end
 end
