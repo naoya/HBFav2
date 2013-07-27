@@ -12,10 +12,7 @@ class HotentryViewController < UITableViewController
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
       refresh.update_title("フィード取得中...")
       refresh.backgroundColor = '#e2e7ed'.uicolor
-      refresh.on(:value_changed) do |event|
-        refresh.beginRefreshing
-        load_hotentry
-      end
+      refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged)
     end
 
     ## Set RefreshControl background (work around)
@@ -32,7 +29,6 @@ class HotentryViewController < UITableViewController
   def load_hotentry
     query = BW::HTTP.get(self.feed_url) do |response|
       @connection = nil
-
       if response.ok?
         data = BW::JSON.parse(response.body.to_str)
         @bookmarks = data['bookmarks'].map do |dict|
@@ -82,5 +78,15 @@ class HotentryViewController < UITableViewController
       c.bookmark = @bookmarks[indexPath.row]
       self.navigationController.pushViewController(c, animated:true)
     end
+  end
+
+  def on_refresh
+    self.refreshControl.beginRefreshing
+    load_hotentry
+  end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    super
   end
 end
