@@ -49,23 +49,23 @@ class TimelineViewController < UITableViewController
     end
 
     ## Pull to Refresh
-    self.refreshControl = UIRefreshControl.new.tap do |refresh|
+    self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
+      refresh.update_title("フィード取得中...")
       refresh.backgroundColor = '#e2e7ed'.uicolor
       refresh.on(:value_changed) do |event|
-        self.update_refresh_title("フィード取得中...")
+        refresh.update_title("フィード取得中...")
         refresh.beginRefreshing
         @bookmarks.update(true) do |res|
           if not res.ok?
-            self.update_refresh_title(res.error_message)
+            refresh.update_title(res.error_message)
           else
-            self.update_refresh_title
+            refresh.update_title
             @footer_indicator.startAnimating
           end
           refresh.endRefreshing
         end
       end
     end
-    self.update_refresh_title("フィード取得中...")
 
     ## Set RefreshControl background (work around)
     frame = self.tableView.bounds
@@ -99,34 +99,16 @@ class TimelineViewController < UITableViewController
     end
   end
 
-  def update_refresh_title (msg = nil)
-    color = "#678"
-    shadow = NSShadow.new
-    shadow.shadowOffset = [0, 1]
-    shadow.shadowColor = UIColor.whiteColor
-
-    if msg
-      self.refreshControl.attributedTitle = msg.attrd.shadow(shadow).foreground_color(color)
-    else
-      formatter = NSDateFormatter.new
-      formatter.dateFormat = "MM/dd HH:mm"
-      now = formatter.stringFromDate(NSDate.new)
-      self.refreshControl.attributedTitle = "最終更新 : #{now}".attrd.shadow(shadow).foreground_color(color)
-    end
-  end
-
   def initialize_bookmarks
     self.refreshControl.beginRefreshing
     @bookmarks.update(true) do |res|
       @indicator.stopAnimating
       self.refreshControl.endRefreshing
       if not res.ok?
-        ## TODO
-        ## App.alert(res.error_message)
-        self.update_refresh_title(res.error_message)
+        self.refreshControl.update_title(res.error_message)
       else
-        self.update_refresh_title
-        tableView.reloadData
+        self.refreshControl.update_title
+        # tableView.reloadData ## 要らない模様
         if @bookmarks.size > 0
           @footer_indicator.startAnimating
         else
