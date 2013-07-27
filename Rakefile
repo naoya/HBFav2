@@ -10,11 +10,21 @@ Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'HBFav'
   app.version = "2.0"
+  app.short_version = "2"
+  app.sdk_version = '6.1'
   app.deployment_target = '6.1'
   app.device_family = [:iphone]
   app.identifier = "HBFav"
-  app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'
-  app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
+
+  app.development do
+    app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'
+    app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
+  end
+
+  app.release do
+    app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav_for_production.mobileprovision'
+    app.codesign_certificate='iPhone Distribution: Naoya Ito (KC9234ZWM8)'
+  end
 
   app.interface_orientations = [:portrait]
 
