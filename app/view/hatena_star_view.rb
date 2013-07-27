@@ -1,6 +1,13 @@
 module HBFav2
   class HatenaStarView < UIImageView
     @@blank_image = UIImage.imageNamed('blank')
+
+    def initWithFrame(frame)
+      if super
+        self.userInteractionEnabled = true
+      end
+      self
+    end
     # def initWithFrame(frame)
     #   if super
     #     self.frame = CGRectZero

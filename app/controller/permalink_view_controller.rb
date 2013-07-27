@@ -11,42 +11,43 @@ class PermalinkViewController < UIViewController
     self.navigationController.setToolbarHidden(true, animated:false)
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
-    @bookmarkView = HBFav2::BookmarkView.new.tap do |v|
+    self.view << @bookmarkView = HBFav2::BookmarkView.new.tap do |v|
       v.frame = self.view.bounds
       v.backgroundColor = UIColor.whiteColor
-
-      v.headerView.when_tapped do
-        ProfileViewController.new.tap do |c|
-          c.user = bookmark.user
-          self.navigationController.pushViewController(c, animated:true)
-        end
-      end
-
+      v.headerView.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'open_profile'))
+      v.starView.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'open_stars'))
       v.titleButton.addTarget(self, action:'open_webview', forControlEvents:UIControlEventTouchUpInside)
-
-      v.starView.when_tapped do
-        StarsViewController.new.tap do |c|
-          c.url = @bookmark.permalink
-          v.starView.highlighted = true
-          v.starView.backgroundColor = '#e5f0ff'.to_color
-          self.presentViewController(UINavigationController.alloc.initWithRootViewController(c), animated:true, completion:nil)
-        end
-      end
-
-      v.usersButton.on(:touch) do
-        BookmarksViewController.new.tap do |c|
-          c.entry = @bookmark
-          self.presentViewController(UINavigationController.alloc.initWithRootViewController(c), animated:true, completion:nil)
-        end
-      end
+      v.usersButton.addTarget(self, action:'open_bookmarks', forControlEvents:UIControlEventTouchUpInside)
     end
-    view << @bookmarkView
+  end
+
+  def open_profile
+    controller = ProfileViewController.new.tap { |c| c.user = bookmark.user }
+    self.navigationController.pushViewController(controller, animated:true)
+  end
+
+  def open_stars
+    controller = StarsViewController.new.tap do |c|
+      c.url = @bookmark.permalink
+      @bookmarkView.starView.highlighted = true
+      @bookmarkView.starView.backgroundColor = '#e5f0ff'.to_color
+    end
+    self.presentViewController(
+      UINavigationController.alloc.initWithRootViewController(controller),
+      animated:true,
+      completion:nil
+    )
   end
 
   def open_webview
     controller = WebViewController.new
     controller.bookmark = @bookmark
     self.navigationController.pushViewController(controller, animated: true)
+  end
+
+  def open_bookmarks
+    controller = BookmarksViewController.new.tap { |c| c.entry = @bookmark }
+    self.presentViewController(UINavigationController.alloc.initWithRootViewController(controller), animated:true, completion:nil)
   end
 
   def viewWillAppear(animated)
@@ -69,12 +70,13 @@ class PermalinkViewController < UIViewController
     end
   end
 
-  def viewDidAppear(animated)
-    super
-  end
-
   def viewWillDisappear(animated)
     super
     self.navigationController.toolbar.translucent = false
+  end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    super
   end
 end

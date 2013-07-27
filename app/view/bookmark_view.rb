@@ -165,5 +165,10 @@ module HBFav2
 
       @bodyView.contentSize = [self.frame.size.width, current_y + 69]
     end
+
+    def dealloc
+      NSLog("dealloc: " + self.class.name)
+      super
+    end
   end
 end
