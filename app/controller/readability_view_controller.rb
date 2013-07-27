@@ -16,10 +16,12 @@ class ReadabilityViewController < UIViewController
     end
 
     self.view.backgroundColor = UIColor.redColor
-    self.navigationItem.leftBarButtonItem  =
-      UIBarButtonItem.stop { self.dismissViewControllerAnimated(true, completion:nil) }
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
+      btn.action = 'on_close'
+      btn.target = self
+    end
 
-    view << @webview = UIWebView.new.tap do |v|
+    view << @webview = HBFav2::WebView.new.tap do |v|
       v.frame = CGRectZero
       v.delegate = self
       tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_fullscreen')
@@ -111,10 +113,8 @@ class ReadabilityViewController < UIViewController
   end
 
   def begin_fullscreen
-    puts 'begin'
     ## navigationController がある == まだ生き残ってる
     if navigationController.present?
-      puts 'act'
       @fullscreen = true
       UIView.beginAnimations(nil, context:nil)
       UIView.setAnimationDuration(0.3)
@@ -135,15 +135,20 @@ class ReadabilityViewController < UIViewController
     UIView.commitAnimations
   end
 
+  def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
+    true
+  end
+
+  def on_close
+    self.dismissViewControllerAnimated(true, completion:nil)
+  end
+
   def dealloc
+    NSLog("dealloc: " + self.class.name)
     if @webview.loading?
       @webview.stopLoading
     end
     @webview.delegate = nil
     super
-  end
-
-  def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
-    true
   end
 end
