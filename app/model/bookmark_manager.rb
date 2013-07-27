@@ -65,4 +65,9 @@ class BookmarkManager
   def parse_args(d, a)
     return d.map { |k, v| a[k] or v }
   end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    super
+  end
 end

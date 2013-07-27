@@ -56,7 +56,6 @@ class AccountConfigViewController < Formotion::FormController
 
   def viewDidLoad
     super
-
     self.navigationItem.title = "設定"
     self.view.backgroundColor = UIColor.groupTableViewBackgroundColor
   end
@@ -81,7 +80,7 @@ class AccountConfigViewController < Formotion::FormController
   end
 
   def cancel
-    self.dismissModalViewControllerAnimated(true)
+    self.dismissModalViewControllerAnimated(true, completion:nil)
   end
 
   def save
@@ -94,7 +93,12 @@ class AccountConfigViewController < Formotion::FormController
       user.password  = data["password"] || nil
       user.use_timeline = data["use_timeline"]
       user.save
-      self.dismissModalViewControllerAnimated(true)
+      self.dismissModalViewControllerAnimated(true, completion:nil)
     end
+  end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    super
   end
 end

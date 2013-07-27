@@ -183,26 +183,26 @@ class WebViewController < UIViewController
   end
 
   def on_action
-    @safari = TUSafariActivity.new
-    @pocket = PocketActivity.new
-    @hatena = HatenaBookmarkActivity.new
-    @add_bookmark = AddBookmarkActivity.new.tap do |activity|
+    safari = TUSafariActivity.new
+    pocket = PocketActivity.new
+    hatena = HatenaBookmarkActivity.new
+    add_bookmark = AddBookmarkActivity.new.tap do |activity|
       user = ApplicationUser.sharedUser
       activity.hatena_id = user.hatena_id
       activity.password  = user.password
     end
 
-    @activity = UIActivityViewController.alloc.initWithActivityItems(
+    activity = UIActivityViewController.alloc.initWithActivityItems(
       [@bookmark.title, @bookmark.link.nsurl],
       applicationActivities:[
-        @safari,
-        @add_bookmark,
-        @pocket,
-        @hatena,
+        safari,
+        add_bookmark,
+        pocket,
+        hatena,
       ]
     )
-    @activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
-    present_modal(@activity)
+    activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
+    present_modal(activity)
   end
 
   def dealloc
@@ -214,3 +214,10 @@ class WebViewController < UIViewController
     super
   end
 end
+
+# class UIActivityViewController
+#   def dealloc
+#     NSLog("dealloc: " + self.class.name)
+#     super
+#   end
+# end
