@@ -81,6 +81,7 @@ class ProfileViewController < UIViewController
   end
 
   def viewWillAppear(animated)
+    super
     @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)
   end
 
@@ -161,20 +162,14 @@ class ProfileViewController < UIViewController
 
   def open_hotentry
     self.navigationController.pushViewController(
-      HotentryViewController.new.tap do |c|
-        c.feed_url = "http://hbfav.herokuapp.com/hotentry"
-        c.title    = "人気エントリー"
-      end,
+      HotentryViewController.new.tap { |c| c.list_type = :hotentry },
       animated:true
     )
   end
 
   def open_entrylist
     self.navigationController.pushViewController(
-      HotentryViewController.new.tap do |c|
-        c.feed_url = "http://hbfav.herokuapp.com/entrylist"
-        c.title    = "新着エントリー"
-      end,
+      HotentryViewController.new.tap { |c| c.list_type = :entrylist },
       animated:true
     )
   end

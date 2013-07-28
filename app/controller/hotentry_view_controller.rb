@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 class HotentryViewController < UITableViewController
-  attr_accessor :feed_url
+  attr_accessor :category, :list_type
 
   def viewDidLoad
     @bookmarks = []
 
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
+
+    self.navigationItem.titleView = TitleLabel.new.tap do |label|
+      label.frame = [[0, 0], [view.frame.size.width, 44]]
+    end
 
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
@@ -21,13 +25,28 @@ class HotentryViewController < UITableViewController
     bgview = UIView.alloc.initWithFrame(frame)
     bgview.backgroundColor = '#e2e7ed'.uicolor
     self.tableView.insertSubview(bgview, atIndex: 0)
-
-    self.refreshControl.beginRefreshing
     load_hotentry
   end
 
+  def clear_entries
+    @bookmarks = []
+    self.tableView.reloadData
+  end
+
   def load_hotentry
-    query = BW::HTTP.get(self.feed_url) do |response|
+    self.refreshControl.beginRefreshing
+
+    if self.list_type == :hotentry
+      feed_url = 'http://hbfav.herokuapp.com/hotentry'
+    else
+      feed_url = 'http://hbfav.herokuapp.com/entrylist'
+    end
+
+    if not self.category.nil?
+      feed_url += "?category=#{self.category}"
+    end
+
+    query = BW::HTTP.get(feed_url) do |response|
       @connection = nil
       if response.ok?
         data = BW::JSON.parse(response.body.to_str)
@@ -46,6 +65,15 @@ class HotentryViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
+    ## category selector
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("カテゴリ").tap do |btn|
+      btn.target = self
+      btn.action = 'open_category'
+    end
+
+    subtitle = CategoryList.sharedCategories.key_to_title(self.category)
+    self.navigationItem.titleView.text = list_type == :hotentry ? "人気: #{subtitle}" : "新着: #{subtitle}"
+
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
@@ -81,8 +109,20 @@ class HotentryViewController < UITableViewController
   end
 
   def on_refresh
-    self.refreshControl.beginRefreshing
     load_hotentry
+  end
+
+  def open_category
+    controller = CategoryViewController.alloc.initWithStyle(UITableViewStyleGrouped)
+    controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
+    controller.current_category = self.category
+    controller.hotentry_controller = self
+
+    self.presentViewController(
+      UINavigationController.alloc.initWithRootViewController(controller),
+      animated:true,
+      completion:nil
+    )
   end
 
   def dealloc
