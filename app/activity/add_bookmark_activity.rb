@@ -12,7 +12,7 @@ class AddBookmarkActivity < UIActivity
   end
 
   def activityTitle
-    "B!"
+    "ブックマーク"
   end
 
   def performActivity
