@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 class AppDelegate
   def application(application, didFinishLaunchingWithOptions:launchOptions)
+    NSLog("RUBYMOTION_ENV: " + RUBYMOTION_ENV)
     ## initialize PocketAPI
     PocketAPI.sharedAPI.setConsumerKey("16058-73f06a0629616ad0245bbfd0")
 
@@ -33,5 +34,10 @@ class AppDelegate
       return true
     end
     return true
+  end
+end
+
+if RUBYMOTION_ENV == 'release'
+  def NSLog(msg)
   end
 end
