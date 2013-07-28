@@ -5,6 +5,7 @@ class WebViewController < UIViewController
   def viewDidLoad
     super
 
+    @bookmark_requestd = {}
     @link_clicked = nil
 
     @document_title = nil
@@ -101,26 +102,35 @@ class WebViewController < UIViewController
 
   def update_bookmark
     url = @webview.request.URL.absoluteString
+
+    if @bookmark_requestd[url]
+      return
+    else
+      @bookmark_requestd[url] = true
+    end
+
     query = BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
       if response.ok?
         ## まだ画面遷移が一度も発生してない場合はオブジェクトの更新は必要ない (リダイレクト対策)
         ## ただし、その場合でもブックマークコメントの先読みのためにリクエストはしておく
         if @link_clicked
-          data = BW::JSON.parse(response.body.to_str) || {}
-          @bookmark = Bookmark.new(
-            {
-              :eid   => data['eid'] || nil,
-              :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
-              :link  => url,
-              :count => data['count'] || 0,
-              :user => { :name => 'dummy' },
-              :datetime => '1977-01-01' # dummy
-            }
-          )
-          ## TODO: もっと複雑になるようなら Observer パターンに変更
-          self.navigationItem.titleView.text = @bookmark.title if self.navigationItem.present?
-          @bookmarkButton.setTitle(@bookmark.count.to_s, forState:UIControlStateNormal)
-          @bookmarkButton.enabled = @bookmark.count.to_i > 0
+          autorelease_pool {
+            data = BW::JSON.parse(response.body.to_str) || {}
+            @bookmark = Bookmark.new(
+              {
+                :eid   => data['eid'] || nil,
+                :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
+                :link  => url,
+                :count => data['count'] || 0,
+                :user => { :name => 'dummy' },
+                :datetime => '1977-01-01' # dummy
+              }
+            )
+            ## TODO: もっと複雑になるようなら Observer パターンに変更
+            self.navigationItem.titleView.text = @bookmark.title if self.navigationItem.present?
+            @bookmarkButton.setTitle(@bookmark.count.to_s, forState:UIControlStateNormal)
+            @bookmarkButton.enabled = @bookmark.count.to_i > 0
+          }
         end
       else
         # TODO:
