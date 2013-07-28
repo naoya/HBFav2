@@ -104,9 +104,8 @@ class WebViewController < UIViewController
     url = @webview.request.URL.absoluteString
 
     if @bookmark_requestd[url]
+      update_bookmark_info(@bookmark_requestd[url])
       return
-    else
-      @bookmark_requestd[url] = true
     end
 
     query = BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
@@ -116,7 +115,7 @@ class WebViewController < UIViewController
         if @link_clicked
           autorelease_pool {
             data = BW::JSON.parse(response.body.to_str) || {}
-            @bookmark = Bookmark.new(
+            @bookmark_requestd[url] = @bookmark = Bookmark.new(
               {
                 :eid   => data['eid'] || nil,
                 :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
@@ -126,10 +125,7 @@ class WebViewController < UIViewController
                 :datetime => '1977-01-01' # dummy
               }
             )
-            ## TODO: もっと複雑になるようなら Observer パターンに変更
-            self.navigationItem.titleView.text = @bookmark.title if self.navigationItem.present?
-            @bookmarkButton.setTitle(@bookmark.count.to_s, forState:UIControlStateNormal)
-            @bookmarkButton.enabled = @bookmark.count.to_i > 0
+            update_bookmark_info(@bookmark)
           }
         end
       else
@@ -138,6 +134,12 @@ class WebViewController < UIViewController
       @connection = nil
     end
     @connection = query.connection
+  end
+
+  def update_bookmark_info(bookmark)
+    self.navigationItem.titleView.text = bookmark.title if self.navigationItem.present?
+    @bookmarkButton.setTitle(bookmark.count.to_s, forState:UIControlStateNormal)
+    @bookmarkButton.enabled = bookmark.count.to_i > 0
   end
 
   def on_back
