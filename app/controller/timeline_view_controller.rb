@@ -54,8 +54,8 @@ class TimelineViewController < UITableViewController
         b.action = 'open_profile'
         b.styleClass = 'navigation-button'
       end
-      # self.navigationItem.rightBarButtonItem = btn
-      self.navigationItem.leftBarButtonItem = btn
+      self.navigationItem.rightBarButtonItem = btn
+      # self.navigationItem.leftBarButtonItem = btn
     end
 
     if ApplicationUser.sharedUser.configured?
