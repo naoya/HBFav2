@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
 module HBFav2
   class BookmarkView < UIView
     attr_accessor :headerView, :usersButton, :starView, :titleButton
 
     def initWithFrame(frame)
       if super
-        ## header
-        @headerView = UITableView.alloc.initWithFrame(CGRectZero, style:UITableViewStyleGrouped)
-        self << @headerView
+        self << @bodyView = UIScrollView.new.tap {|v| v.frame = CGRectZero }
 
+        @bodyView << @headerView = UITableView.alloc.initWithFrame(CGRectZero, style:UITableViewStyleGrouped)
+
+        ## header
         @profileImageView = UIImageView.new.tap do |v|
           v.frame = CGRectZero
           v.layer.tap do |layer|
@@ -31,14 +33,11 @@ module HBFav2
         end
         @headerView << @discImageView
 
-        @border = UIView.new.tap do |v|
+        @bodyView << @border = UIView.new.tap do |v|
           v.backgroundColor = '#ababab'.uicolor
-          self << v
         end
 
         ## body
-        self << @bodyView = UIScrollView.new.tap {|v| v.frame = CGRectZero }
-
         @bodyView << @commentLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
@@ -100,22 +99,18 @@ module HBFav2
     ## FIXME: hard to read
     def layoutSubviews
       super
+      @bodyView.frame = self.bounds
 
       ## header
       @headerView.frame = [self.bounds.origin, [self.bounds.size.width, 68]]
       @profileImageView.frame = [[10, 10], [48, 48]]
-      @nameLabel.frame = [[68, 10], [200, 48]]
+      @nameLabel.frame = [[@profileImageView.right + 10, 10], [200, 48]]
 
-      w = @headerView.bounds.size.width
       h = @headerView.bounds.size.height
-      @discImageView.frame = [[w - 20, (h / 2) - 8], [12, 17]]
-      @border.frame = [[0, 68], [self.bounds.size.width, 1]]
+      @discImageView.frame = [[@headerView.right - 20, (h / 2) - 8], [12, 17]]
+      @border.frame = [[0, @headerView.bottom], [self.bounds.size.width, 1]]
 
       ## body
-      @bodyView.frame = [[0, 69], [self.bounds.size.width, self.bounds.size.height - 69]]
-      current_y = 10
-
-      # comment
       if @commentLabel.text.present?
         constrain = CGSize.new(self.frame.size.width - 20, 1000)
         size = @commentLabel.text.sizeWithFont(
@@ -123,47 +118,43 @@ module HBFav2
           constrainedToSize:constrain,
           lineBreakMode:NSLineBreakByWordWrapping
         )
-        @commentLabel.frame = [[10, current_y], size]
-        current_y += size.height + 4
+        @commentLabel.frame = [[10, @border.bottom + 10], size]
       end
 
+      y = @commentLabel.text.present? ? @commentLabel.bottom : @border.bottom + 10
+
       # favicon
-      @faviconView.frame = [[10, current_y + 2], [16, 16]]
+      @faviconView.frame = [[10, y + 6], [16, 16]]
 
       # title
-      constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000) # 19 = favicon (16) + margin (3)
+      constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000) # 19 = favicon (16) + margin (3), 20 = margin left,right
       size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
         UIFont.systemFontOfSize(18),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByWordWrapping
       )
-      @titleButton.frame = [[10 + 19, current_y], size]
-      current_y += size.height + 4
+      @titleButton.frame = [[@faviconView.right + 3, y + 4], size]
 
       # URL
-      constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000) # 19 = favicon (16) + margin (3)
+      constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000)
       size = @urlLabel.text.sizeWithFont(
         UIFont.systemFontOfSize(14),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByCharWrapping
       )
-      @urlLabel.frame = [[10 + 19, current_y], size]
-      current_y += size.height + 4
+      @urlLabel.frame = [[@titleButton.left, @titleButton.bottom + 4], size]
 
       # date
-      @dateLabel.frame = [[10 + 19, current_y], [0, 0]]
+      @dateLabel.frame = [[@titleButton.left, @urlLabel.bottom + 4], [0, 0]]
       @dateLabel.sizeToFit
-      current_y += @dateLabel.frame.size.height + 10
 
       # star
       origin = @dateLabel.frame.origin
       @starView.origin = [origin.x + @dateLabel.frame.size.width + 3, origin.y + 3.5]
 
       # button
-      @usersButton.frame = [[10, current_y], [self.frame.size.width - 20, 40]]
-      current_y += 40
-
-      @bodyView.contentSize = [self.frame.size.width, current_y + 69]
+      @usersButton.frame = [[10, @dateLabel.bottom + 10], [self.frame.size.width - 20, 40]]
+      @bodyView.contentSize = [self.frame.size.width, @usersButton.bottom + 100]
     end
 
     def dealloc
