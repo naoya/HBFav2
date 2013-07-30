@@ -143,7 +143,8 @@ class ProfileViewController < UIViewController
   def open_bookmarks
     self.navigationController.pushViewController(
       TimelineViewController.new.tap do |c|
-        c.feed_url = user.bookmark_feed_url
+        c.user  = user
+        c.content_type = :bookmark
         c.title = user.name
       end,
       animated:true
@@ -153,7 +154,7 @@ class ProfileViewController < UIViewController
   def open_timeline
     self.navigationController.pushViewController(
       TimelineViewController.new.tap do |c|
-        c.feed_url = user.timeline_feed_url
+        c.user  = user
         c.title = user.name
       end,
       animated:true

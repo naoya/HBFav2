@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class TimelineViewController < UITableViewController
-  attr_accessor :user, :feed_url, :as_home
+  attr_accessor :user, :as_home, :content_type
   # include Motion::Pixate::Observer
 
   def viewDidLoad
@@ -11,11 +11,11 @@ class TimelineViewController < UITableViewController
     # App.alert(user.use_timeline? ? "true" : "false")
 
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
-    @bookmarks = BookmarkManager.new(self.feed_url)
-    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
-    if (user and user.use_timeline?)
-      @bookmarks.paging_method = 'until'
+    @bookmarks = BookmarkManager.factory(user)
+    if (content_type == :bookmark)
+      @bookmarks.url = user.bookmark_feed_url
     end
+    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
 
     self.navigationItem.title ||= "HBFav"
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
@@ -127,8 +127,9 @@ class TimelineViewController < UITableViewController
 
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
       self.user = ApplicationUser.sharedUser.to_bookmark_user
-      self.feed_url = self.user.timeline_feed_url
-      @bookmarks.url = self.feed_url
+      @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
+      @bookmarks = BookmarkManager.factory(user)
+      @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
       initialize_bookmarks
     end
   end

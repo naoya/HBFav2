@@ -20,7 +20,6 @@ class AppDelegate
         TimelineViewController.new.tap do |c|
           app_user = ApplicationUser.sharedUser.load
           c.user     = app_user.to_bookmark_user
-          c.feed_url = c.user.timeline_feed_url
           c.as_home  = true
         end
       )
