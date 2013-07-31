@@ -127,8 +127,9 @@ class TimelineViewController < UITableViewController
 
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
       self.user = ApplicationUser.sharedUser.to_bookmark_user
+      NSLog(self.user.use_timeline? ? 'true' : 'false')
       @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
-      @bookmarks = BookmarkManager.factory(user)
+      @bookmarks = BookmarkManager.factory(self.user)
       @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
       initialize_bookmarks
     end
@@ -162,22 +163,42 @@ class TimelineViewController < UITableViewController
   def viewDidAppear(animated)
     super
   end
-
   def tableView(tableView, numberOfRowsInSection:section)
     return @bookmarks.size
   end
 
   def tableView(tableView, heightForRowAtIndexPath:indexPath)
-    BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+    bookmark = @bookmarks[indexPath.row]
+    if bookmark.kind_of? Placeholder
+      super
+    else
+      BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+    end
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    BookmarkFastCell.cellForBookmark(@bookmarks[indexPath.row], inTableView:tableView)
+    bookmark = @bookmarks[indexPath.row]
+    if bookmark.kind_of? Placeholder
+      PlaceholderCell.cellForPlaceholder(bookmark, inTableView:tableView)
+    else
+      BookmarkFastCell.cellForBookmark(bookmark, inTableView:tableView)
+    end
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    controller = PermalinkViewController.new.tap { |c| c.bookmark = @bookmarks[indexPath.row] }
-    self.navigationController.pushViewController(controller, animated:true)
+    bookmark = @bookmarks[indexPath.row]
+    if bookmark.kind_of? Placeholder
+      cell = tableView.cellForRowAtIndexPath(indexPath)
+      cell.beginRefreshing
+      self.refreshControl.beginRefreshing
+      @bookmarks.replace_placeholder(bookmark) do |response|
+        self.refreshControl.endRefreshing
+        cell.endRefreshing
+      end
+    else
+      controller = PermalinkViewController.new.tap { |c| c.bookmark = @bookmarks[indexPath.row] }
+      self.navigationController.pushViewController(controller, animated:true)
+    end
   end
 
   def open_profile
