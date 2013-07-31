@@ -13,7 +13,7 @@ class BookmarkManager
   end
 
   def initialize
-    @url = url
+    @url = nil
     @bookmarks = []
     @updating = nil
   end

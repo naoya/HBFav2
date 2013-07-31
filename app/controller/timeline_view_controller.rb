@@ -11,9 +11,11 @@ class TimelineViewController < UITableViewController
     # App.alert(user.use_timeline? ? "true" : "false")
 
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
-    @bookmarks = BookmarkManager.factory(user)
     if (content_type == :bookmark)
+      @bookmarks = BookmarkManager::Offset.new
       @bookmarks.url = user.bookmark_feed_url
+    else
+      @bookmarks = BookmarkManager.factory(user)
     end
     @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
 
