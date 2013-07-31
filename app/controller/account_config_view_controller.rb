@@ -89,10 +89,12 @@ class AccountConfigViewController < Formotion::FormController
       App.alert("はてなIDは必須です")
     else
       user = ApplicationUser.sharedUser
-      user.hatena_id = data["hatena_id"]
+      self.willChangeValueForKey('hatena_id')
       user.password  = data["password"] || nil
       user.use_timeline = data["use_timeline"]
+      user.hatena_id = data["hatena_id"]
       user.save
+      self.didChangeValueForKey('hatena_id')
       self.dismissModalViewControllerAnimated(true, completion:nil)
     end
   end

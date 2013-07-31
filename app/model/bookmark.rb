@@ -24,7 +24,7 @@ class Bookmark
   end
 
   def id
-    @id ||= self.user_name + "-" + self.datetime.timeIntervalSince1970.to_i.to_s
+    @id ||= self.permalink
   end
 
   def permalink
