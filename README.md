@@ -5,6 +5,8 @@ HBFav2 - はてなブックマークお気に入りリーダー
 
 [HBFav](https://github.com/naoya/HBFav) の新バージョンです。Titanium Mobile をやめて RubyMotion でイチから作り直して安定性を確保し、各種機能をブラッシュアップしています。
 
+- ウェブサイト: [http://hbfav.bloghackers.net/](http://hbfav.bloghackers.net/)
+
 コンセプト
 --------------------
 * 「何を」より「誰が」に視点を当てる: who  >>>> what
