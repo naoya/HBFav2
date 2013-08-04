@@ -52,11 +52,12 @@ class WebViewController < UIViewController
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
     self.wantsFullScreenLayout = false
 
-    self.navigationController.setToolbarHidden(false, animated:animated)
     self.navigationController.toolbar.translucent = false
+    self.navigationController.setToolbarHidden(false, animated:animated)
 
-    @webview.frame = view.bounds
-    @indicator.center = [view.bounds.size.width / 2, view.bounds.size.height / 2]
+    ## FIXME: Readability から戻ってくると画面の大きさがおかしくなる
+    @webview.frame = view.frame
+    @indicator.center = [@webview.bounds.size.width / 2, @webview.bounds.size.height / 2]
   end
 
   def viewWillDisappear(animated)
@@ -184,14 +185,15 @@ class WebViewController < UIViewController
     controller = ReadabilityViewController.new.tap do |c|
       c.entry = {:title => @bookmark.title, :url => @bookmark.link}
     end
-    present_modal(UINavigationController.alloc.initWithRootViewController(controller))
+    # present_modal(UINavigationController.alloc.initWithRootViewController(controller))
+    self.navigationController << controller
   end
 
   def open_bookmark
     controller = BookmarksViewController.new.tap do |c|
       c.entry = @bookmark
     end
-    present_modal(UINavigationController.alloc.initWithRootViewController(controller))
+    present_modal(HBFav2NavigationController.alloc.initWithRootViewController(controller))
   end
 
   def on_action
