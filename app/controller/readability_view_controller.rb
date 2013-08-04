@@ -172,6 +172,7 @@ class ReadabilityViewController < UIViewController
     @webview.stringByEvaluatingJavaScriptFromString(<<"EOF")
 document.body.style.fontSize = #{font_size} + '%';
 EOF
+    SVProgressHUD.showSuccessWithStatus("#{font_size}%")
   end
 
   def dealloc
