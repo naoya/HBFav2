@@ -47,7 +47,7 @@ class PermalinkViewController < UIViewController
 
   def open_bookmarks
     controller = BookmarksViewController.new.tap { |c| c.entry = @bookmark }
-    self.presentViewController(UINavigationController.alloc.initWithRootViewController(controller), animated:true, completion:nil)
+    self.presentViewController(HBFav2NavigationController.alloc.initWithRootViewController(controller), animated:true, completion:nil)
   end
 
   def viewWillAppear(animated)

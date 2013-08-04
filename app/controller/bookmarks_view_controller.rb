@@ -76,7 +76,7 @@ class BookmarksViewController < UITableViewController
     tableView.reloadData
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
-
+    self.navigationController.setToolbarHidden(true, animated:animated)
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 21]
     self.navigationItem.leftBarButtonItem  = UIBarButtonItem.stop.tap do |btn|
       btn.action = 'on_close'
