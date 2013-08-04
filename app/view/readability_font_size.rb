@@ -9,8 +9,10 @@ class ReadabilityFontSize
   def initialize
     @sizes = [
       100,
+      95,
       90,
       100,
+      105,
       110,
     ]
   end

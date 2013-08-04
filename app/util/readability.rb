@@ -81,7 +81,7 @@ p.domain {
 div.content {
   margin-top: 3em;
   font-size: 100%;
-  line-height: 180%;
+  line-height: 160%;
 }
 
 pre {

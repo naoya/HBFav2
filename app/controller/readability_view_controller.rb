@@ -15,15 +15,6 @@ class ReadabilityViewController < UIViewController
       end
     end
 
-    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
-    #   UIButton.custom.tap do |btn|
-    #     btn.frame = [[0, 0], [16, 16]]
-    #     btn.showsTouchWhenHighlighted = true
-    #     btn.setImage(UIImage.imageNamed('font_size_icon'), forState: :normal.uicontrolstate)
-    #     btn.addTarget(self, action:'on_change_font', forControlEvents:UIControlEventTouchUpInside)w
-    #   end
-    # )
-
     view << @webview = HBFav2::WebView.new.tap do |v|
       v.frame = CGRectZero
       v.delegate = self
@@ -65,10 +56,26 @@ class ReadabilityViewController < UIViewController
       btn.target = self
     end
 
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("aA").tap do |btn|
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("Aa").tap do |btn|
       btn.action = 'on_change_font'
       btn.target = self
     end
+
+    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithImage(
+    #   UIImage.imageNamed('font_case_24'),
+    #   style:UIBarButtonItemStylePlain,
+    #   target:self,
+    #   action:'on_change_font'
+    # )
+
+    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+    #   UIButton.custom.tap do |btn|
+    #     btn.frame = [[0, 0], [24, 24]]
+    #     btn.showsTouchWhenHighlighted = true
+    #     btn.setImage(UIImage.imageNamed('font_case_24'), forState: :normal.uicontrolstate)
+    #     btn.addTarget(self, action:'on_change_font', forControlEvents:UIControlEventTouchUpInside)
+    #   end
+    # )
   end
 
   def viewWillDisappear(animated)
