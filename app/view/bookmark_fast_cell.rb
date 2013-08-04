@@ -42,11 +42,11 @@ class BookmarkFastCell < UITableViewCell
       title_height = 0
       margin = 0
     else
-      title_height   = self.heightForTitle(bookmark.title, width)
-      margin = comment_height > 0 ? 10 : 0
+      title_height = self.heightForTitle(bookmark.title, width)
+      margin = comment_height > 0 ? 3 : 0
     end
 
-    [68, 10 + name_size.height + 5 + comment_height + margin + title_height + 10].max
+    [68, 10 + name_size.height + 3 + comment_height + margin + title_height + 10].max
   end
 
   def self.heightForComment(comment, width)
@@ -75,7 +75,7 @@ class BookmarkFastCell < UITableViewCell
   end
 
   def self.sizeForTitle(title, width)
-    constrain = CGSize.new(self.bodyWidth(width) - 19, 1000) # 19 ･･･ favicon (16) + margin (3)
+    constrain = CGSize.new(self.bodyWidth(width) - 16, 1000) # 17 ･･･ favicon (14) + margin (3)
     title.sizeWithFont(
       BookmarkLabelAttributes.sharedAttributes.attributes[:title][:font],
       constrainedToSize:constrain,
@@ -182,7 +182,7 @@ class BookmarkFastCell < UITableViewCell
     y = current_y + 4.5
     @starView.image.drawInRect([[x, y], @starView.size])
 
-    current_y += size.height + 5
+    current_y += size.height + 3
 
     ## comment
     comment_height = 0
@@ -192,17 +192,17 @@ class BookmarkFastCell < UITableViewCell
       @labels[:comment].drawInRect([[SideWidth, current_y], size], withFont:attributes[:comment][:font], lineBreakMode:NSLineBreakByWordWrapping)
     end
 
-    margin = comment_height > 0 ? 10 : 0
+    margin = comment_height > 0 ? 3 : 0
     current_y += comment_height + margin
 
     ## favicon + title
     unless self.no_title
       if @favicon.present?
-        @favicon.drawInRect([[SideWidth, current_y + 2], [16, 16]]) if @favicon.present?
+        @favicon.drawInRect([[SideWidth, current_y + 2], [14, 14]]) if @favicon.present?
       end
       color[:link].uicolor.set
       size = self.class.sizeForTitle(@labels[:title], self.frame.size.width)
-      @labels[:title].drawInRect([[SideWidth + 19, current_y], size], withFont:attributes[:title][:font], lineBreakMode:NSLineBreakByWordWrapping)
+      @labels[:title].drawInRect([[SideWidth + 16, current_y], size], withFont:attributes[:title][:font], lineBreakMode:NSLineBreakByWordWrapping)
     end
   end
 

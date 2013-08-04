@@ -8,10 +8,10 @@ class BookmarkLabelAttributes
 
   def initialize
     @attributes = {
-      :name    => { :color => '#000',    :font => UIFont.boldSystemFontOfSize(16) },
-      :title   => { :color => '#3b5998', :font => UIFont.systemFontOfSize(16) },
-      :comment => { :color => '#000',    :font => UIFont.systemFontOfSize(16) },
-      :date    => { :color => '#999',    :font => UIFont.systemFontOfSize(13) },
+      :name    => { :color => '#000',    :font => UIFont.boldSystemFontOfSize(15) },
+      :title   => { :color => '#3b5998', :font => UIFont.systemFontOfSize(14) },
+      :comment => { :color => '#000',    :font => UIFont.systemFontOfSize(14) },
+      :date    => { :color => '#999',    :font => UIFont.systemFontOfSize(12) },
     }
   end
 end
