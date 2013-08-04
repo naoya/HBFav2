@@ -18,7 +18,7 @@ class ReadabilityViewController < UIViewController
     view << @webview = HBFav2::WebView.new.tap do |v|
       v.frame = CGRectZero
       v.delegate = self
-      tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_fullscreen')
+      tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_fullscreen:')
       tapGesture.delegate = self
       v.addGestureRecognizer(tapGesture)
     end
@@ -127,9 +127,11 @@ class ReadabilityViewController < UIViewController
     self.wantsFullScreenLayout = false
   end
 
-  def toggle_fullscreen
-    @fullscreen = !@fullscreen
-    @fullscreen ? begin_fullscreen : end_fullscreen
+  def toggle_fullscreen(recog)
+    if (recog.state == UIGestureRecognizerStateEnded)
+      @fullscreen = !@fullscreen
+      @fullscreen ? begin_fullscreen : end_fullscreen
+    end
   end
 
   def begin_fullscreen
