@@ -65,7 +65,7 @@ class ReadabilityViewController < UIViewController
       btn.target = self
     end
 
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("aA") do |btn|
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("aA").tap do |btn|
       btn.action = 'on_change_font'
       btn.target = self
     end
@@ -156,7 +156,6 @@ class ReadabilityViewController < UIViewController
     self.dismissViewControllerAnimated(true, completion:nil)
   end
 
-  ## FIXME: なぜかボタンの初回押下時に呼ばれない...
   def on_change_font
     font_size = ReadabilityFontSize.sharedFontSize.nextSize
     @webview.stringByEvaluatingJavaScriptFromString(<<"EOF")
