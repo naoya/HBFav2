@@ -6,6 +6,7 @@ class BookmarkFastCellContentView < UIView
 end
 
 class BookmarkFastCell < UITableViewCell
+  @@blank_image = UIImage.imageNamed('blank')
   SideWidth = 65
   attr_accessor :no_title
 
@@ -96,8 +97,9 @@ class BookmarkFastCell < UITableViewCell
        l.cornerRadius = 5.0
       end
       @starView = HBFav2::HatenaStarView.new
+      @faviconView = UIImageView.new
 
-      ## それ以外は UIView を使わない
+      # それ以外は UIView を使わない
       @labels  = {}
       @favicon = nil
     end
@@ -112,14 +114,10 @@ class BookmarkFastCell < UITableViewCell
 
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"profile_placeholder.png".uiimage, options:SDWebImageLowPriority)
 
-    sdmgr = SDWebImageManager.sharedManager
     unless self.no_title
-      sdmgr.downloadWithURL(bookmark.favicon_url.nsurl, options:SDWebImageLowPriority, progress:nil, completed:lambda do |image, error, cacheType, finished|
-        if image.present?
-          @favicon = image
+      @faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:@@blank_image, options:SDWebImageLowPriority, progress:nil, completed:lambda do |image, error, cacheType|
           self.setNeedsDisplay
-        end
-      end)
+        end)
     end
 
     @starView.set_url(bookmark.permalink) do |image, error, cacheType|
@@ -197,9 +195,7 @@ class BookmarkFastCell < UITableViewCell
 
     ## favicon + title
     unless self.no_title
-      if @favicon.present?
-        @favicon.drawInRect([[SideWidth, current_y + 2], [15, 15]]) if @favicon.present?
-      end
+      @faviconView.image.drawInRect([[SideWidth, current_y + 2], [15, 15]])
       color[:link].uicolor.set
       size = self.class.sizeForTitle(@labels[:title], self.frame.size.width)
       @labels[:title].drawInRect([[SideWidth + 17, current_y], size], withFont:attributes[:title][:font], lineBreakMode:NSLineBreakByWordWrapping)
