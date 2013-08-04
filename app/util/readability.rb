@@ -17,6 +17,7 @@ module Readability
     end
 
     def html(data)
+      font_size = ReadabilityFontSize.sharedFontSize.size
       html =<<"EOF"
 <!DOCTYPE html>
 <html>
@@ -35,6 +36,7 @@ body {
   word-wrap: break-word;
   font-family: "Hiragino Mincho ProN", serif;
   color: #000;
+  font-size: #{font_size}%;
 }
 
 a {
@@ -79,7 +81,7 @@ p.domain {
 div.content {
   margin-top: 3em;
   font-size: 100%;
-  line-height: 180%;
+  line-height: 160%;
 }
 
 pre {
