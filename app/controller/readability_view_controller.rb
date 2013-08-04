@@ -15,11 +15,14 @@ class ReadabilityViewController < UIViewController
       end
     end
 
-    self.view.backgroundColor = UIColor.redColor
-    self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
-      btn.action = 'on_close'
-      btn.target = self
-    end
+    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+    #   UIButton.custom.tap do |btn|
+    #     btn.frame = [[0, 0], [16, 16]]
+    #     btn.showsTouchWhenHighlighted = true
+    #     btn.setImage(UIImage.imageNamed('font_size_icon'), forState: :normal.uicontrolstate)
+    #     btn.addTarget(self, action:'on_change_font', forControlEvents:UIControlEventTouchUpInside)w
+    #   end
+    # )
 
     view << @webview = HBFav2::WebView.new.tap do |v|
       v.frame = CGRectZero
@@ -56,6 +59,16 @@ class ReadabilityViewController < UIViewController
     prepare_fullscreen
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
     @webview.frame = self.view.frame
+
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
+      btn.action = 'on_close'
+      btn.target = self
+    end
+
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("aA") do |btn|
+      btn.action = 'on_change_font'
+      btn.target = self
+    end
   end
 
   def viewWillDisappear(animated)
@@ -141,6 +154,14 @@ class ReadabilityViewController < UIViewController
 
   def on_close
     self.dismissViewControllerAnimated(true, completion:nil)
+  end
+
+  ## FIXME: なぜかボタンの初回押下時に呼ばれない...
+  def on_change_font
+    font_size = ReadabilityFontSize.sharedFontSize.nextSize
+    @webview.stringByEvaluatingJavaScriptFromString(<<"EOF")
+document.body.style.fontSize = #{font_size} + '%';
+EOF
   end
 
   def dealloc
