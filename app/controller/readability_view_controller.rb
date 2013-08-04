@@ -15,12 +15,6 @@ class ReadabilityViewController < UIViewController
       end
     end
 
-    self.view.backgroundColor = UIColor.redColor
-    self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
-      btn.action = 'on_close'
-      btn.target = self
-    end
-
     view << @webview = HBFav2::WebView.new.tap do |v|
       v.frame = CGRectZero
       v.delegate = self
@@ -56,6 +50,32 @@ class ReadabilityViewController < UIViewController
     prepare_fullscreen
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
     @webview.frame = self.view.frame
+
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
+      btn.action = 'on_close'
+      btn.target = self
+    end
+
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("Aa").tap do |btn|
+      btn.action = 'on_change_font'
+      btn.target = self
+    end
+
+    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithImage(
+    #   UIImage.imageNamed('font_case_24'),
+    #   style:UIBarButtonItemStylePlain,
+    #   target:self,
+    #   action:'on_change_font'
+    # )
+
+    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+    #   UIButton.custom.tap do |btn|
+    #     btn.frame = [[0, 0], [24, 24]]
+    #     btn.showsTouchWhenHighlighted = true
+    #     btn.setImage(UIImage.imageNamed('font_case_24'), forState: :normal.uicontrolstate)
+    #     btn.addTarget(self, action:'on_change_font', forControlEvents:UIControlEventTouchUpInside)
+    #   end
+    # )
   end
 
   def viewWillDisappear(animated)
@@ -141,6 +161,13 @@ class ReadabilityViewController < UIViewController
 
   def on_close
     self.dismissViewControllerAnimated(true, completion:nil)
+  end
+
+  def on_change_font
+    font_size = ReadabilityFontSize.sharedFontSize.nextSize
+    @webview.stringByEvaluatingJavaScriptFromString(<<"EOF")
+document.body.style.fontSize = #{font_size} + '%';
+EOF
   end
 
   def dealloc
