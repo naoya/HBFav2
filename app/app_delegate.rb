@@ -16,7 +16,7 @@ class AppDelegate
 
     ## initialize HBFav2
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds).tap do |w|
-      w.rootViewController = UINavigationController.alloc.initWithRootViewController(
+      w.rootViewController = HBFav2NavigationController.alloc.initWithRootViewController(
         TimelineViewController.new.tap do |c|
           app_user = ApplicationUser.sharedUser.load
           c.user     = app_user.to_bookmark_user

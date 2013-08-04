@@ -51,10 +51,10 @@ class ReadabilityViewController < UIViewController
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
     @webview.frame = self.view.frame
 
-    self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
-      btn.action = 'on_close'
-      btn.target = self
-    end
+    # self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
+    #   btn.action = 'on_close'
+    #   btn.target = self
+    # end
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("Aa").tap do |btn|
       btn.action = 'on_change_font'
@@ -81,6 +81,8 @@ class ReadabilityViewController < UIViewController
   def viewWillDisappear(animated)
     super
     cleanup_fullscreen
+
+    self.navigationController.toolbar.translucent = false
     self.navigationController.setToolbarHidden(false, animated:animated)
 
     if @connection.present?
@@ -110,7 +112,7 @@ class ReadabilityViewController < UIViewController
 
   def prepare_fullscreen
     @fullscreen = false
-    self.navigationController.setToolbarHidden(true, animated:false)
+    self.navigationController.setToolbarHidden(true, animated:true)
     self.navigationController.setNavigationBarHidden(false, animated:false)
     self.navigationController.navigationBar.translucent = true
     self.navigationController.toolbar.translucent = true

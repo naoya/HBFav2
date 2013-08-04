@@ -152,6 +152,8 @@ class TimelineViewController < UITableViewController
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
     self.wantsFullScreenLayout = false
 
+    self.navigationController.setToolbarHidden(true, animated:animated)
+
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
