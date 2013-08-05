@@ -65,6 +65,8 @@ class HotentryViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
+    self.navigationController.setToolbarHidden(true, animated:animated)
+
     ## category selector
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("カテゴリ").tap do |btn|
       btn.target = self
