@@ -29,7 +29,7 @@ module HBFav2
         @headerView << @nameLabel
 
         @discImageView = UIImageView.new.tap do |v|
-          v.image = UIImage.imageNamed('disc2.png')
+          v.image = UIImage.imageNamed('chevron')
         end
         @headerView << @discImageView
 
@@ -107,7 +107,7 @@ module HBFav2
       @nameLabel.frame = [[@profileImageView.right + 10, 10], [200, 48]]
 
       h = @headerView.bounds.size.height
-      @discImageView.frame = [[@headerView.right - 20, (h / 2) - 8], [12, 17]]
+      @discImageView.frame = [[@headerView.right - 20, (h / 2) - 6], [10, 14]]
       @border.frame = [[0, @headerView.bottom], [self.bounds.size.width, 1]]
 
       ## body
