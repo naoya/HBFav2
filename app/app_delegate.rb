@@ -1,30 +1,28 @@
 # -*- coding: utf-8 -*-
 class AppDelegate
+  attr_accessor :viewController
+
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     NSLog("RUBYMOTION_ENV: " + RUBYMOTION_ENV)
+
     ## initialize PocketAPI
     PocketAPI.sharedAPI.setConsumerKey("16058-73f06a0629616ad0245bbfd0")
 
-    ## Debugging PocketAPI
-    # defaults = NSUserDefaults.new
-    # data = defaults.dataForKey("PocketAPICurrentLogin")
-    # if (data)
-    #   login = NSKeyedUnarchiver.unarchiveObjectWithData(data)
-    #   App.alert(login.requestToken)
-    # end
     UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 
-    ## initialize HBFav2
-    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds).tap do |w|
-      w.rootViewController = HBFav2NavigationController.alloc.initWithRootViewController(
-        TimelineViewController.new.tap do |c|
-          app_user = ApplicationUser.sharedUser.load
-          c.user     = app_user.to_bookmark_user
-          c.as_home  = true
-        end
-      )
-      w.makeKeyAndVisible
-    end
+    @viewController = HBFav2PanelController.sharedController
+    @viewController.leftGapPercentage = 0.7
+    @viewController.leftPanel = LeftViewController.new
+    @viewController.centerPanel = HBFav2NavigationController.alloc.initWithRootViewController(
+      TimelineViewController.new.tap do |c|
+        app_user = ApplicationUser.sharedUser.load
+        c.user     = app_user.to_bookmark_user
+        c.as_home  = true
+      end
+    )
+    @window.rootViewController = @viewController
+    @window.makeKeyAndVisible
     true
   end
 

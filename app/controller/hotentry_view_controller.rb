@@ -65,10 +65,17 @@ class HotentryViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
+    self.navigationController.setToolbarHidden(true, animated:animated)
+
     ## category selector
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("カテゴリ").tap do |btn|
       btn.target = self
       btn.action = 'open_category'
+    end
+
+    ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
+    if self.navigationItem.leftBarButtonItem
+      self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
     end
 
     subtitle = CategoryList.sharedCategories.key_to_title(self.category)
