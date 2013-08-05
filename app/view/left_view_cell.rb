@@ -1,6 +1,5 @@
 class LeftViewCellContentView < UIView
   def drawRect(rect)
-    NSLog("fofofo")
     self.superview.superview.drawRectContent(rect)
   end
 end
@@ -26,18 +25,9 @@ class LeftViewCell < UITableViewCell
         layer.masksToBounds = true
       end
 
-      # self.textLabel.font = UIFont.systemFontOfSize(18)
-      # self.textLabel.textColor = [196, 204, 217].uicolor
-      # self.textLabel.shadowColor = [0, 0, 0].uicolor
-      # self.textLabel.shadowOffset = [0.5, 1]
-
       @titleShadow = NSShadow.new
       @titleShadow.shadowOffset = [0.5, 1]
       @titleShadow.shadowColor = [0, 0, 0].uicolor
-
-      self.contentView << @border = UIView.new.tap do |v|
-        v.backgroundColor = [62, 69, 84].uicolor
-      end
     end
     self
   end
@@ -61,17 +51,22 @@ class LeftViewCell < UITableViewCell
   def layoutSubviews
     super
     @contentView.frame = self.bounds
-    @border.frame = [[0, 0], [self.bounds.size.width, 1]]
     if self.imageView.image
       self.imageView.frame = [[8, 8], [28, 28]]
     end
-    # self.textLabel.origin = [self.imageView.right + 8, self.textLabel.origin.y ]
   end
 
   def drawRectContent(rect)
-    NSLog(@title)
     size =  @title.sizeWithFont(UIFont.systemFontOfSize(18))
     title = @title.attrd.shadow(@titleShadow).foreground_color([196, 204, 217].uicolor).font(UIFont.systemFontOfSize(18))
     title.drawInRect([[self.imageView.right + 8, self.imageView.top + 4], size])
+
+    ## shadowed border line
+    context = UIGraphicsGetCurrentContext()
+    [62, 69, 84].uicolor(1.0).setStroke
+    CGContextSetLineWidth(context, 2)
+    CGContextMoveToPoint(context, 0, 0)
+    CGContextAddLineToPoint(context, self.right, 0)
+    CGContextStrokePath(context)
   end
 end
