@@ -34,7 +34,7 @@ EOF
         :payload => xml,
         :headers => {
           'Accept' => 'application/x.atom+xml,application/xml,text/xml,*/*',
-          'X-WSSE' => RmWsse.wsse_header(self.hatena_id, self.password)
+          'X-WSSE' => RmWsse.wsse_header(self.hatena_id, self.password || '')
         }
       }
     ) do |response|
