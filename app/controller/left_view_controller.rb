@@ -9,6 +9,7 @@ class LeftViewController < UITableViewController
     @timeline = self.sidePanelController.centerPanel
     @user = ApplicationUser.sharedUser.to_bookmark_user
 
+    ## initialize navigation controllers
     @bookmark = HBFav2NavigationController.alloc.initWithRootViewController(
       TimelineViewController.new.tap do |c|
         c.user  = @user
@@ -35,7 +36,6 @@ class LeftViewController < UITableViewController
     @dataSource = [
       {
         :title      => @user.name,
-        :action     => 'open_config',
         :controller => @config,
         :image      => UIImageView.new.tap do |iv|
           iv.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
@@ -43,23 +43,23 @@ class LeftViewController < UITableViewController
       },
       {
         :title      => 'タイムライン',
-        :action     => 'open_timeline',
         :controller => @timeline,
+        :image      => UIImage.imageNamed('insignia_star')
       },
       {
         :title      => 'ブックマーク',
-        :action     => 'open_hotentry',
         :controller => @bookmark,
+        :image      => UIImage.imageNamed('insignia_tags')
       },
       {
         :title      => '人気エントリー',
-        :action     => 'open_hotentry',
         :controller => @hotentry,
+        :image      => UIImage.imageNamed('insignia_heart')
       },
       {
         :title      => '新着エントリー',
-        :action     => 'open_entrylist',
         :controller => @entrylist,
+        :image      => UIImage.imageNamed('insignia_file')
       },
     ]
   end
@@ -72,8 +72,9 @@ class LeftViewController < UITableViewController
     row = @dataSource[indexPath.row]
     cell = LeftViewCell.cellForLeftView(tableView)
     cell.textLabel.text = row[:title]
-    if row[:image]
-      cell.imageView.image = row[:image].image
+    if image = row[:image]
+      i = image.kind_of?(UIImageView) ? image.image : image
+      cell.imageView.image = i
       cell.imageView.frame = [[10, 10], [24, 24]]
     end
     cell
