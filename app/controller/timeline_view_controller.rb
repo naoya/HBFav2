@@ -50,16 +50,6 @@ class TimelineViewController < UITableViewController
     bgview.backgroundColor = '#e2e7ed'.uicolor
     self.tableView.insertSubview(bgview, atIndex: 0)
 
-    if home?
-      btn = UIBarButtonItem.bookmarks.tap do |b|
-        b.target = self
-        b.action = 'open_profile'
-        b.styleClass = 'navigation-button'
-      end
-      self.navigationItem.rightBarButtonItem = btn
-      # self.navigationItem.leftBarButtonItem = btn
-    end
-
     if ApplicationUser.sharedUser.configured?
       ## Finally, fetch latest timeline feed
       initialize_bookmarks
@@ -146,6 +136,11 @@ class TimelineViewController < UITableViewController
 
   def viewWillAppear(animated)
     # NSNotificationCenter.defaultCenter.addObserver(self, selector: :'open_bookmark:', name:'title_touched', object:nil)
+
+    ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
+    if self.navigationItem.leftBarButtonItem
+      self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
+    end
 
     ## 応急処置
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
