@@ -71,12 +71,7 @@ class LeftViewController < UITableViewController
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     row = @dataSource[indexPath.row]
     cell = LeftViewCell.cellForLeftView(tableView)
-    cell.textLabel.text = row[:title]
-    if image = row[:image]
-      i = image.kind_of?(UIImageView) ? image.image : image
-      cell.imageView.image = i
-      cell.imageView.frame = [[10, 10], [24, 24]]
-    end
+    cell.fillWithProperties(row)
     cell
   end
 
