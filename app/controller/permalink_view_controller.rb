@@ -7,9 +7,16 @@ class PermalinkViewController < UIViewController
 
     self.navigationItem.title = "ブックマーク"
     self.view.backgroundColor = UIColor.whiteColor
-    self.navigationController.toolbar.translucent = true
-    self.navigationController.setToolbarHidden(true, animated:false)
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+      UIButton.custom.tap do |btn|
+        btn.frame = [[0, 0], [38, 38]]
+        btn.showsTouchWhenHighlighted = true
+        btn.setImage(UIImage.imageNamed('UIButtonBarAction'), forState: :normal.uicontrolstate)
+        btn.addTarget(self, action:'on_action', forControlEvents:UIControlEventTouchUpInside)
+        btn.setTitleShadowColor(UIColor.grayColor, forState: :normal.uicontrolstate)
+      end
+    )
 
     self.view << @bookmarkView = HBFav2::BookmarkView.new.tap do |v|
       v.frame = self.view.bounds
@@ -73,6 +80,29 @@ class PermalinkViewController < UIViewController
   def viewWillDisappear(animated)
     super
     self.navigationController.toolbar.translucent = false
+  end
+
+  def on_action
+    safari = TUSafariActivity.new
+    pocket = PocketActivity.new
+    hatena = HatenaBookmarkActivity.new
+    add_bookmark = AddBookmarkActivity.new.tap do |activity|
+      user = ApplicationUser.sharedUser
+      activity.hatena_id = user.hatena_id
+      activity.password  = user.password
+    end
+
+    activity = UIActivityViewController.alloc.initWithActivityItems(
+      [@bookmark.title, @bookmark.link.nsurl],
+      applicationActivities:[
+        safari,
+        add_bookmark,
+        pocket,
+        hatena,
+      ]
+    )
+    activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
+    self.presentViewController(activity, animated:true, completion:nil)
   end
 
   def dealloc
