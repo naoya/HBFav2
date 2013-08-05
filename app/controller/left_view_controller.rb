@@ -26,12 +26,7 @@ class LeftViewController < UITableViewController
       HotentryViewController.new.tap { |c| c.list_type = :entrylist }
     )
 
-    @config = HBFav2NavigationController.alloc.initWithRootViewController(
-      ProfileViewController.new.tap do |c|
-        c.user    = @user
-        c.as_mine = true
-      end
-    )
+    @config = HBFav2NavigationController.alloc.initWithRootViewController(AccountViewController.new)
 
     @dataSource = [
       {
