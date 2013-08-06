@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-class ProfileViewController < UIViewController
-  attr_accessor :user
-
+class AccountViewController < UIViewController
   def viewDidLoad
     super
 
+    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
+    @user = ApplicationUser.sharedUser.to_bookmark_user
     self.navigationItem.title = @user.name
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
@@ -13,20 +13,15 @@ class ProfileViewController < UIViewController
 
     @dataSource = [
       {
-        :title => nil,
-        :rows  => [
+        :title => "設定",
+        :rows => [
           {
-            :label         => "ブックマーク",
-            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
-            :action        => 'open_bookmarks'
-          },
-          {
-            :label         => "フォロー",
-            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
-            :action        => 'open_timeline'
-          },
+            :label  => "はてなアカウント",
+            :color  => '#385487'.uicolor,
+            :action => 'open_hatena_config'
+          }
         ]
-      },
+      }
     ]
 
     @imageView = UIImageView.new.tap do |v|
@@ -57,6 +52,10 @@ class ProfileViewController < UIViewController
 
   def viewWillAppear(animated)
     super
+    ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
+    if self.navigationItem.leftBarButtonItem
+      self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
+    end
     @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)
   end
 
@@ -89,8 +88,6 @@ class ProfileViewController < UIViewController
   end
 
   def numberOfSectionsInTableView (tableView)
-    # @dataSource.size
-    # ↓ ちょっとこの書き方はどうかなあ
     @dataSource.size
   end
 
@@ -100,29 +97,27 @@ class ProfileViewController < UIViewController
     end
   end
 
-  def open_bookmarks
-    self.navigationController.pushViewController(
-      TimelineViewController.new.tap do |c|
-        c.user  = user
-        c.content_type = :bookmark
-        c.title = user.name
-      end,
-      animated:true
-    )
+  def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
+    @user = ApplicationUser.sharedUser.to_bookmark_user
+
+    ## view 更新
+    navigationItem.title = @user.name
+    @imageView.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
+    @nameLabel.text = @user.name
   end
 
-  def open_timeline
-    self.navigationController.pushViewController(
-      TimelineViewController.new.tap do |c|
-        c.user  = user
-        c.title = user.name
-      end,
+  def open_hatena_config
+    self.presentModalViewController(
+      UINavigationController.alloc.initWithRootViewController(
+        AccountConfigViewController.new.tap { |c| c.allow_cancellation = true }
+      ),
       animated:true
     )
   end
 
   def dealloc
     NSLog("dealloc: " + self.class.name)
+    ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
     super
   end
 end

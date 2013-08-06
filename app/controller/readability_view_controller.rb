@@ -51,10 +51,10 @@ class ReadabilityViewController < UIViewController
     @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
     @webview.frame = self.view.frame
 
-    # self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
-    #   btn.action = 'on_close'
-    #   btn.target = self
-    # end
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
+      btn.action = 'on_close'
+      btn.target = self
+    end
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("Aa").tap do |btn|
       btn.action = 'on_change_font'
