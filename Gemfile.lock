@@ -31,7 +31,6 @@ GEM
       cocoapods (>= 0.17.0)
     motion-pixate (1.2)
       sass
-    motion-pixate-observer (0.5)
     motion-require (0.0.6)
     multi_json (1.7.7)
     nap (0.5.1)
@@ -56,7 +55,6 @@ DEPENDENCIES
   formotion
   motion-cocoapods
   motion-pixate
-  motion-pixate-observer
   motion-require
   rake
   rm-wsse

@@ -3,38 +3,34 @@ class TimelineViewController < UITableViewController
   attr_accessor :user, :as_home, :content_type
   # include Motion::Pixate::Observer
 
+  DefaultTitle = "HBFav2"
+
+  def registerObserver
+    @observed = true
+    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
+    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
+  end
+
+  def removeObserver
+    if @observed
+      @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
+      ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
+      @observed = false
+    end
+  end
+
   def viewDidLoad
     super
-
-    ## for Pixate development
-    # startObserving
-    # App.alert(user.use_timeline? ? "true" : "false")
-
-    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
     if (content_type == :bookmark)
       @bookmarks = BookmarkManager::Offset.new
       @bookmarks.url = user.bookmark_feed_url
     else
       @bookmarks = BookmarkManager.factory(user)
     end
-    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
 
-    self.navigationItem.title ||= "HBFav"
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
     self.initialize_footerview
-
-    ## Navigation back button
-    # self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
-    #   UIButton.custom.tap do |btn|
-    #     btn.frame = [[0, 0], [24, 24]]
-    #     btn.setImage("arrow".uiimage, forState: :normal.uicontrolstate)
-    #     btn.on(:touch) do
-    #       self.navigationController.popViewControllerAnimated(true)
-    #     end
-    #   end
-    # )
-    # self.navigationItem.hidesBackButton = true
 
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
@@ -56,6 +52,8 @@ class TimelineViewController < UITableViewController
     else
       open_account_config
     end
+
+    self.registerObserver
   end
 
   def initialize_bookmarks
@@ -119,7 +117,6 @@ class TimelineViewController < UITableViewController
 
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
       self.user = ApplicationUser.sharedUser.to_bookmark_user
-      NSLog(self.user.use_timeline? ? 'true' : 'false')
       @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
       @bookmarks = BookmarkManager.factory(self.user)
       @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
@@ -134,8 +131,16 @@ class TimelineViewController < UITableViewController
     end
   end
 
+  def update_title
+    if content_type == :bookmark
+      self.navigationItem.title = self.user.name
+    else
+      self.navigationItem.title = DefaultTitle
+    end
+  end
+
   def viewWillAppear(animated)
-    # NSNotificationCenter.defaultCenter.addObserver(self, selector: :'open_bookmark:', name:'title_touched', object:nil)
+    self.update_title
 
     ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
     if self.navigationItem.leftBarButtonItem
@@ -159,9 +164,6 @@ class TimelineViewController < UITableViewController
     super
   end
 
-  def viewDidAppear(animated)
-    super
-  end
   def tableView(tableView, numberOfRowsInSection:section)
     return @bookmarks.size
   end
@@ -235,9 +237,8 @@ class TimelineViewController < UITableViewController
   end
 
   def dealloc
+    self.removeObserver
     NSLog("dealloc: " + self.class.name)
-    @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
-    ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
     super
   end
 end

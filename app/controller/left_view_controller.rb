@@ -2,19 +2,24 @@
 class LeftViewController < UITableViewController
   def viewDidLoad
     super
+    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
+
     self.title = "メニュー"
     self.view.backgroundColor = [50, 57, 73].uicolor
     self.view.separatorColor = [36, 42, 54].uicolor
 
     @timeline = self.sidePanelController.centerPanel
-    @user = ApplicationUser.sharedUser.to_bookmark_user
+    @dataSource = initialize_controllers_for(ApplicationUser.sharedUser.to_bookmark_user)
+  end
 
+  def initialize_controllers_for(user)
     ## initialize navigation controllers
     @bookmark = HBFav2NavigationController.alloc.initWithRootViewController(
       TimelineViewController.new.tap do |c|
-        c.user  = @user
+        c.user  = user
         c.content_type = :bookmark
-        c.title = @user.name
+        c.title = user.name
+        c.as_home  = true
       end
     )
 
@@ -26,15 +31,15 @@ class LeftViewController < UITableViewController
       HotentryViewController.new.tap { |c| c.list_type = :entrylist }
     )
 
-    @config = HBFav2NavigationController.alloc.initWithRootViewController(AccountViewController.new)
+    @config = HBFav2NavigationController.alloc.initWithRootViewController(
+      AccountViewController.new
+    )
 
-    @dataSource = [
+    return [
       {
-        :title      => @user.name,
+        :title      => user.name,
         :controller => @config,
-        :image      => UIImageView.new.tap do |iv|
-          iv.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
-        end
+        :image      => profile_image_for(user)
       },
       {
         :title      => 'タイムライン',
@@ -59,6 +64,20 @@ class LeftViewController < UITableViewController
     ]
   end
 
+  def profile_image_for(user)
+    UIImageView.new.tap do |iv|
+      iv.setImageWithURL(
+        user.profile_image_url.nsurl,
+        placeholderImage:UIImage.imageNamed("profile_placeholder"),
+        completed:lambda do |image, error, cacheType|
+          ## FIXME: セルだけ更新すればいい
+          NSLog("RELOAD")
+          self.tableView.reloadData
+        end
+      )
+    end
+  end
+
   def tableView(tableView, numberOfRowsInSection:indexPath)
     @dataSource.size
   end
@@ -75,5 +94,21 @@ class LeftViewController < UITableViewController
     row = @dataSource[indexPath.row]
     controller = row[:controller]
     self.sidePanelController.centerPanel = controller
+  end
+
+  def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
+    if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id')
+      ## FIXME: 生データいじりすぎてて微妙
+      row = @dataSource[0]
+      user = ApplicationUser.sharedUser.to_bookmark_user
+      row[:title] = user.name
+      row[:image] = profile_image_for(user)
+      tableView.reloadData
+    end
+  end
+
+  def dealloc
+    ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
+    super
   end
 end
