@@ -68,7 +68,8 @@ class HotentryViewController < UITableViewController
     self.navigationController.setToolbarHidden(true, animated:animated)
 
     ## category selector
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("カテゴリ").tap do |btn|
+    label =  CategoryList.sharedCategories.key_to_label(self.category)
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled(label).tap do |btn|
       btn.target = self
       btn.action = 'open_category'
     end
@@ -79,7 +80,7 @@ class HotentryViewController < UITableViewController
     end
 
     subtitle = CategoryList.sharedCategories.key_to_title(self.category)
-    self.navigationItem.titleView.text = list_type == :hotentry ? "人気: #{subtitle}" : "新着: #{subtitle}"
+    self.navigationItem.titleView.text = list_type == :hotentry ? "人気エントリー" : "新着エントリー"
 
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
