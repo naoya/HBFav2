@@ -47,6 +47,7 @@ Motion::Project::App.setup do |app|
     pod 'Base64'
     pod 'SVProgressHUD'
     pod 'SSKeychain'
+    pod 'JASidePanels'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security']
