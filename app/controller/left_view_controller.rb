@@ -5,7 +5,8 @@ class LeftViewController < UITableViewController
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
 
     self.title = "メニュー"
-    self.view.backgroundColor = [50, 57, 73].uicolor
+    # self.view.backgroundColor = [50, 57, 73].uicolor
+    self.view.backgroundColor = [41, 47, 59].uicolor
     self.view.separatorColor = [36, 42, 54].uicolor
 
     @timeline = self.sidePanelController.centerPanel
