@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 class HBFav2PanelController < JASidePanelController
+  def self.sharedController
+    Dispatch.once { @instance ||= new }
+    @instance
+  end
+
   ## 上角だけ丸める
   def stylePanel(panel)
     maskPath = UIBezierPath.bezierPathWithRoundedRect(
