@@ -26,6 +26,7 @@ class TimelineViewController < UITableViewController
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
     self.initialize_footerview
+    self.backGestureEnabled = true unless home?
 
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
