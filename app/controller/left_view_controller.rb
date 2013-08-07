@@ -5,12 +5,13 @@ class LeftViewController < UITableViewController
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
 
     self.title = "メニュー"
+    @dataSource = initialize_controllers_for(ApplicationUser.sharedUser.to_bookmark_user)
+
     # self.view.backgroundColor = [50, 57, 73].uicolor
     self.view.backgroundColor = [41, 47, 59].uicolor
     self.view.separatorColor = [36, 42, 54].uicolor
 
     @timeline = self.sidePanelController.centerPanel
-    @dataSource = initialize_controllers_for(ApplicationUser.sharedUser.to_bookmark_user)
   end
 
   def initialize_controllers_for(user)
@@ -89,7 +90,11 @@ class LeftViewController < UITableViewController
   end
 
   def tableView(tableView, numberOfRowsInSection:indexPath)
-    @dataSource.size
+    if @dataSource.present?
+      @dataSource.size
+    else
+      0
+    end
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
