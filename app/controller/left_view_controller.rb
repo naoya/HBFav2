@@ -10,12 +10,12 @@ class LeftViewController < UITableViewController
     # self.view.backgroundColor = [50, 57, 73].uicolor
     self.view.backgroundColor = [41, 47, 59].uicolor
     self.view.separatorColor = [36, 42, 54].uicolor
-
-    @timeline = self.sidePanelController.centerPanel
   end
 
   def initialize_controllers_for(user)
     ## initialize navigation controllers
+    @timeline = self.sidePanelController.centerPanel
+
     @bookmark = HBFav2NavigationController.alloc.initWithRootViewController(
       TimelineViewController.new.tap do |c|
         c.user  = user
