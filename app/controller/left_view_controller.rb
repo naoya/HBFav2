@@ -81,9 +81,7 @@ class LeftViewController < UITableViewController
         user.profile_image_url.nsurl,
         placeholderImage:UIImage.imageNamed("profile_placeholder"),
         completed:lambda do |image, error, cacheType|
-          ## FIXME: セルだけ更新すればいい
-          NSLog("RELOAD")
-          self.tableView.reloadData
+          self.tableView.reloadRowsAtIndexPaths([[0, 0].nsindexpath], withRowAnimation:UITableViewRowAnimationNone)
         end
       )
     end
