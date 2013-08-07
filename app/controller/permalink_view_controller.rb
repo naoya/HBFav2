@@ -9,15 +9,15 @@ class PermalinkViewController < UIViewController
     self.view.backgroundColor = UIColor.whiteColor
     self.backGestureEnabled = true
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
-      UIButton.custom.tap do |btn|
-        btn.frame = [[0, 0], [38, 38]]
-        btn.showsTouchWhenHighlighted = true
-        btn.setImage(UIImage.imageNamed('UIButtonBarAction'), forState: :normal.uicontrolstate)
-        btn.addTarget(self, action:'on_action', forControlEvents:UIControlEventTouchUpInside)
-        btn.setTitleShadowColor(UIColor.grayColor, forState: :normal.uicontrolstate)
-      end
-    )
+    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
+    #   UIButton.custom.tap do |btn|
+    #     btn.frame = [[0, 0], [38, 38]]
+    #     btn.showsTouchWhenHighlighted = true
+    #     btn.setImage(UIImage.imageNamed('UIButtonBarAction'), forState: :normal.uicontrolstate)
+    #     btn.addTarget(self, action:'on_action', forControlEvents:UIControlEventTouchUpInside)
+    #     btn.setTitleShadowColor(UIColor.grayColor, forState: :normal.uicontrolstate)
+    #   end
+    # )
 
     self.view << @bookmarkView = HBFav2::BookmarkView.new.tap do |v|
       v.frame = self.view.bounds
@@ -25,6 +25,7 @@ class PermalinkViewController < UIViewController
       v.headerView.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'open_profile'))
       v.starView.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'open_stars'))
       v.titleButton.addTarget(self, action:'open_webview', forControlEvents:UIControlEventTouchUpInside)
+      v.titleButton.addGestureRecognizer(UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_action'))
       v.usersButton.addTarget(self, action:'open_bookmarks', forControlEvents:UIControlEventTouchUpInside)
     end
   end
