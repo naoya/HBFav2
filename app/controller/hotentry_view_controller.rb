@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 class HotentryViewController < UITableViewController
   attr_accessor :category, :list_type
+  include HBFav2::ApplicationSwitchNotification
 
   def viewDidLoad
+    super
     @bookmarks = []
 
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
@@ -65,6 +67,7 @@ class HotentryViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
+    self.receive_application_switch_notifcation
     self.navigationController.setToolbarHidden(true, animated:animated)
 
     ## category selector
@@ -91,6 +94,7 @@ class HotentryViewController < UITableViewController
 
   def viewWillDisappear(animated)
     super
+    self.unreceive_application_switch_notification
     if @connection.present?
       @connection.cancel
       App.shared.networkActivityIndicatorVisible = false
@@ -131,6 +135,10 @@ class HotentryViewController < UITableViewController
       animated:true,
       completion:nil
     )
+  end
+
+  def applicationWillEnterForeground
+    self.tableView.reloadData
   end
 
   def dealloc

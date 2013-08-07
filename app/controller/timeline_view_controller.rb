@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class TimelineViewController < UITableViewController
   attr_accessor :user, :as_home, :content_type
-  # include Motion::Pixate::Observer
+  include HBFav2::ApplicationSwitchNotification
 
   DefaultTitle = "HBFav2"
 
@@ -145,6 +145,7 @@ class TimelineViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
+    self.receive_application_switch_notifcation
     self.update_title
 
     ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
@@ -166,6 +167,11 @@ class TimelineViewController < UITableViewController
 
     @footer_indicator.center = [@footerView.frame.size.width / 2, @footerView.frame.size.height / 2]
 
+    super
+  end
+
+  def viewWillDisappear(animated)
+    self.unreceive_application_switch_notification
     super
   end
 
@@ -239,6 +245,11 @@ class TimelineViewController < UITableViewController
 
   def home?
     as_home ? true : false
+  end
+
+  def applicationWillEnterForeground
+    ## 相対時刻更新
+    self.tableView.reloadData
   end
 
   def dealloc

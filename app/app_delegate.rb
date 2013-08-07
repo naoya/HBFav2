@@ -32,6 +32,16 @@ class AppDelegate
     end
     return true
   end
+
+  def applicationDidEnterBackground(application)
+    notify = NSNotification.notificationWithName("applicationDidEnterBackground", object:self)
+    NSNotificationCenter.defaultCenter.postNotification(notify)
+  end
+
+  def applicationWillEnterForeground(application)
+    notify = NSNotification.notificationWithName("applicationWillEnterForeground", object:self)
+    NSNotificationCenter.defaultCenter.postNotification(notify)
+  end
 end
 
 if RUBYMOTION_ENV == 'release'

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 class AppInfoViewController < UIViewController
+  include HBFav2::ApplicationSwitchNotification
+
   def viewDidLoad
     super
-
     self.title = "アプリについて"
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
@@ -68,6 +69,7 @@ class AppInfoViewController < UIViewController
 
   def viewWillAppear(animated)
     super
+    self.receive_application_switch_notifcation
     self.navigationController.setToolbarHidden(true, animated:animated)
 
     ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
@@ -76,6 +78,11 @@ class AppInfoViewController < UIViewController
     end
 
     @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)
+  end
+
+  def viewWillDisappear(animated)
+    self.unreceive_application_switch_notification
+    super
   end
 
   ## AccountViewController とコードが被ってる
@@ -158,5 +165,9 @@ class AppInfoViewController < UIViewController
   def dealloc
     NSLog("dealloc: " + self.class.name)
     super
+  end
+
+  def applicationWillEnterForeground
+    @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:true)
   end
 end

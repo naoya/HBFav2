@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 class BookmarksViewController < UITableViewController
   attr_accessor :entry
+  include HBFav2::ApplicationSwitchNotification
 
   def viewDidLoad
     super
@@ -72,6 +73,7 @@ class BookmarksViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
+    self.receive_application_switch_notifcation
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
@@ -87,6 +89,7 @@ class BookmarksViewController < UITableViewController
 
   def viewWillDisappear(animated)
     super
+    self.unreceive_application_switch_notification
     if @connection.present?
       @connection.cancel
       App.shared.networkActivityIndicatorVisible = false
@@ -121,6 +124,10 @@ class BookmarksViewController < UITableViewController
 
   def on_close
     self.dismissViewControllerAnimated(true, completion:nil)
+  end
+
+  def applicationWillEnterForeground
+    self.tableView.reloadData
   end
 
   def dealloc
