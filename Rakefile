@@ -47,6 +47,7 @@ Motion::Project::App.setup do |app|
     pod 'SVProgressHUD'
     pod 'SSKeychain'
     pod 'JASidePanels'
+    pod 'ISBackGesture', :git => 'https://github.com/ishkawa/ISBackGesture.git'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security']

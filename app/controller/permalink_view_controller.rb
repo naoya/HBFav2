@@ -7,6 +7,7 @@ class PermalinkViewController < UIViewController
 
     self.navigationItem.title = "ブックマーク"
     self.view.backgroundColor = UIColor.whiteColor
+    self.backGestureEnabled = true
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
       UIButton.custom.tap do |btn|

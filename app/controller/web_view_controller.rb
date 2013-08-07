@@ -9,6 +9,7 @@ class WebViewController < UIViewController
     @link_clicked = nil
 
     @document_title = nil
+    self.backGestureEnabled = true
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = '#fff'.uicolor
     self.initialize_toolbar
