@@ -190,10 +190,10 @@ EOF
 
   def dealloc
     NSLog("dealloc: " + self.class.name)
-    if @webview.loading?
-      @webview.stopLoading
+    if @webview
+      @webview.stopLoading if @webview.loading?
+      @webview.delegate = nil
     end
-    @webview.delegate = nil
     super
   end
 end
