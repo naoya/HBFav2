@@ -41,7 +41,7 @@ class BookmarkManager
     url = prepend ? self.prepend_url : self.append_url
 
     # debug
-    puts url
+    NSLog(url)
 
     BW::HTTP.get(url) do |response|
       if response.ok?
@@ -141,6 +141,8 @@ class BookmarkManager
     def replace_placeholder(ph, &cb)
       @updating = true
       url = append_url_from(ph.datetime)
+
+      NSLog("replace_placeholder: #{url}")
 
       ## FIXME: not DRY
       BW::HTTP.get(url) do |response|
