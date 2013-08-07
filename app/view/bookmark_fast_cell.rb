@@ -112,10 +112,12 @@ class BookmarkFastCell < UITableViewCell
     @labels[:comment] = bookmark.comment.length > 0 ? bookmark.comment : nil
     @labels[:title]   = bookmark.title unless self.no_title
 
-    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"profile_placeholder.png".uiimage, options:SDWebImageLowPriority)
+    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"profile_placeholder.png".uiimage, options:SDWebImageLowPriority, completed:lambda do |image, error, cacheType|
+        self.setNeedsDisplay
+    end)
 
     unless self.no_title
-      @faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:@@blank_image, options:SDWebImageLowPriority, progress:nil, completed:lambda do |image, error, cacheType|
+      @faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:@@blank_image, options:SDWebImageLowPriority, completed:lambda do |image, error, cacheType|
           self.setNeedsDisplay
         end)
     end
