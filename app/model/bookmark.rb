@@ -9,18 +9,26 @@ class Bookmark
   end
 
   def initialize(dict)
-    @eid               = dict[:eid]
-    @title             = dict[:title]
-    @link              = dict[:link]
-    @user_name         = dict[:user][:name]
-    @created_at        = dict[:created_at]
-    @comment           = dict[:comment]
-    @profile_image_url = dict[:user][:profile_image_url]
-    @permalink         = dict[:permalink]
+    @eid        = dict[:eid]
+    @title      = dict[:title]
+    @link       = dict[:link]
+    @created_at = dict[:created_at]
+    @comment    = dict[:comment]
+    @permalink  = dict[:permalink]
 
-    @count             = Count.new(dict[:count].to_i)
-    @user = User.new({:name => @user_name})
-    @datetime = self.class.date_formatter.dateFromString(dict[:datetime])
+    unless dict[:count].nil?
+      @count = Count.new(dict[:count].to_i)
+    end
+
+    if dict[:user]
+      @user              = User.new({:name => dict[:user][:name]})
+      @user_name         = dict[:user][:name]
+      @profile_image_url = dict[:user][:profile_image_url]
+    end
+
+    if dict[:datetime]
+      @datetime = self.class.date_formatter.dateFromString(dict[:datetime])
+    end
   end
 
   def id

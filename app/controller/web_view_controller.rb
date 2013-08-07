@@ -113,7 +113,7 @@ class WebViewController < UIViewController
       if response.ok?
         ## まだ画面遷移が一度も発生してない場合はオブジェクトの更新は必要ない (リダイレクト対策)
         ## ただし、その場合でもブックマークコメントの先読みのためにリクエストはしておく
-        if @link_clicked
+        if @bookmark.count.nil? or @link_clicked
           autorelease_pool {
             data = BW::JSON.parse(response.body.to_str) || {}
             @bookmark_requestd[url] = @bookmark = Bookmark.new(
@@ -139,7 +139,12 @@ class WebViewController < UIViewController
 
   def update_bookmark_info(bookmark)
     self.navigationItem.titleView.text = bookmark.title if self.navigationItem.present?
-    @bookmarkButton.setTitle(bookmark.count.to_s, forState:UIControlStateNormal)
+    update_bookmark_count(bookmark)
+  end
+
+  def update_bookmark_count(bookmark)
+    cnt = bookmark.count.nil? ? " - users" : bookmark.count.to_s
+    @bookmarkButton.setTitle(cnt, forState:UIControlStateNormal)
     @bookmarkButton.enabled = bookmark.count.to_i > 0
   end
 
@@ -169,11 +174,12 @@ class WebViewController < UIViewController
       spacer,
       UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAction, target:self, action:'on_action'),
       spacer,
-      @bookmarkButton = UIBarButtonItem.titled(@bookmark.count.to_s, :bordered).tap do |btn|
+      @bookmarkButton = UIBarButtonItem.titled('', :bordered).tap do |btn|
         btn.target = self
         btn.action = 'open_bookmark'
       end
     ]
+    self.update_bookmark_count(@bookmark)
   end
 
   def present_modal (controller)

@@ -36,6 +36,10 @@ class LeftViewController < UITableViewController
       AccountViewController.new
     )
 
+    @appinfo = HBFav2NavigationController.alloc.initWithRootViewController(
+      AppInfoViewController.new
+    )
+
     return [
       {
         :title      => user.name,
@@ -62,6 +66,11 @@ class LeftViewController < UITableViewController
         :controller => @entrylist,
         :image      => UIImage.imageNamed('insignia_file')
       },
+      {
+        :title      => "アプリについて",
+        :controller => @appinfo,
+        :image      => UIImage.imageNamed('default_app_logo')
+      }
     ]
   end
 
