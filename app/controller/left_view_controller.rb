@@ -5,7 +5,8 @@ class LeftViewController < UITableViewController
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
 
     self.title = "メニュー"
-    self.view.backgroundColor = [50, 57, 73].uicolor
+    # self.view.backgroundColor = [50, 57, 73].uicolor
+    self.view.backgroundColor = [41, 47, 59].uicolor
     self.view.separatorColor = [36, 42, 54].uicolor
 
     @timeline = self.sidePanelController.centerPanel
@@ -35,6 +36,10 @@ class LeftViewController < UITableViewController
       AccountViewController.new
     )
 
+    @appinfo = HBFav2NavigationController.alloc.initWithRootViewController(
+      AppInfoViewController.new
+    )
+
     return [
       {
         :title      => user.name,
@@ -61,6 +66,11 @@ class LeftViewController < UITableViewController
         :controller => @entrylist,
         :image      => UIImage.imageNamed('insignia_file')
       },
+      {
+        :title      => "アプリについて",
+        :controller => @appinfo,
+        :image      => UIImage.imageNamed('default_app_logo')
+      }
     ]
   end
 

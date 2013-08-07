@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-class AccountViewController < UIViewController
+class AppInfoViewController < UIViewController
   def viewDidLoad
     super
 
-    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
-    @user = ApplicationUser.sharedUser.to_bookmark_user
-    self.navigationItem.title = @user.name
+    self.title = "アプリについて"
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
     ## 背景
@@ -13,40 +11,58 @@ class AccountViewController < UIViewController
 
     @dataSource = [
       {
-        :title => "設定",
         :rows => [
           {
-            :label  => "はてなアカウント",
-            :color  => '#385487'.uicolor,
-            :action => 'open_hatena_config'
+            :label  => "ご意見・ご要望",
+            :detail => "Github",
+            :action => 'open_report'
+          },
+          {
+            :label  => "レビューを書く",
+            :detail => "App Store",
+            :action => 'open_review'
+          },
+          {
+            :label  => "アプリのWebサイト",
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
+            :action => 'open_website'
+          },
+          {
+            :label => "クレジット",
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
+            :action => 'open_credit'
+          },
+          {
+            :label => "開発者ブログ",
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
+            :action => 'open_blog'
           }
-        ]
-      },
+        ],
+      }
     ]
 
-    @imageView = UIImageView.new.tap do |v|
+    view << @imageView = UIImageView.new.tap do |v|
       v.frame = [[10, 10], [48, 48]]
       v.layer.tap do |l|
         l.masksToBounds = true
         l.cornerRadius  = 5.0
       end
-      v.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
-      view << v
+      v.image = UIImage.imageNamed('default_app_logo')
     end
 
-    @nameLabel = UILabel.new.tap do |v|
+    view << @nameLabel = UILabel.new.tap do |v|
+      version = NSBundle.mainBundle.infoDictionary.objectForKey('CFBundleShortVersionString')
+
       v.frame = [[68, 10], [200, 48]]
       v.font  = UIFont.boldSystemFontOfSize(18)
-      v.text  = @user.name
+      v.text  = "HBFav #{version}"
       v.shadowColor = UIColor.whiteColor
       v.shadowOffset = [0, 1]
       v.backgroundColor = UIColor.clearColor
-      view << v
     end
 
-    @menuTable = UITableView.alloc.initWithFrame([[0, 59], self.view.bounds.size], style:UITableViewStyleGrouped).tap do |v|
+    view << @menuTable = UITableView.alloc.initWithFrame([[0, 59], self.view.bounds.size], style:UITableViewStyleGrouped).tap do |v|
       v.dataSource = v.delegate = self
-      view << v
     end
   end
 
@@ -58,9 +74,11 @@ class AccountViewController < UIViewController
     if self.navigationItem.leftBarButtonItem
       self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
     end
+
     @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)
   end
 
+  ## AccountViewController とコードが被ってる
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     id = "basis-cell"
     rowData = @dataSource[indexPath.section][:rows][indexPath.row]
@@ -102,24 +120,6 @@ class AccountViewController < UIViewController
     end
   end
 
-  def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
-    @user = ApplicationUser.sharedUser.to_bookmark_user
-
-    ## view 更新
-    navigationItem.title = @user.name
-    @imageView.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
-    @nameLabel.text = @user.name
-  end
-
-  def open_hatena_config
-    self.presentModalViewController(
-      UINavigationController.alloc.initWithRootViewController(
-        AccountConfigViewController.new.tap { |c| c.allow_cancellation = true }
-      ),
-      animated:true
-    )
-  end
-
   def open_website
     bookmark = Bookmark.new({
       :title => 'HBFav2',
@@ -139,9 +139,24 @@ class AccountViewController < UIViewController
     "https://github.com/naoya/HBFav2/issues?state=open".nsurl.open
   end
 
+  def open_blog
+    bookmark = Bookmark.new({
+      :title => 'HBFav2',
+      :link  => "http://d.hatena.ne.jp/naoya/",
+      :count => nil
+    })
+    controller = WebViewController.new
+    controller.bookmark = bookmark
+    self.navigationController.pushViewController(controller, animated:true)
+  end
+
+  def open_credit
+    controller = CreditViewController.new
+    self.navigationController.pushViewController(controller, animated:true)
+  end
+
   def dealloc
     NSLog("dealloc: " + self.class.name)
-    ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
     super
   end
 end
