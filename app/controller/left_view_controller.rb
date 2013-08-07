@@ -87,6 +87,13 @@ class LeftViewController < UITableViewController
     end
   end
 
+  def viewWillAppear(animated)
+    super
+    if tableView.indexPathForSelectedRow.nil?
+      tableView.selectRowAtIndexPath([0, 1].nsindexpath, animated:true, scrollPosition:UITableViewScrollPositionNone);
+    end
+  end
+
   def tableView(tableView, numberOfRowsInSection:indexPath)
     if @dataSource.present?
       @dataSource.size
@@ -103,7 +110,6 @@ class LeftViewController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    tableView.deselectRowAtIndexPath(indexPath, animated:true)
     row = @dataSource[indexPath.row]
     controller = row[:controller]
     self.sidePanelController.centerPanel = controller

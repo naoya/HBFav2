@@ -14,6 +14,10 @@ class LeftViewCell < UITableViewCell
 
   def initWithStyle(style, reuseIdentifier:cell_id)
     if super
+      self.selectedBackgroundView = UIView.new.tap do |v|
+        v.backgroundColor = [41, 47, 59].uicolor
+      end
+
       @contentView = LeftViewCellContentView.alloc.initWithFrame(CGRectZero)
       @contentView.backgroundColor = [50, 57, 73].uicolor
       @contentView.opaque = true
@@ -62,11 +66,13 @@ class LeftViewCell < UITableViewCell
     title.drawInRect([[self.imageView.right + 8, self.imageView.top + 4], size])
 
     ## shadowed border line
-    context = UIGraphicsGetCurrentContext()
-    [62, 69, 84].uicolor(1.0).setStroke
-    CGContextSetLineWidth(context, 2)
-    CGContextMoveToPoint(context, 0, 0)
-    CGContextAddLineToPoint(context, self.right, 0)
-    CGContextStrokePath(context)
+    unless selected?
+      context = UIGraphicsGetCurrentContext()
+      [62, 69, 84].uicolor(1.0).setStroke
+      CGContextSetLineWidth(context, 2)
+      CGContextMoveToPoint(context, 0, 0)
+      CGContextAddLineToPoint(context, self.right, 0)
+      CGContextStrokePath(context)
+    end
   end
 end
