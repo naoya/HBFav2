@@ -1,4 +1,15 @@
 # -*- coding: utf-8 -*-
+class ReadabilityViewControllerDelegated
+  def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
+    return true
+  end
+
+  def dealloc
+    NSLog("dealloc: " + self.class.name)
+    super
+  end
+end
+
 class ReadabilityViewController < UIViewController
   attr_accessor :entry
 
@@ -19,7 +30,9 @@ class ReadabilityViewController < UIViewController
       v.frame = CGRectZero
       v.delegate = self
       tapGesture = UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_fullscreen:')
-      tapGesture.delegate = self
+
+      ## Hack: self で受けると ISBackGesture とバッティングするので
+      tapGesture.delegate = @delegated = ReadabilityViewControllerDelegated.new
       v.addGestureRecognizer(tapGesture)
     end
 
@@ -159,9 +172,9 @@ class ReadabilityViewController < UIViewController
     UIView.commitAnimations
   end
 
-  def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
-    true
-  end
+#  def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
+#    true
+#  end
 
   def on_close
     self.dismissViewControllerAnimated(true, completion:nil)
