@@ -10,25 +10,7 @@ class AccountViewController < UIViewController
 
     ## 背景
     view << UITableView.alloc.initWithFrame(view.bounds, style:UITableViewStyleGrouped)
-
-    @dataSource = [
-      {
-        :title => "設定",
-        :rows => [
-          {
-            :label  => "はてなアカウント",
-            :color  => '#385487'.uicolor,
-            :action => 'open_hatena_config'
-          },
-          {
-            :label  => 'クラッシュレポート',
-            :action => 'open_bugreport_config',
-            :color  => '#385487'.uicolor,
-            # :accessoryType => UITableViewCellAccessoryDisclosureIndicator
-          }
-        ],
-      },
-    ]
+    self.initialize_data_source
 
     @imageView = UIImageView.new.tap do |v|
       v.frame = [[10, 10], [48, 48]]
@@ -56,6 +38,37 @@ class AccountViewController < UIViewController
     end
   end
 
+  def initialize_data_source
+    @dataSource = [
+      {
+        :title => "設定",
+        :rows => [
+          {
+            :label  => "はてなアカウント",
+            :detail => ApplicationUser.sharedUser.hatena_id,
+            :action => 'open_hatena_config'
+          },
+          {
+            :label  => 'クラッシュレポート',
+            :detail => ApplicationUser.sharedUser.send_bugreport? ? "オン" : "オフ",
+            :action => 'open_bugreport_config',
+          }
+        ],
+      },
+      {
+        :title => "外部サービス",
+        :rows => [
+          {
+            :label  => "Pocket",
+            :detail => PocketAPI.sharedAPI.username || "未設定",
+            :action => 'open_pocket',
+            :accessoryType => PocketAPI.sharedAPI.loggedIn? ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone
+          },
+        ]
+      }
+    ]
+  end
+
   def viewWillAppear(animated)
     super
     self.navigationController.setToolbarHidden(true, animated:animated)
@@ -64,7 +77,12 @@ class AccountViewController < UIViewController
     if self.navigationItem.leftBarButtonItem
       self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
     end
-    @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)
+
+    indexPath = @menuTable.indexPathForSelectedRow
+    self.initialize_data_source
+    @menuTable.reloadData
+    @menuTable.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
+    @menuTable.deselectRowAtIndexPath(indexPath, animated:animated);
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
@@ -109,12 +127,15 @@ class AccountViewController < UIViewController
   end
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
-    @user = ApplicationUser.sharedUser.to_bookmark_user
-
-    ## view 更新
-    navigationItem.title = @user.name
-    @imageView.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
-    @nameLabel.text = @user.name
+    if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id')
+      @user = ApplicationUser.sharedUser.to_bookmark_user
+      ## view 更新
+      navigationItem.title = @user.name
+      @imageView.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
+      @nameLabel.text = @user.name
+      self.initialize_data_source
+      @menuTable.reloadData
+    end
   end
 
   def open_hatena_config
@@ -151,6 +172,21 @@ class AccountViewController < UIViewController
 
   def open_report
     "https://github.com/naoya/HBFav2/issues?state=open".nsurl.open
+  end
+
+  def open_pocket
+    if PocketAPI.sharedAPI.loggedIn?
+      self.navigationController.pushViewController(PocketViewController.alloc.initWithStyle(UITableViewStyleGrouped), animated:true)
+    else
+      PocketAPI.sharedAPI.loginWithHandler(lambda do |pocket, error|
+          if error.nil?
+          else
+            NSLog(error.localizedDescription)
+          end
+          self.initialize_data_source
+          @menuTable.reloadData
+      end)
+    end
   end
 
   def dealloc
