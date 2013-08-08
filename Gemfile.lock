@@ -32,6 +32,7 @@ GEM
     motion-pixate (1.2)
       sass
     motion-require (0.0.6)
+    motion-yaml (1.0)
     multi_json (1.7.8)
     nap (0.5.1)
     open4 (1.3.0)
@@ -54,6 +55,7 @@ DEPENDENCIES
   motion-cocoapods
   motion-pixate
   motion-require
+  motion-yaml
   rake
   rm-wsse
   sugarcube

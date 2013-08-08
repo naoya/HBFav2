@@ -48,6 +48,7 @@ Motion::Project::App.setup do |app|
     pod 'SSKeychain'
     pod 'JASidePanels'
     pod 'ISBackGesture', :git => 'https://github.com/ishkawa/ISBackGesture.git'
+    pod 'BugSense'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security']
@@ -61,6 +62,14 @@ Motion::Project::App.setup do |app|
   app.pixate.user = 'i.naoya@gmail.com'
   app.pixate.key = 'EQ618-LJDLI-B8GN3-QBBU3-8M0JM-QUITT-NJRFC-U10SL-RL43M-SETVQ-0OA4D-5S24R-6SNQH-02OR8-KNK7T-R6'
   app.pixate.framework = 'vendor/PXEngine.framework'
+
+  ## BugSense
+  app.vendor_project(
+    'vendor/Pods/BugSense/BugSense-iOS.framework',
+    :static,
+    :products => %w{BugSense-iOS},
+    :headers_dir => 'Headers'
+  )
 
   ## Reveal
   # app.vendor_project(

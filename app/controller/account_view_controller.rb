@@ -19,8 +19,14 @@ class AccountViewController < UIViewController
             :label  => "はてなアカウント",
             :color  => '#385487'.uicolor,
             :action => 'open_hatena_config'
+          },
+          {
+            :label  => 'クラッシュレポート',
+            :action => 'open_bugreport_config',
+            :color  => '#385487'.uicolor,
+            # :accessoryType => UITableViewCellAccessoryDisclosureIndicator
           }
-        ]
+        ],
       },
     ]
 
@@ -117,6 +123,15 @@ class AccountViewController < UIViewController
         AccountConfigViewController.new.tap { |c| c.allow_cancellation = true }
       ),
       animated:true
+    )
+  end
+
+  def open_bugreport_config
+    NSLog('open bug report config')
+    self.presentViewController(
+      UINavigationController.alloc.initWithRootViewController(BugreportConfigViewController.new),
+      animated:true,
+      completion:nil
     )
   end
 
