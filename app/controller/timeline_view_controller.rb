@@ -50,6 +50,21 @@ class TimelineViewController < UITableViewController
     end
 
     self.registerObserver
+    self.tableView.addGestureRecognizer(
+      UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_long_press_row:')
+    )
+  end
+
+  def on_long_press_row(recog)
+    if recog.state == UIGestureRecognizerStateBegan and
+        indexPath = tableView.indexPathForRowAtPoint(recog.locationInView(tableView))
+      bookmark = @bookmarks[indexPath.row]
+      unless bookmark.kind_of? Placeholder
+        controller = WebViewController.new
+        controller.bookmark = bookmark
+        self.navigationController.pushViewController(controller, animated:true)
+      end
+    end
   end
 
   def initialize_bookmark_manager(user)

@@ -28,6 +28,19 @@ class HotentryViewController < UITableViewController
     bgview.backgroundColor = '#e2e7ed'.uicolor
     self.tableView.insertSubview(bgview, atIndex: 0)
     load_hotentry
+    self.tableView.addGestureRecognizer(
+      UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_long_press_row:')
+    )
+  end
+
+  def on_long_press_row(recog)
+    if recog.state == UIGestureRecognizerStateBegan and
+        indexPath = tableView.indexPathForRowAtPoint(recog.locationInView(tableView))
+      bookmark = @bookmarks[indexPath.row]
+      controller = WebViewController.new
+      controller.bookmark = bookmark
+      self.navigationController.pushViewController(controller, animated:true)
+    end
   end
 
   def clear_entries
