@@ -36,7 +36,7 @@ class AccountConfigViewController < Formotion::FormController
                   value: user.configured? ? user.password : nil
                 }
               ],
-              footer: "ブックマーク投稿機能を利用しない場合パスワード入力は不要です"
+              footer: "非公開設定のIDは利用できません\nブックマーク投稿機能を利用しない場合パスワード入力は不要です"
             }, {
               title: "オプション",
               rows: [
