@@ -127,7 +127,6 @@ class AccountViewController < UIViewController
   end
 
   def open_bugreport_config
-    NSLog('open bug report config')
     self.presentViewController(
       UINavigationController.alloc.initWithRootViewController(BugreportConfigViewController.new),
       animated:true,
