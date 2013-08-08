@@ -24,6 +24,11 @@ class AppInfoViewController < UIViewController
             :action => 'open_review'
           },
           {
+            :label  => "TIPS",
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
+            :action => 'open_tips'
+          },
+          {
             :label  => "アプリのWebサイト",
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
             :action => 'open_website'
@@ -159,6 +164,11 @@ class AppInfoViewController < UIViewController
 
   def open_credit
     controller = CreditViewController.new
+    self.navigationController.pushViewController(controller, animated:true)
+  end
+
+  def open_tips
+    controller = TipsViewController.new
     self.navigationController.pushViewController(controller, animated:true)
   end
 
