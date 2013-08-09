@@ -6,6 +6,9 @@ resources/*.storyboardc
 vendor/Pods/
 vendor/bundle/
 
+vendor/ChromeProgressBar/build-*
+vendor/ChromeProgressBar/*.bridgesupport
+
 ### /Users/naoya/.gitignore-boilerplates/ruby.gitignore
 
 *.gem

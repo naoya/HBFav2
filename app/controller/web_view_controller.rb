@@ -16,16 +16,20 @@ class WebViewController < UIViewController
 
     ## Title
     self.navigationItem.titleView = TitleLabel.new.tap do |label|
-      label.frame = [[0, 0], [view.frame.size.width, 44]]
+      label.frame = self.navigationController.navigationBar.bounds
       label.text = @bookmark.title
     end
 
     ## WebView
+    @proxy = NJKWebViewProgress.alloc.init
     self.view << @webview = HBFav2::WebView.new.tap do |v|
       v.scalesPageToFit = true
       v.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
-      v.delegate = self
+      v.delegate = @proxy
     end
+
+    @proxy.webViewProxyDelegate = self
+    @proxy.progressDelegate = self
 
     ## Activity Indicator
     self.view << @indicator = UIActivityIndicatorView.new.tap do |v|
@@ -44,7 +48,6 @@ class WebViewController < UIViewController
     )
   end
 
-  # http://stackoverflow.com/questions/4492683/why-do-i-have-to-subtract-for-height-of-uinavigationbar-twice-to-get-uiwebview-t
   def viewWillAppear(animated)
     super
 
@@ -123,8 +126,6 @@ class WebViewController < UIViewController
                 :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
                 :link  => url,
                 :count => data['count'] || 0,
-                :user => { :name => 'dummy' },
-                :datetime => '1977-01-01' # dummy
               }
             )
             update_bookmark_info(@bookmark)
@@ -229,6 +230,27 @@ class WebViewController < UIViewController
     present_modal(activity)
   end
 
+  def webViewProgress(webViewProgress, updateProgress:progress)
+    ## progress (demo)
+    if (progress == 0)
+      unless @progress.nil?
+        @progress.removeFromSuperview
+        @progress = nil
+      end
+
+      self.view <<@progress = ChromeProgressBar.new.tap do |v|
+        v.frame = [self.view.bounds.origin, [self.view.bounds.size.width, 5 ] ]
+      end
+      @progress.progress = 0
+      # UIView.animateWithDuration(0.27, animations:lambda {  @progress.alpha = 1.0 })
+    end
+
+    if (progress == 1.0)
+      UIView.animateWithDuration(0.27, delay:progress - @progress.progress, options:0, animations:lambda { @progress.alpha = 0.0 }, completion:nil)
+    end
+    @progress.setProgress(progress, animated:false)
+  end
+
   def dealloc
     NSLog("dealloc: " + self.class.name)
     if @webview.loading?
@@ -238,10 +260,3 @@ class WebViewController < UIViewController
     super
   end
 end
-
-# class UIActivityViewController
-#   def dealloc
-#     NSLog("dealloc: " + self.class.name)
-#     super
-#   end
-# end

@@ -11,6 +11,7 @@ PODS:
   - libwebp/dsp (0.3.0-rc7)
   - libwebp/utils (0.3.0-rc7)
   - libwebp/webp (0.3.0-rc7)
+  - NJKWebViewProgress (0.1.6)
   - NSDate+TimeAgo (1.0.2)
   - PocketAPI (1.0.2)
   - SDWebImage (3.3):
@@ -27,6 +28,7 @@ DEPENDENCIES:
   - BugSense
   - ISBackGesture (from `https://github.com/ishkawa/ISBackGesture.git`)
   - JASidePanels
+  - NJKWebViewProgress
   - NSDate+TimeAgo
   - PocketAPI
   - SDWebImage
@@ -44,6 +46,7 @@ SPEC CHECKSUMS:
   ISBackGesture: 94b94031bc5175ce428e0e9ee169744d37dcda4b
   JASidePanels: c0e642a7311ec9cc9adfa616fa4a795e4e169f20
   libwebp: 40517fa1fd3716eded73b4696c45fc0b66e4b414
+  NJKWebViewProgress: 5181e8af629e60e8dd48c8b738b39e89eeecb351
   NSDate+TimeAgo: fe93d3042e83093ae3630bc47ae7d57f782733f6
   PocketAPI: 2ed51391e6ea7a48c707528f782f5a2cb0eab80e
   SDWebImage: 79a8bac9ccf85b269100b294f7b43684dab8bf8a

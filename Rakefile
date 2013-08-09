@@ -51,6 +51,7 @@ Motion::Project::App.setup do |app|
     pod 'ISBackGesture', :git => 'https://github.com/ishkawa/ISBackGesture.git'
     pod 'BugSense'
     pod 'TTTAttributedLabel'
+    pod 'NJKWebViewProgress'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security']
@@ -71,6 +72,12 @@ Motion::Project::App.setup do |app|
     :static,
     :products => %w{BugSense-iOS},
     :headers_dir => 'Headers'
+  )
+
+  ## ChromeProgressBar
+  app.vendor_project(
+    'vendor/ChromeProgressBar',
+    :static
   )
 
   ## Reveal
