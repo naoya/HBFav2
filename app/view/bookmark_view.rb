@@ -38,11 +38,34 @@ module HBFav2
         end
 
         ## body
-        @bodyView << @commentLabel = UILabel.new.tap do |v|
-          v.frame = CGRectZero
-          v.numberOfLines = 0
-          v.lineBreakMode = NSLineBreakByWordWrapping
-          v.font = UIFont.systemFontOfSize(18)
+        @bodyView << @commentLabel = TTTAttributedLabel.new.tap do |label|
+          label.frame = CGRectZero
+          label.numberOfLines = 0
+          label.lineBreakMode = NSLineBreakByWordWrapping
+          label.font = UIFont.systemFontOfSize(18)
+
+          label.dataDetectorTypes = NSTextCheckingTypeLink
+
+          ## workaround: これで UILabel とほぼ同じ設定になるっぽい
+          label.textAlignment = NSTextAlignmentLeft
+          label.lineHeightMultiple = 0.68
+
+          ## link attributes
+          ## FIXME: 日本語とURLが混じると行間がおかしくなる
+          paragraph = NSMutableParagraphStyle.new
+          paragraph.lineBreakMode = NSLineBreakByWordWrapping
+          paragraph.minimumLineHeight = 18
+          paragraph.maximumLineHeight = 18
+          paragraph.lineSpacing       = 1
+
+          label.linkAttributes       = {
+            KCTForegroundColorAttributeName => '#3B5998'.uicolor,
+            KCTParagraphStyleAttributeName  => paragraph
+          }
+          label.activeLinkAttributes = {
+            KCTForegroundColorAttributeName => '#69c'.uicolor,
+            KCTParagraphStyleAttributeName  => paragraph
+          }
         end
 
         @bodyView << @faviconView = UIImageView.new.tap {|v| v.frame = CGRectZero }
@@ -53,8 +76,8 @@ module HBFav2
           btn.titleLabel.numberOfLines = 0
           btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
           btn.backgroundColor = UIColor.whiteColor
-          btn.setTitleColor('#3B5998'.to_color, forState:UIControlStateNormal)
-          btn.setTitleColor('#69c'.to_color, forState:UIControlStateHighlighted)
+          btn.setTitleColor('#3B5998'.uicolor, forState:UIControlStateNormal)
+          btn.setTitleColor('#69c'.uicolor, forState:UIControlStateHighlighted)
         end
 
         @bodyView << @urlLabel = UILabel.new.tap do |v|
@@ -81,9 +104,30 @@ module HBFav2
       self
     end
 
+    def delegate=(delegate)
+      @commentLabel.delegate = delegate
+    end
+
     def bookmark=(bookmark)
       @nameLabel.text    = bookmark.user.name
       @commentLabel.text = bookmark.comment if bookmark.comment.present?
+
+      ## handle Hatena ID
+      if bookmark.comment =~ %r{(id:[a-zA-Z\-]{3,32})}
+        id = $1
+        range = bookmark.comment.rangeOfString(id)
+        id.gsub!(/id:/, '')
+        @commentLabel.addLinkToURL("bookmark://#{id}".nsurl, withRange:range)
+      end
+
+      ## handle Twitter mention
+      if bookmark.comment =~ %r{(@[0-9a-zA-Z_]{1,15})}
+        mention = $1
+        range = bookmark.comment.rangeOfString(mention)
+        mention.gsub!(/^@/, '')
+        @commentLabel.addLinkToURL("twitter://#{mention}".nsurl, withRange:range)
+      end
+
       @titleButton.setTitle(bookmark.title, forState:UIControlStateNormal)
       @urlLabel.text     = bookmark.link
       @dateLabel.text    = bookmark.datetime.timeAgo
