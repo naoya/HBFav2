@@ -20,6 +20,7 @@ PODS:
     - libwebp
   - SSKeychain (1.1.0)
   - SVProgressHUD (0.9)
+  - TTTAttributedLabel (1.7.1)
   - TUSafariActivity (1.0.0)
 
 DEPENDENCIES:
@@ -31,6 +32,7 @@ DEPENDENCIES:
   - SDWebImage
   - SSKeychain
   - SVProgressHUD
+  - TTTAttributedLabel
   - TUSafariActivity
 
 EXTERNAL SOURCES:
@@ -47,6 +49,7 @@ SPEC CHECKSUMS:
   SDWebImage: 79a8bac9ccf85b269100b294f7b43684dab8bf8a
   SSKeychain: 54b6daee1d95af968beebef07522b583ff9a809c
   SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
+  TTTAttributedLabel: e504133915a9b11de63cb470ffa2790383a3eb23
   TUSafariActivity: bd9da588f5f9136ba445d89f8f86b6dccf4d46ba
 
 COCOAPODS: 0.22.3

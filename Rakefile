@@ -49,6 +49,7 @@ Motion::Project::App.setup do |app|
     pod 'JASidePanels'
     pod 'ISBackGesture', :git => 'https://github.com/ishkawa/ISBackGesture.git'
     pod 'BugSense'
+    pod 'TTTAttributedLabel'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security']
