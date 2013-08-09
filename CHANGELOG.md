@@ -26,3 +26,6 @@
 
 * [Takeshi Nagayama][nagayama]
 * [Watson][Watson1978]
+
+[nagayama]:https://github.com/nagayama
+[Watson1978]:https://github.com/Watson1978
