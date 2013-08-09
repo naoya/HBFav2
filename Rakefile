@@ -9,7 +9,7 @@ require 'sugarcube-attributedstring'
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'HBFav'
-  app.version = "2.0"
+  app.version = "2.1"
   app.short_version = "2.1"
   app.sdk_version = '6.1'
   app.deployment_target = '6.1'
