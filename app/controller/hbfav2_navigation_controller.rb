@@ -8,6 +8,19 @@ class HBFav2NavigationController < UINavigationController
     longPressGesture = UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'backToRoot:')
     longPressGesture.delegate = self
     self.navigationBar.addGestureRecognizer(longPressGesture)
+
+    ## naviBar の上部を丸める
+    layer = self.navigationBar.layer
+    maskPath = UIBezierPath.bezierPathWithRoundedRect(
+      layer.bounds,
+      byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight),
+      cornerRadii:CGSizeMake(5.0, 5.0)
+    )
+    maskLayer = CAShapeLayer.alloc.init
+    maskLayer.frame = layer.bounds
+    maskLayer.path = maskPath.CGPath;
+    layer.addSublayer(maskLayer)
+    layer.mask = maskLayer
   end
 
   def gestureRecognizerShouldBegin(gestureRecognizer)
