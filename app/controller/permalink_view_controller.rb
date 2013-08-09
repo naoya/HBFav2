@@ -104,6 +104,7 @@ class PermalinkViewController < UIViewController
         hatena,
       ]
     )
+    activity.setValue(@bookmark.title, forKey:"subject")
     activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
     self.presentViewController(activity, animated:true, completion:nil)
   end

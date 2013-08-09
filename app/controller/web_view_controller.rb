@@ -224,6 +224,7 @@ class WebViewController < UIViewController
         hatena,
       ]
     )
+    activity.setValue(@bookmark.title, forKey:"subject")
     activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
     present_modal(activity)
   end
