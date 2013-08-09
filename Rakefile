@@ -15,6 +15,7 @@ Motion::Project::App.setup do |app|
   app.deployment_target = '6.1'
   app.device_family = [:iphone]
   app.identifier = "HBFav"
+  app.prerendered_icon = true
 
   app.development do
     app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'

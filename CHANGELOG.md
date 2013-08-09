@@ -2,6 +2,7 @@
 
 ## 新機能
 
+* アプリアイコンを変更 (@ugtkbtk)
 * サイドメニューを追加
 * コメント欄のリンク、はてなID、Twitter名をクリッカブルに
 * バグレポート機能・設定を追加 (デフォルトオフ)
@@ -18,6 +19,10 @@
 * リストのフォントサイズを小さく (16pt -> 15pt)
 * rm-wsse を 0.0.4 に変更
 
+## Thanks to our contributors
+
+* [Yuji Takabatake][ugtkbtk]
+
 # 2.0 / 2013-08-01
 
 * RubyMotion で書き直してリリース
@@ -29,3 +34,4 @@
 
 [nagayama]:https://github.com/nagayama
 [Watson1978]:https://github.com/Watson1978
+[ugtkbtk]:https://github.com/ugtkbtk
