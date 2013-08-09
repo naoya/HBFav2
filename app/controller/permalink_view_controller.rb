@@ -27,6 +27,7 @@ class PermalinkViewController < UIViewController
       v.titleButton.addTarget(self, action:'open_webview', forControlEvents:UIControlEventTouchUpInside)
       v.titleButton.addGestureRecognizer(UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_action'))
       v.usersButton.addTarget(self, action:'open_bookmarks', forControlEvents:UIControlEventTouchUpInside)
+      v.delegate = self
     end
   end
 
@@ -105,6 +106,33 @@ class PermalinkViewController < UIViewController
     )
     activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
     self.presentViewController(activity, animated:true, completion:nil)
+  end
+
+  def attributedLabel(label, didSelectLinkWithURL:url)
+    if url.scheme == 'bookmark'
+      name = url.host
+      controller = ProfileViewController.new
+      controller.user = User.new({ :name => name })
+      return self.navigationController.pushViewController(controller, animated:true)
+    end
+
+    if url.scheme == 'twitter'
+      name = url.host
+      link = "http://twitter.com/#{name}"
+    else
+      link = url.absoluteString
+    end
+
+    bookmark = Bookmark.new(
+      {
+        :title => '',
+        :link  => link,
+        :count => nil
+      }
+    )
+    controller = WebViewController.new
+    controller.bookmark = bookmark
+    self.navigationController.pushViewController(controller, animated:true)
   end
 
   def dealloc
