@@ -202,7 +202,7 @@ module HBFav2
         @commentLabel.frame = [[10, @border.bottom + 10], [fitSize.width, fitSize.height + 10] ]
       end
 
-      y = @commentLabel.text.present? ? @commentLabel.bottom : @border.bottom + 10
+      y = @commentLabel.text.present? ? @commentLabel.bottom : @border.bottom + 5
 
       # favicon
       @faviconView.frame = [[10, y + 6], [16, 16]]
