@@ -44,7 +44,7 @@ module HBFav2
           label.lineBreakMode = NSLineBreakByWordWrapping
 
           ## workaround: System Font では ParagraphStyle の日本語とASCIIのline height計算が異なっておかしくなる
-          label.font = UIFont.fontWithName("HiraKakuProN-W3", size:16)
+          label.font = UIFont.fontWithName("HiraKakuProN-W3", size:17)
 
           label.dataDetectorTypes = NSTextCheckingTypeLink
           label.textAlignment = NSTextAlignmentLeft
@@ -69,7 +69,7 @@ module HBFav2
         @bodyView << @faviconView = UIImageView.new.tap {|v| v.frame = CGRectZero }
 
         @bodyView << @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
-          btn.titleLabel.font = UIFont.systemFontOfSize(16)
+          btn.titleLabel.font = UIFont.systemFontOfSize(17)
           btn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping
           btn.titleLabel.numberOfLines = 0
           btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
@@ -210,7 +210,7 @@ module HBFav2
       # title
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000) # 19 = favicon (16) + margin (3), 20 = margin left,right
       size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
-        UIFont.systemFontOfSize(16),
+        UIFont.systemFontOfSize(17),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByWordWrapping
       )
