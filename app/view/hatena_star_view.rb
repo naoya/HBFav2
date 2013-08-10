@@ -20,7 +20,7 @@ module HBFav2
       self.setImageWithURL(
         api_url.nsurl,
         placeholderImage:@@blank_image,
-        options:SDWebImageCacheMemoryOnly|SDWebImageLowPriority,
+        options:SDWebImageLowPriority|SDWebImageCacheMemoryOnly,
         completed: lambda do |image, error, cacheType|
           if image
             # self.frame = [self.frame.origin, [image.size.width / 2, image.size.height / 2]]
