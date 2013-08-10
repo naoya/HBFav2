@@ -42,21 +42,19 @@ module HBFav2
           label.frame = CGRectZero
           label.numberOfLines = 0
           label.lineBreakMode = NSLineBreakByWordWrapping
-          label.font = UIFont.systemFontOfSize(18)
+
+          ## workaround: System Font では ParagraphStyle の日本語とASCIIのline height計算が異なっておかしくなる
+          label.font = UIFont.fontWithName("HiraKakuProN-W3", size:16)
 
           label.dataDetectorTypes = NSTextCheckingTypeLink
-
-          ## workaround: これで UILabel とほぼ同じ設定になるっぽい
           label.textAlignment = NSTextAlignmentLeft
-          label.lineHeightMultiple = 0.68
+          label.lineHeightMultiple = 0.8
+          label.verticalAlignment = TTTAttributedLabelVerticalAlignmentCenter
 
           ## link attributes
-          ## FIXME: 日本語とURLが混じると行間がおかしくなる
           paragraph = NSMutableParagraphStyle.new
           paragraph.lineBreakMode = NSLineBreakByWordWrapping
-          paragraph.minimumLineHeight = 18
-          paragraph.maximumLineHeight = 18
-          paragraph.lineSpacing       = 1
+          paragraph.lineHeightMultiple = 0.8
 
           label.linkAttributes       = {
             KCTForegroundColorAttributeName => '#3B5998'.uicolor,
@@ -71,7 +69,7 @@ module HBFav2
         @bodyView << @faviconView = UIImageView.new.tap {|v| v.frame = CGRectZero }
 
         @bodyView << @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
-          btn.titleLabel.font = UIFont.systemFontOfSize(18)
+          btn.titleLabel.font = UIFont.systemFontOfSize(16)
           btn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping
           btn.titleLabel.numberOfLines = 0
           btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
@@ -110,23 +108,48 @@ module HBFav2
 
     def bookmark=(bookmark)
       @nameLabel.text    = bookmark.user.name
-      @commentLabel.text = bookmark.comment if bookmark.comment.present?
 
-      ## handle Hatena ID
-      if bookmark.comment =~ %r{(id:[a-zA-Z\-]{3,32})}
-        id = $1
-        range = bookmark.comment.rangeOfString(id)
-        id.gsub!(/id:/, '')
-        @commentLabel.addLinkToURL("bookmark://#{id}".nsurl, withRange:range)
+
+      if bookmark.comment.present?
+        @commentLabel.setText(bookmark.comment, afterInheritingLabelAttributesAndConfiguringWithBlock:
+          lambda do |string|
+            ## handle Hatena ID
+            if bookmark.comment =~ %r{(id:[a-zA-Z\-]{3,32})}
+              id = $1
+              range = bookmark.comment.rangeOfString(id)
+              id.gsub!(/id:/, '')
+              @commentLabel.addLinkToURL("bookmark://#{id}".nsurl, withRange:range)
+            end
+
+            ## handle Twitter mention
+            if bookmark.comment =~ %r{(@[0-9a-zA-Z_]{1,15})}
+              mention = $1
+              range = bookmark.comment.rangeOfString(mention)
+              mention.gsub!(/^@/, '')
+              @commentLabel.addLinkToURL("twitter://#{mention}".nsurl, withRange:range)
+            end
+            return string
+          end
+        )
       end
 
-      ## handle Twitter mention
-      if bookmark.comment =~ %r{(@[0-9a-zA-Z_]{1,15})}
-        mention = $1
-        range = bookmark.comment.rangeOfString(mention)
-        mention.gsub!(/^@/, '')
-        @commentLabel.addLinkToURL("twitter://#{mention}".nsurl, withRange:range)
-      end
+      # @commentLabel.text = bookmark.comment if bookmark.comment.present?
+
+      # ## handle Hatena ID
+      # if bookmark.comment =~ %r{(id:[a-zA-Z\-]{3,32})}
+      #   id = $1
+      #   range = bookmark.comment.rangeOfString(id)
+      #   id.gsub!(/id:/, '')
+      #   @commentLabel.addLinkToURL("bookmark://#{id}".nsurl, withRange:range)
+      # end
+
+      # ## handle Twitter mention
+      # if bookmark.comment =~ %r{(@[0-9a-zA-Z_]{1,15})}
+      #   mention = $1
+      #   range = bookmark.comment.rangeOfString(mention)
+      #   mention.gsub!(/^@/, '')
+      #   @commentLabel.addLinkToURL("twitter://#{mention}".nsurl, withRange:range)
+      # end
 
       @titleButton.setTitle(bookmark.title, forState:UIControlStateNormal)
       @urlLabel.text     = bookmark.link
@@ -157,12 +180,25 @@ module HBFav2
       ## body
       if @commentLabel.text.present?
         constrain = CGSize.new(self.frame.size.width - 20, 1000)
-        size = @commentLabel.text.sizeWithFont(
-          UIFont.systemFontOfSize(18),
-          constrainedToSize:constrain,
-          lineBreakMode:NSLineBreakByWordWrapping
+
+        ## BUG: it doesn't have consideration for paragraph style
+        # rect = @commentLabel.attributedText.boundingRectWithSize(
+        #   constrain,
+        #   options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingUsesDeviceMetrics,
+        #   context:nil
+        # )
+
+        ## workaround: http://stackoverflow.com/questions/13621084/boundingrectwithsize-for-nsattributedstring-returning-wrong-size
+        fitSize = CTFramesetterSuggestFrameSizeWithConstraints(
+          CTFramesetterCreateWithAttributedString(@commentLabel.attributedText),
+          CFRangeMake(0, @commentLabel.attributedText.length),
+          nil,
+          constrain,
+          nil
         )
-        @commentLabel.frame = [[10, @border.bottom + 10], size]
+
+        ## workaround: 若干上が見きれるので height +10 する
+        @commentLabel.frame = [[10, @border.bottom + 10], [fitSize.width, fitSize.height + 10] ]
       end
 
       y = @commentLabel.text.present? ? @commentLabel.bottom : @border.bottom + 10
@@ -173,7 +209,7 @@ module HBFav2
       # title
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000) # 19 = favicon (16) + margin (3), 20 = margin left,right
       size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
-        UIFont.systemFontOfSize(18),
+        UIFont.systemFontOfSize(16),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByWordWrapping
       )
