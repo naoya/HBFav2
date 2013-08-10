@@ -113,24 +113,25 @@ module HBFav2
       if bookmark.comment.present?
         @commentLabel.setText(bookmark.comment, afterInheritingLabelAttributesAndConfiguringWithBlock:
           lambda do |string|
-            ## handle Hatena ID
-            if bookmark.comment =~ %r{(id:[a-zA-Z\-]{3,32})}
-              id = $1
-              range = bookmark.comment.rangeOfString(id)
-              id.gsub!(/id:/, '')
-              @commentLabel.addLinkToURL("bookmark://#{id}".nsurl, withRange:range)
-            end
-
-            ## handle Twitter mention
-            if bookmark.comment =~ %r{(@[0-9a-zA-Z_]{1,15})}
-              mention = $1
-              range = bookmark.comment.rangeOfString(mention)
-              mention.gsub!(/^@/, '')
-              @commentLabel.addLinkToURL("twitter://#{mention}".nsurl, withRange:range)
-            end
             return string
           end
         )
+      end
+
+      ## handle Hatena ID
+      bookmark.comment.scan(%r{(id:[a-zA-Z\-]{3,32})}) do |match|
+        id = match[0]
+        range = bookmark.comment.rangeOfString(id)
+        id.gsub!(/id:/, '')
+        @commentLabel.addLinkToURL("bookmark://#{id}".nsurl, withRange:range)
+      end
+
+      ## handle Twitter mention
+      bookmark.comment.scan(%r{(@[0-9a-zA-Z_]{1,15})}) do |match|
+        mention = match[0]
+        range = bookmark.comment.rangeOfString(mention)
+        mention.gsub!(/^@/, '')
+        @commentLabel.addLinkToURL("twitter://#{mention}".nsurl, withRange:range)
       end
 
       # @commentLabel.text = bookmark.comment if bookmark.comment.present?
