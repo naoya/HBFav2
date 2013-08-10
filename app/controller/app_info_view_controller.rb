@@ -23,20 +23,25 @@ class AppInfoViewController < UIViewController
             :detail => "App Store",
             :action => 'open_review'
           },
+        ]
+      },
+      {
+        :title => 'アプリの情報',
+        :rows => [
           {
-            :label  => "TIPS",
+            :label  => "開発者より",
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
-            :action => 'open_tips'
-          },
-          {
-            :label  => "アプリのWebサイト",
-            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
-            :action => 'open_website'
+            :action => 'open_help'
           },
           {
             :label => "クレジット",
             :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
             :action => 'open_credit'
+          },
+          {
+            :label  => "アプリのWebサイト",
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator,
+            :action => 'open_website'
           },
           {
             :label => "開発者ブログ",
@@ -67,7 +72,7 @@ class AppInfoViewController < UIViewController
       v.backgroundColor = UIColor.clearColor
     end
 
-    view << @menuTable = UITableView.alloc.initWithFrame([[0, 59], self.view.bounds.size], style:UITableViewStyleGrouped).tap do |v|
+    view << @menuTable = UITableView.alloc.initWithFrame(CGRectZero, style:UITableViewStyleGrouped).tap do |v|
       v.dataSource = v.delegate = self
     end
   end
@@ -75,6 +80,7 @@ class AppInfoViewController < UIViewController
   def viewWillAppear(animated)
     super
     self.receive_application_switch_notifcation
+    self.navigationController.toolbar.translucent = true
     self.navigationController.setToolbarHidden(true, animated:animated)
 
     ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
@@ -82,6 +88,8 @@ class AppInfoViewController < UIViewController
       self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
     end
 
+    self.view.frame = UIScreen.mainScreen.bounds
+    @menuTable.frame = [[0, 59], [view.frame.size.width, view.frame.size.height - 59]]
     @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)
   end
 
@@ -97,9 +105,7 @@ class AppInfoViewController < UIViewController
 
     cell = tableView.dequeueReusableCellWithIdentifier(id) || UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue1, reuseIdentifier:id)
     cell.textLabel.text = rowData[:label]
-    if rowData[:detail]
-      cell.detailTextLabel.text = rowData[:detail]
-    end
+    cell.detailTextLabel.text = rowData[:detail]
 
     if (color = rowData[:color])
       cell.textLabel.textColor = color
@@ -169,6 +175,11 @@ class AppInfoViewController < UIViewController
 
   def open_tips
     controller = TipsViewController.new
+    self.navigationController.pushViewController(controller, animated:true)
+  end
+
+  def open_help
+    controller = HelpViewController.new
     self.navigationController.pushViewController(controller, animated:true)
   end
 
