@@ -94,12 +94,21 @@ class AccountConfigViewController < Formotion::FormController
     if data["hatena_id"].blank?
       App.alert("はてなIDは必須です")
     else
-      user = ApplicationUser.sharedUser
-      user.password  = data["password"] || nil
-      user.use_timeline = data["use_timeline"]
-      user.hatena_id = data["hatena_id"]
-      user.save
-      self.dismissModalViewControllerAnimated(true, completion:nil)
+      buser = User.new({ :name => data["hatena_id"] })
+      buser.fetch_status do |status|
+        if status == 404
+          App.alert("指定されたユーザーが見つかりません")
+        elsif (status == 403)
+          App.alert("非公開設定のアカウントは利用できません")
+        else
+          user = ApplicationUser.sharedUser
+          user.password  = data["password"] || nil
+          user.use_timeline = data["use_timeline"]
+          user.hatena_id = data["hatena_id"]
+          user.save
+          self.dismissModalViewControllerAnimated(true, completion:nil)
+        end
+      end
     end
   end
 

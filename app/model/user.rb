@@ -14,6 +14,12 @@ class User
     end
   end
 
+  def fetch_status(&block)
+    BW::HTTP.head("http://b.hatena.ne.jp/#{@name}") do |response|
+      block.call(response.status_code)
+    end
+  end
+
   def use_timeline?
     self.use_timeline ? true : false
   end
