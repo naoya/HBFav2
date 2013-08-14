@@ -119,15 +119,20 @@ class HotentryViewController < UITableViewController
   end
 
   def tableView(tableView, heightForRowAtIndexPath:indexPath)
-    BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+    bookmark = @bookmarks[indexPath.row]
+    if bookmark.thumbnail_url.present?
+      HotentryCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+    else
+      HotentryCell.heightForBookmarkNoThumbnail(@bookmarks[indexPath.row], tableView.frame.size.width)
+    end
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    BookmarkFastCell.cellForBookmark(@bookmarks[indexPath.row], inTableView:tableView)
+    HotentryCell.cellForBookmark(@bookmarks[indexPath.row], inTableView:tableView)
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    PermalinkViewController.new.tap do |c|
+    WebViewController.new.tap do |c|
       c.bookmark = @bookmarks[indexPath.row]
       self.navigationController.pushViewController(c, animated:true)
     end

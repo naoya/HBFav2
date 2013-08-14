@@ -8,13 +8,13 @@ class CategoryList
   def initialize
     @categories = [
       { :key => nil,             :title => '総合',                :label => '総合' },
-      { :key => 'social',        :title => '社会',                :label => '社会' },
-      { :key => 'economics',     :title => '政治・経済',          :label => '政経' },
-      { :key => 'life',          :title => '生活・人生',          :label => '生活' },
-      { :key => 'entertainment', :title => 'スポーツ・芸能・音楽',:label => '芸能' },
-      { :key => 'knowledge',     :title => '科学・学問',          :label => '科学' },
-      { :key => 'it',            :title => 'コンピュータ・IT',    :label => 'IT' },
-      { :key => 'game',          :title => 'ゲーム・アニメ',      :label => 'ゲーム' } ,
+      { :key => 'social',        :title => '世の中',              :label => '世の中' },
+      { :key => 'economics',     :title => '政治と経済',          :label => '政経' },
+      { :key => 'life',          :title => '暮らし',              :label => '暮らし' },
+      { :key => 'entertainment', :title => 'エンタメ',            :label => 'エンタメ' },
+      { :key => 'knowledge',     :title => '学び',                :label => '学び' },
+      { :key => 'it',            :title => 'テクノロジー',        :label => 'IT' },
+      { :key => 'game',          :title => 'アニメとゲーム',      :label => 'アニメ' } ,
       { :key => 'fun',           :title => 'おもしろ',            :label => 'おもしろ' },
     ]
   end
