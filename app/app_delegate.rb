@@ -20,6 +20,8 @@ class AppDelegate
       app_config.vars[:pocket][:consumer_key]
     )
 
+    self.initialize_audio_session
+
     UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 
@@ -35,6 +37,15 @@ class AppDelegate
     @window.rootViewController = @viewController
     @window.makeKeyAndVisible
     true
+  end
+
+  def initialize_audio_session
+    session = AVAudioSession.sharedInstance
+    err_ptr = Pointer.new(:object)
+    ok = session.setCategory(AVAudioSessionCategoryPlayback, error:err_ptr)
+    if not ok
+      NSLog("Failed to setCategory")
+    end
   end
 
   def application(application, openURL:url, sourceApplication:sourceApplication, annotation:annotation)

@@ -62,7 +62,7 @@ Motion::Project::App.setup do |app|
     pod 'NJKWebViewProgress'
   end
 
-  app.frameworks += ['ImageIO', 'MapKit', 'Security']
+  app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']
   app.icons = ["default_app_logo.png", "default_app_logo@2x.png"]
 
   app.entitlements['keychain-access-groups'] = [
