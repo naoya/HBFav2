@@ -52,12 +52,13 @@ class BookmarksViewController < UITableViewController
               )
             end
           else
+            NSLog('private?')
             App.alert("ブックマークが全てプライベートモード、もしくはコメント非表示設定のエントリーです")
           end
         }
         view.reloadData
       else
-        App.alert(response.error_message)
+        App.alert("通信エラー: " + response.status_code.to_s)
       end
       @indicator.stopAnimating
       ## Show "scrolls to bottom" button
