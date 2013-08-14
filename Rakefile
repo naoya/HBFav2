@@ -17,6 +17,14 @@ Motion::Project::App.setup do |app|
   app.identifier = "HBFav"
   app.prerendered_icon = true
 
+  ## TestFlight
+  # % bundle exec rake testflight notes="..."
+  app.testflight.sdk = 'vendor/TestFlightSDK2.0.0'
+  app.testflight.notify = true
+  app.testflight.api_token = "05ca7592a6f65e7ca7bbe2e87dd20571_MjI5Njc"
+  app.testflight.team_token = "356d6f74354332874463abf23d7875dc_MjU5MzUzMjAxMy0wOC0xNCAwNDo0ODozMC4yNzA1Njk"
+
+  app.testflight.distribution_lists = ['testers']
   app.development do
     app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'
     app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'

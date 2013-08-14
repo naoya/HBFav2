@@ -32,6 +32,7 @@ GEM
     motion-pixate (1.2)
       sass
     motion-require (0.0.6)
+    motion-testflight (1.5)
     motion-yaml (1.0)
     multi_json (1.7.9)
     nap (0.5.1)
@@ -55,6 +56,7 @@ DEPENDENCIES
   motion-cocoapods
   motion-pixate
   motion-require
+  motion-testflight
   motion-yaml
   rake
   rm-wsse
