@@ -35,7 +35,7 @@ class HotentryCell < UITableViewCell
   def self.sizeForTitle(title, width)
     constrain = CGSize.new(width - 10 - (5 + 80 + 10), 1000)
     title.sizeWithFont(
-      BookmarkLabelAttributes.sharedAttributes.attributes[:title][:font],
+      BookmarkLabelAttributes.sharedAttributes.attributes[:hotentry_title][:font],
       constrainedToSize:constrain,
       lineBreakMode:NSLineBreakByWordWrapping
     )
@@ -44,7 +44,7 @@ class HotentryCell < UITableViewCell
   def self.sizeForTitleNoThubnail(title, width)
     constrain = CGSize.new(width - 10 - 10, 1000)
     title.sizeWithFont(
-      BookmarkLabelAttributes.sharedAttributes.attributes[:title][:font],
+      BookmarkLabelAttributes.sharedAttributes.attributes[:hotentry_title][:font],
       constrainedToSize:constrain,
       lineBreakMode:NSLineBreakByWordWrapping
     )
@@ -141,7 +141,7 @@ class HotentryCell < UITableViewCell
       color = {
         :date => attributes[:date][:color],
         :text => attributes[:name][:color],
-        :link => attributes[:title][:color],
+        :link => attributes[:hotentry_title][:color],
         :host => attributes[:host][:color],
       }
     end
@@ -155,7 +155,7 @@ class HotentryCell < UITableViewCell
              self.class.sizeForTitle(@labels[:title], self.frame.size.width)
            end
 
-    @labels[:title].drawInRect([[10, current_y], size], withFont:attributes[:title][:font], lineBreakMode:NSLineBreakByWordWrapping)
+    @labels[:title].drawInRect([[10, current_y], size], withFont:attributes[:hotentry_title][:font], lineBreakMode:NSLineBreakByWordWrapping)
 
     current_y += size.height + 3
 
