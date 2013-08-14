@@ -10,6 +10,8 @@ class LeftViewController < UITableViewController
     # self.view.backgroundColor = [50, 57, 73].uicolor
     self.view.backgroundColor = [41, 47, 59].uicolor
     self.view.separatorColor = [36, 42, 54].uicolor
+
+    @selected = [0, 1].nsindexpath
   end
 
   def initialize_controllers_for(user)
@@ -90,7 +92,7 @@ class LeftViewController < UITableViewController
   def viewWillAppear(animated)
     super
     if tableView.indexPathForSelectedRow.nil?
-      tableView.selectRowAtIndexPath([0, 1].nsindexpath, animated:true, scrollPosition:UITableViewScrollPositionNone);
+      tableView.selectRowAtIndexPath(@selected, animated:true, scrollPosition:UITableViewScrollPositionNone);
     end
   end
 
@@ -110,6 +112,7 @@ class LeftViewController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+    @selected = indexPath
     row = @dataSource[indexPath.row]
     controller = row[:controller]
     self.sidePanelController.centerPanel = controller
