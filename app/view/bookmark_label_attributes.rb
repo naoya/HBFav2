@@ -12,6 +12,7 @@ class BookmarkLabelAttributes
       :title   => { :color => '#3b5998', :font => UIFont.systemFontOfSize(15) },
       :comment => { :color => '#000',    :font => UIFont.systemFontOfSize(15) },
       :date    => { :color => '#999',    :font => UIFont.systemFontOfSize(12) },
+      :host    => { :color => '#999',    :font => UIFont.systemFontOfSize(13) },
     }
   end
 end
