@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class Bookmark
-  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime
+  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime, :thumbnail_url, :category
 
   def self.date_formatter
     @@date_formatter ||= NSDateFormatter.new.tap do |f|
@@ -9,12 +9,14 @@ class Bookmark
   end
 
   def initialize(dict)
-    @eid        = dict[:eid]
-    @title      = dict[:title]
-    @link       = dict[:link]
-    @created_at = dict[:created_at]
-    @comment    = dict[:comment]
-    @permalink  = dict[:permalink]
+    @eid          = dict[:eid]
+    @title        = dict[:title]
+    @link         = dict[:link]
+    @created_at   = dict[:created_at]
+    @comment      = dict[:comment]
+    @permalink    = dict[:permalink]
+    @thumbnail_url = dict[:thumbnail_url]
+    @category     = dict[:category]
 
     unless dict[:count].nil?
       @count = Count.new(dict[:count].to_i)
