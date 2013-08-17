@@ -3,7 +3,7 @@ class Bookmark
   attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime, :thumbnail_url, :category
 
   def self.date_formatter
-    @@date_formatter ||= NSDateFormatter.new.tap do |f|
+    @@date_formatter ||= NSDateFormatter.alloc.initWithGregorianCalendar.tap do |f|
       f.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
     end
   end
