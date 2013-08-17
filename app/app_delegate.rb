@@ -21,6 +21,7 @@ class AppDelegate
     )
 
     self.initialize_audio_session
+    Appearance.configure
 
     UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)

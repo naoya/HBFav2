@@ -88,6 +88,12 @@ Motion::Project::App.setup do |app|
     :static
   )
 
+  ## Appearance
+  app.vendor_project(
+    'vendor/Appearance',
+    :static
+  )
+
   ## Reveal
   # app.vendor_project(
   #   'vendor/Reveal.framework',
