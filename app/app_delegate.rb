@@ -21,7 +21,8 @@ class AppDelegate
     )
 
     self.initialize_audio_session
-    Appearance.configure
+    self.configure_navigation_bar
+    self.configure_bar_button_item
 
     UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
@@ -47,6 +48,17 @@ class AppDelegate
     if not ok
       NSLog("Failed to setCategory")
     end
+  end
+
+  def configure_navigation_bar
+    background_image = UIImage.imageNamed("UINavigationBarBackGround.png")
+    UINavigationBar.appearance.setBackgroundImage(background_image, forBarMetrics:UIBarMetricsDefault)
+  end
+
+  def configure_bar_button_item
+    background_image = UIImage.imageNamed("UIBarButtonItemBarBackGround.png")
+    UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
+    UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackButtonBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
   end
 
   def application(application, openURL:url, sourceApplication:sourceApplication, annotation:annotation)
