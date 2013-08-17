@@ -77,11 +77,6 @@ class AccountConfigViewController < Formotion::FormController
       )
     end
 
-    ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
-    if self.navigationItem.leftBarButtonItem
-      self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
-    end
-
     super
   end
 

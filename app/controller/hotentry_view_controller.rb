@@ -90,11 +90,6 @@ class HotentryViewController < UITableViewController
       btn.action = 'open_category'
     end
 
-    ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
-    if self.navigationItem.leftBarButtonItem
-      self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
-    end
-
     subtitle = CategoryList.sharedCategories.key_to_title(self.category)
     self.navigationItem.titleView.text = list_type == :hotentry ? "人気エントリー" : "新着エントリー"
 

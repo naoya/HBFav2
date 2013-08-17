@@ -12,7 +12,6 @@ class CategoryViewController < UITableViewController
     self.navigationItem.leftBarButtonItem  = UIBarButtonItem.titled("戻る").tap do |btn|
       btn.action = 'on_close'
       btn.target = self
-      btn.styleClass = 'navigation-button'
     end
   end
 
