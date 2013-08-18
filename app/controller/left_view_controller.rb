@@ -79,12 +79,12 @@ class LeftViewController < UITableViewController
 
   def profile_image_for(user)
     UIImageView.new.tap do |iv|
-      iv.setImageWithURL(
-        user.profile_image_url.nsurl,
-        placeholderImage:UIImage.imageNamed("profile_placeholder"),
-        completed:lambda do |image, error, cacheType|
+      iv.setImageWithURLRequest(user.profile_image_url.nsurl.request, placeholderImage:UIImage.imageNamed("profile_placeholder"),
+        success: lambda do |request, response, image|
+          iv.image = image
           self.tableView.reloadRowsAtIndexPaths([[0, 0].nsindexpath], withRowAnimation:UITableViewRowAnimationNone)
-        end
+        end,
+        failure: lambda { |request, response, error| }
       )
     end
   end

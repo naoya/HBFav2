@@ -86,20 +86,28 @@ class HotentryCell < UITableViewCell
     @labels[:count]    = bookmark.count.to_s
 
     if bookmark.thumbnail_url.present?
-      self.imageView.setImageWithURL(bookmark.thumbnail_url.nsurl, placeholderImage:@blank_image, options:SDWebImageLowPriority, completed:
-        lambda do |image, error, cacheType|
+      self.imageView.setImageWithURLRequest(bookmark.thumbnail_url.nsurl.request, placeholderImage:@blank_image,
+        success: lambda { |request, response, image |
+          self.imageView.image = image
           self.setNeedsDisplay
           self.setNeedsLayout
-        end
+        },
+        failure: lambda { |request, response, error | },
       )
     else
       self.imageView.image = nil
       self.setNeedsDisplay
     end
 
-    @faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:@@blank_image, options:SDWebImageLowPriority, completed:lambda { |image, error, cacheType| self.setNeedsDisplay })
+    @faviconView.setImageWithURLRequest(bookmark.favicon_url.nsurl.request, placeholderImage:@@blank_image,
+      success: lambda { |request, response, image |
+        @faviconView.image = image
+        self.setNeedsDisplay
+      },
+      failure: lambda { |request, response, error | },
+    )
 
-    @starView.set_url(bookmark.permalink) do |image, error, cacheType|
+    @starView.set_url(bookmark.permalink) do |request, response, image|
       self.setNeedsDisplay
     end
 
