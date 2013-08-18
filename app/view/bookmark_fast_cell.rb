@@ -15,7 +15,7 @@ class BookmarkFastCell < UITableViewCell
     cell = tableView.dequeueReusableCellWithIdentifier(cell_id) ||
       BookmarkFastCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:cell_id)
     cell.no_title = false
-    cell.fillWithBookmark(bookmark)
+    cell.fillWithBookmark(bookmark, inTableView:tableView)
     cell
   end
 
@@ -106,23 +106,31 @@ class BookmarkFastCell < UITableViewCell
     self
   end
 
-  def fillWithBookmark(bookmark)
+  def fillWithBookmark(bookmark, inTableView:tableView)
     @labels[:name]    = bookmark.user.name
     @labels[:date]    = bookmark.datetime.timeAgo
     @labels[:comment] = bookmark.comment.length > 0 ? bookmark.comment : nil
     @labels[:title]   = bookmark.title unless self.no_title
 
-    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"profile_placeholder.png".uiimage, options:SDWebImageLowPriority, completed:lambda do |image, error, cacheType|
+    self.imageView.setImageWithURLRequest(bookmark.user.profile_image_url.nsurl.request, placeholderImage:"profile_placeholder.png".uiimage,
+      success: lambda {|request, response, image|
+        self.imageView.image = image
         self.setNeedsLayout
-    end)
+      },
+      failure: lambda {|request, response, error| NSLog(error.localizedDescription) }
+    )
 
     unless self.no_title
-      @faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:@@blank_image, options:SDWebImageLowPriority, completed:lambda do |image, error, cacheType|
+      @faviconView.setImageWithURLRequest(bookmark.favicon_url.nsurl.request, placeholderImage:@@blank_image,
+        success: lambda {|request, response, image|
+          @faviconView.image = image
           self.setNeedsDisplay
-        end)
+        },
+        failure: lambda {|request, response, error|}
+      )
     end
 
-    @starView.set_url(bookmark.permalink) do |image, error, cacheType|
+    @starView.set_url(bookmark.permalink) do |request, reponse, image|
       self.setNeedsDisplay
     end
 

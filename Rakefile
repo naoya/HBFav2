@@ -49,7 +49,7 @@ Motion::Project::App.setup do |app|
   ]
 
   app.pods do
-    pod 'SDWebImage'
+    # pod 'SDWebImage'
     pod 'PocketAPI'
     pod 'NSDate+TimeAgo'
     pod 'TUSafariActivity'
@@ -60,6 +60,7 @@ Motion::Project::App.setup do |app|
     pod 'BugSense'
     pod 'TTTAttributedLabel'
     pod 'NJKWebViewProgress'
+    pod 'AFNetworking', '~> 1.3'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']
