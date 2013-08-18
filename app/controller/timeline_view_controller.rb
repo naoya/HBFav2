@@ -164,11 +164,6 @@ class TimelineViewController < UITableViewController
     self.receive_application_switch_notifcation
     self.update_title
 
-    ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
-    if self.navigationItem.leftBarButtonItem
-      self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
-    end
-
     ## 応急処置
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
