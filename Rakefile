@@ -61,6 +61,7 @@ Motion::Project::App.setup do |app|
     pod 'TTTAttributedLabel'
     pod 'NJKWebViewProgress'
     pod 'AFNetworking', '~> 1.3'
+    pod 'ARChromeActivity'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']

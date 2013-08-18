@@ -210,6 +210,9 @@ class WebViewController < UIViewController
     safari = TUSafariActivity.new
     pocket = PocketActivity.new
     hatena = HatenaBookmarkActivity.new
+    chrome = ARChromeActivity.new.tap do |activity|
+      activity.activityTitle = "Chromeで開く"
+    end
     add_bookmark = AddBookmarkActivity.new.tap do |activity|
       user = ApplicationUser.sharedUser
       activity.hatena_id = user.hatena_id
@@ -220,6 +223,7 @@ class WebViewController < UIViewController
       [@bookmark.title, @bookmark.link.nsurl],
       applicationActivities:[
         safari,
+        chrome,
         add_bookmark,
         pocket,
         hatena,
