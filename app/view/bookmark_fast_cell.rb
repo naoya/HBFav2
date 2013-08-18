@@ -15,7 +15,7 @@ class BookmarkFastCell < UITableViewCell
     cell = tableView.dequeueReusableCellWithIdentifier(cell_id) ||
       BookmarkFastCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:cell_id)
     cell.no_title = false
-    cell.fillWithBookmark(bookmark, inTableView:tableView)
+    cell.fillWithBookmark(bookmark)
     cell
   end
 
@@ -96,8 +96,9 @@ class BookmarkFastCell < UITableViewCell
        l.masksToBounds = true
        l.cornerRadius = 5.0
       end
+
+      self.contentView << @faviconView = UIImageView.new
       @starView = HBFav2::HatenaStarView.new
-      @faviconView = UIImageView.new
 
       # それ以外は UIView を使わない
       @labels  = {}
@@ -106,32 +107,37 @@ class BookmarkFastCell < UITableViewCell
     self
   end
 
-  def fillWithBookmark(bookmark, inTableView:tableView)
+  def fillWithBookmark(bookmark)
     @labels[:name]    = bookmark.user.name
     @labels[:date]    = bookmark.datetime.timeAgo
     @labels[:comment] = bookmark.comment.length > 0 ? bookmark.comment : nil
     @labels[:title]   = bookmark.title unless self.no_title
 
-    self.imageView.setImageWithURLRequest(bookmark.user.profile_image_url.nsurl.request, placeholderImage:"profile_placeholder.png".uiimage,
-      success: lambda {|request, response, image|
-        self.imageView.image = image
-        self.setNeedsLayout
-      },
-      failure: lambda {|request, response, error| NSLog(error.localizedDescription) }
-    )
+    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"profile_placeholder.png".uiimage)
+
+    # self.imageView.setImageWithURLRequest(bookmark.user.profile_image_url.nsurl.request, placeholderImage:"profile_placeholder.png".uiimage,
+    #   success: lambda {|request, response, image|
+    #     self.imageView.image = image
+    #     self.setNeedsLayout
+    #   },
+    #   failure: lambda {|request, response, error| NSLog(error.localizedDescription) }
+    # )
 
     unless self.no_title
-      @faviconView.setImageWithURLRequest(bookmark.favicon_url.nsurl.request, placeholderImage:@@blank_image,
-        success: lambda {|request, response, image|
-          @faviconView.image = image
-          self.setNeedsDisplay
-        },
-        failure: lambda {|request, response, error|}
-      )
+      @faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:@@blank_image)
+      # @faviconView.setImageWithURLRequest(bookmark.favicon_url.nsurl.request, placeholderImage:@@blank_image,
+      #   success: lambda {|request, response, image|
+      #     @faviconView.image = image
+      #     self.setNeedsDisplay
+      #   },
+      #   failure: lambda {|request, response, error|}
+      # )
     end
 
     @starView.set_url(bookmark.permalink) do |request, reponse, image|
-      self.setNeedsDisplay
+      if image.size.width != 1 and image.size.height != 1
+        self.setNeedsDisplay
+      end
     end
 
     self.setNeedsDisplay
@@ -205,7 +211,8 @@ class BookmarkFastCell < UITableViewCell
 
     ## favicon + title
     unless self.no_title
-      @faviconView.image.drawInRect([[SideWidth, current_y + 2], [15, 15]])
+      # @faviconView.image.drawInRect([[SideWidth, current_y + 2], [15, 15]])
+      @faviconView.frame = [[SideWidth, current_y + 2], [15, 15]]
       color[:link].uicolor.set
       size = self.class.sizeForTitle(@labels[:title], self.frame.size.width)
       @labels[:title].drawInRect([[SideWidth + 17, current_y], size], withFont:attributes[:title][:font], lineBreakMode:NSLineBreakByWordWrapping)
