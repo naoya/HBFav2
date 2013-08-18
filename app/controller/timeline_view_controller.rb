@@ -3,7 +3,7 @@ class TimelineViewController < UITableViewController
   attr_accessor :user, :as_home, :content_type
   include HBFav2::ApplicationSwitchNotification
 
-  DefaultTitle = "HBFav2"
+  DefaultTitle = "HBFav"
 
   def registerObserver
     @observed = true
