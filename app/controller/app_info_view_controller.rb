@@ -83,11 +83,6 @@ class AppInfoViewController < UIViewController
     self.navigationController.toolbar.translucent = true
     self.navigationController.setToolbarHidden(true, animated:animated)
 
-    ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
-    if self.navigationItem.leftBarButtonItem
-      self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
-    end
-
     self.view.frame = UIScreen.mainScreen.bounds
     @menuTable.frame = [[0, 59], [view.frame.size.width, view.frame.size.height - 59]]
     @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)

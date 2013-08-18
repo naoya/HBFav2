@@ -73,11 +73,6 @@ class AccountViewController < UIViewController
     super
     self.navigationController.setToolbarHidden(true, animated:animated)
 
-    ## JASlidePanels の初期化タイミングでボタンスタイルが当たらないので明示的にセット
-    if self.navigationItem.leftBarButtonItem
-      self.navigationItem.leftBarButtonItem.styleClass = 'navigation-button'
-    end
-
     indexPath = @menuTable.indexPathForSelectedRow
     self.initialize_data_source
     @menuTable.reloadData
