@@ -6,7 +6,9 @@ class BookmarkFastCellContentView < UIView
 end
 
 class BookmarkFastCell < UITableViewCell
+  @@profile_placeholder_image = UIImage.imageNamed('profile_placeholder')
   @@blank_image = UIImage.imageNamed('blank')
+
   SideWidth = 65
   attr_accessor :no_title
 
@@ -113,7 +115,7 @@ class BookmarkFastCell < UITableViewCell
     @labels[:comment] = bookmark.comment.length > 0 ? bookmark.comment : nil
     @labels[:title]   = bookmark.title unless self.no_title
 
-    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:"profile_placeholder.png".uiimage)
+    self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:@@profile_placeholder_image)
 
     # self.imageView.setImageWithURLRequest(bookmark.user.profile_image_url.nsurl.request, placeholderImage:"profile_placeholder.png".uiimage,
     #   success: lambda {|request, response, image|
