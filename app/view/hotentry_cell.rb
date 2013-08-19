@@ -86,7 +86,7 @@ class HotentryCell < UITableViewCell
     @labels[:count]    = bookmark.count.to_s
 
     if bookmark.thumbnail_url.present?
-      self.imageView.setImageWithURLRequest(bookmark.thumbnail_url.nsurl.request, placeholderImage:@blank_image,
+      self.imageView.setImageWithURLRequest(bookmark.thumbnail_url.nsurl.request, placeholderImage:"thumbnail_placeholder".uiimage,
         success: lambda { |request, response, image |
           self.imageView.image = image
           self.setNeedsDisplay
@@ -96,7 +96,7 @@ class HotentryCell < UITableViewCell
       )
     else
       self.imageView.image = nil
-      self.setNeedsDisplay
+      self.setNeedsLayout
     end
 
     @faviconView.setImageWithURLRequest(bookmark.favicon_url.nsurl.request, placeholderImage:@@blank_image,
