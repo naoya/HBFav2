@@ -68,8 +68,8 @@ class PermalinkViewController < UIViewController
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
     self.wantsFullScreenLayout = false
 
-    self.navigationController.toolbar.translucent = true
-    self.navigationController.setToolbarHidden(true, animated:animated)
+    self.navigationController.toolbar.translucent = false
+    self.navigationController.setToolbarHidden(false, animated:animated)
 
     @bookmarkView.tap do |v|
       ## ここでセットすると隠れた toolbar 部分のサイズが勘定されない、なぜ...
@@ -86,26 +86,6 @@ class PermalinkViewController < UIViewController
   end
 
   def on_action
-    # safari = TUSafariActivity.new
-    # pocket = PocketActivity.new
-    # hatena = HatenaBookmarkActivity.new
-    # add_bookmark = AddBookmarkActivity.new.tap do |activity|
-    #   user = ApplicationUser.sharedUser
-    #   activity.hatena_id = user.hatena_id
-    #   activity.password  = user.password
-    # end
-
-    # activity = UIActivityViewController.alloc.initWithActivityItems(
-    #   [@bookmark.title, @bookmark.link.nsurl],
-    #   applicationActivities:[
-    #     safari,
-    #     add_bookmark,
-    #     pocket,
-    #     hatena,
-    #   ]
-    # )
-    # activity.setValue(@bookmark.title, forKey:"subject")
-    # activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
     controller = URLActivityViewController.alloc.initWithDefaultActivities([ @bookmark.title, @bookmark.link.nsurl ])
     self.presentViewController(controller, animated:true, completion:nil)
   end
