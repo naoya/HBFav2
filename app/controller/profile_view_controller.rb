@@ -9,9 +9,6 @@ class ProfileViewController < UIViewController
     self.backGestureEnabled = true
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
-    ## 背景
-    view << UITableView.alloc.initWithFrame(view.bounds, style:UITableViewStyleGrouped)
-
     @dataSource = [
       {
         :title => nil,
@@ -30,35 +27,16 @@ class ProfileViewController < UIViewController
       },
     ]
 
-    @imageView = UIImageView.new.tap do |v|
-      v.frame = [[10, 10], [48, 48]]
-      v.layer.tap do |l|
-        l.masksToBounds = true
-        l.cornerRadius  = 5.0
-      end
-      v.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
-      view << v
-    end
-
-    @nameLabel = UILabel.new.tap do |v|
-      v.frame = [[68, 10], [200, 48]]
-      v.font  = UIFont.boldSystemFontOfSize(18)
-      v.text  = @user.name
-      v.shadowColor = UIColor.whiteColor
-      v.shadowOffset = [0, 1]
-      v.backgroundColor = UIColor.clearColor
-      view << v
-    end
-
-    @menuTable = UITableView.alloc.initWithFrame([[0, 59], self.view.bounds.size], style:UITableViewStyleGrouped).tap do |v|
-      v.dataSource = v.delegate = self
-      view << v
-    end
+    @profile_view = HBFav2::ProfileView.new
+    @profile_view.menuTable.dataSource = @profile_view.menuTable.delegate = self
+    view << @profile_view
   end
 
   def viewWillAppear(animated)
     super
-    @menuTable.deselectRowAtIndexPath(@menuTable.indexPathForSelectedRow, animated:animated)
+    @profile_view.frame = self.view.bounds
+    @profile_view.user  = @user
+    @profile_view.menuTable.deselectRowAtIndexPath(@profile_view.menuTable.indexPathForSelectedRow, animated:animated)
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
@@ -90,8 +68,6 @@ class ProfileViewController < UIViewController
   end
 
   def numberOfSectionsInTableView (tableView)
-    # @dataSource.size
-    # ↓ ちょっとこの書き方はどうかなあ
     @dataSource.size
   end
 
