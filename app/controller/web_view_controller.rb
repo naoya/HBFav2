@@ -207,31 +207,9 @@ class WebViewController < UIViewController
   end
 
   def on_action
-    safari = TUSafariActivity.new
-    pocket = PocketActivity.new
-    hatena = HatenaBookmarkActivity.new
-    chrome = ARChromeActivity.new.tap do |activity|
-      activity.activityTitle = "Chromeで開く"
-    end
-    add_bookmark = AddBookmarkActivity.new.tap do |activity|
-      user = ApplicationUser.sharedUser
-      activity.hatena_id = user.hatena_id
-      activity.password  = user.password
-    end
-
-    activity = UIActivityViewController.alloc.initWithActivityItems(
-      [@bookmark.title, @bookmark.link.nsurl],
-      applicationActivities:[
-        safari,
-        chrome,
-        add_bookmark,
-        pocket,
-        hatena,
-      ]
+    present_modal(
+      URLActivityViewController.alloc.initWithDefaultActivities([@bookmark.title, @bookmark.link.nsurl])
     )
-    activity.setValue(@bookmark.title, forKey:"subject")
-    activity.excludedActivityTypes = [UIActivityTypeMessage, UIActivityTypePostToWeibo]
-    present_modal(activity)
   end
 
   def webViewProgress(webViewProgress, updateProgress:progress)
