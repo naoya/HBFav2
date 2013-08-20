@@ -28,15 +28,8 @@ class AccountConfigViewController < Formotion::FormController
                   auto_capitalization: :none,
                   value: user.configured? ? user.hatena_id : nil
                 },
-                {
-                  title: "パスワード",
-                  key: "password",
-                  type: :string,
-                  secure: true,
-                  value: user.configured? ? user.password : nil
-                }
               ],
-              footer: "非公開設定のIDは利用できません\nブックマーク投稿機能を利用しない場合パスワード入力は不要です"
+              footer: "非公開設定のIDは利用できません"
             }, {
               title: "オプション",
               rows: [
@@ -97,7 +90,6 @@ class AccountConfigViewController < Formotion::FormController
           App.alert("非公開設定のアカウントは利用できません")
         else
           user = ApplicationUser.sharedUser
-          user.password  = data["password"] || nil
           user.use_timeline = data["use_timeline"]
           user.hatena_id = data["hatena_id"]
           user.save

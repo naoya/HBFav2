@@ -119,7 +119,7 @@ module HBFav2
       end
 
       ## handle Hatena ID
-      bookmark.comment.scan(%r{(id:[a-zA-Z\-]{3,32})}) do |match|
+      bookmark.comment.scan(%r{(id:[0-9a-zA-Z\-]{3,32})}) do |match|
         id = match[0]
         range = bookmark.comment.rangeOfString(id)
         id.gsub!(/id:/, '')
@@ -235,7 +235,7 @@ module HBFav2
 
       # button
       @usersButton.frame = [[10, @dateLabel.bottom + 10], [self.frame.size.width - 20, 40]]
-      @bodyView.contentSize = [self.frame.size.width, @usersButton.bottom + 100]
+      @bodyView.contentSize = [self.frame.size.width, @usersButton.bottom + 142]
     end
 
     def dealloc

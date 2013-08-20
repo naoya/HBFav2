@@ -34,6 +34,7 @@ class ProfileViewController < UIViewController
 
   def viewWillAppear(animated)
     super
+    self.navigationController.setToolbarHidden(true, animated:animated)
     @profile_view.frame = self.view.bounds
     @profile_view.user  = @user
     @profile_view.menuTable.deselectRowAtIndexPath(@profile_view.menuTable.indexPathForSelectedRow, animated:animated)

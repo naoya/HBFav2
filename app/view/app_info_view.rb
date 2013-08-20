@@ -1,4 +1,4 @@
-class ProfileView < UIView
+class AppInfoView < UIView
   attr_reader :menuTable
 
   def initWithFrame(frame)
@@ -12,6 +12,7 @@ class ProfileView < UIView
     self << @backgroundView = UITableView.alloc.initWithFrame(CGRectZero, style:UITableViewStyleGrouped)
 
     self << @imageView = UIImageView.new.tap do |v|
+      v.image = UIImage.imageNamed('default_app_logo')
       v.layer.tap do |l|
         l.masksToBounds = true
         l.cornerRadius  = 5.0
@@ -28,10 +29,8 @@ class ProfileView < UIView
     self << @menuTable = UITableView.alloc.initWithFrame(CGRectZero, style:UITableViewStyleGrouped)
   end
 
-  def user=(user)
-    @user = user
-    @imageView.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
-    @nameLabel.text  = @user.name
+  def version=(version)
+    @nameLabel.text  = "HBFav #{version}"
     @menuTable.reloadData
     self.setNeedsLayout
   end
@@ -41,6 +40,6 @@ class ProfileView < UIView
     @backgroundView.frame = self.bounds
     @imageView.frame = [[10, 10], [48, 48]]
     @nameLabel.frame = [[68, 10], [200, 48]]
-    @menuTable.frame = [[0, 59], self.bounds.size]
+    @menuTable.frame = [[0, 59], [self.frame.size.width, self.frame.size.height - 59]]
   end
 end

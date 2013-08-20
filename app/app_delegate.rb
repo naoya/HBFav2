@@ -20,6 +20,12 @@ class AppDelegate
       app_config.vars[:pocket][:consumer_key]
     )
 
+    ## initialize Hatena-Bookmark SDK
+    HTBHatenaBookmarkManager.sharedManager.setConsumerKey(
+      app_config.vars[:hatena][:consumer_key],
+      consumerSecret:app_config.vars[:hatena][:consumer_secret]
+    )
+
     self.initialize_audio_session
     self.configure_navigation_bar
     self.configure_bar_button_item

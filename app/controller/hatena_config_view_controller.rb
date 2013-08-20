@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class PocketViewController < UITableViewController
+class HatenaConfigViewController < UITableViewController
   include HBFav2::MenuTableDelegate
 
   def viewDidLoad
@@ -12,23 +12,23 @@ class PocketViewController < UITableViewController
   def initialize_data_source
     @dataSource = [
       {
-        :title => "Pocket",
+        :title => "はてなブックマーク",
         :rows => [
           {
-            :label  => "Pocket連携を解除",
-            :detail => PocketAPI.sharedAPI.username,
-            :action => 'logout_pocket'
+            :label  => "連携を解除",
+            :detail => HTBHatenaBookmarkManager.sharedManager.username,
+            :action => 'logout_hatena'
           },
         ],
       },
     ]
   end
 
-  def logout_pocket
-    UIActionSheet.alert('Pocket連携を解除してよろしいですか?', buttons: ['キャンセル', '解除する'],
+  def logout_hatena
+    UIActionSheet.alert('はてなブックマーク連携を解除してよろしいですか?', buttons: ['キャンセル', '解除する'],
       cancel: proc { tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow, animated:true) },
       destructive: proc do
-        PocketAPI.sharedAPI.logout
+        HTBHatenaBookmarkManager.sharedManager.logout
         self.navigationController.popViewControllerAnimated(true)
       end,
       success:nil,

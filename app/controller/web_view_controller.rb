@@ -14,7 +14,6 @@ class WebViewController < UIViewController
     self.view.backgroundColor = '#fff'.uicolor
     self.initialize_toolbar
 
-    ## Title
     self.navigationItem.titleView = TitleLabel.new.tap do |label|
       label.frame = self.navigationController.navigationBar.bounds
       label.text = @bookmark.title
@@ -37,15 +36,7 @@ class WebViewController < UIViewController
       v.startAnimating
     end
 
-    ## Readability Button
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
-      UIButton.custom.tap do |btn|
-        btn.frame = [[0, 0], [38, 38]]
-        btn.showsTouchWhenHighlighted = true
-        btn.setImage(UIImage.imageNamed('readability'), forState: :normal.uicontrolstate)
-        btn.addTarget(self, action:'open_readability', forControlEvents:UIControlEventTouchUpInside)
-      end
-    )
+    self.navigationItem.rightBarButtonItem = ReadabilityBarButtonItem.alloc.initWithTarget(self, action:'open_readability')
   end
 
   def viewWillAppear(animated)
@@ -90,9 +81,8 @@ class WebViewController < UIViewController
   def webViewDidFinishLoad (webView)
     update_bookmark
 
-    if @backButton.present? and @forwardButton.present?
+    if @backButton.present?
       @backButton.enabled    = webView.canGoBack
-      @forwardButton.enabled = webView.canGoForward
     end
     App.shared.networkActivityIndicatorVisible = false
     @indicator.stopAnimating
@@ -165,21 +155,20 @@ class WebViewController < UIViewController
   def initialize_toolbar
     self.navigationController.setToolbarHidden(false, animated:false)
     self.navigationController.toolbar.translucent = false
-    spacer = UIBarButtonItem.flexiblespace
-
     self.toolbarItems = [
       @backButton = UIBarButtonItem.alloc.initWithBarButtonSystemItem(101, target:self, action:'on_back').tap { |b| b.enabled = false },
-      spacer,
-      @forwardButton = UIBarButtonItem.alloc.initWithBarButtonSystemItem(102, target:self, action:'on_forward').tap { |b| b.enabled = false },
-      spacer,
+      UIBarButtonItem.flexiblespace,
       UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemRefresh, target:self, action:'on_refresh'),
-      spacer,
+      UIBarButtonItem.flexiblespace,
+      UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemCompose, target:self, action: 'on_bookmark'),
+      UIBarButtonItem.flexiblespace,
+      # BookmarkBarButtonItem.alloc.initWithTarget(self, action:'on_bookmark'),
       UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAction, target:self, action:'on_action'),
-      spacer,
+      UIBarButtonItem.flexiblespace,
       @bookmarkButton = UIBarButtonItem.titled('', :bordered).tap do |btn|
         btn.target = self
         btn.action = 'open_bookmark'
-      end
+      end,
     ]
     self.update_bookmark_count(@bookmark)
   end
@@ -204,6 +193,24 @@ class WebViewController < UIViewController
       c.entry = @bookmark
     end
     present_modal(HBFav2NavigationController.alloc.initWithRootViewController(controller))
+  end
+
+  def on_bookmark
+    if HTBHatenaBookmarkManager.sharedManager.authorized
+      open_hatena_bookmark_view
+    else
+      ## TODO
+      # HTBHatenaBookmarkManager.sharedManager.authorizeWithSuccess(
+      #   lambda { open_bookmark_view },
+      #   failure: lambda {|error| NSLog(error.localizedDescription) }
+      # )
+    end
+  end
+
+  def open_hatena_bookmark_view
+    controller = HTBHatenaBookmarkViewController.alloc.init
+    controller.URL = @bookmark.link.nsurl
+    present_modal(controller)
   end
 
   def on_action

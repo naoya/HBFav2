@@ -49,12 +49,10 @@ Motion::Project::App.setup do |app|
   ]
 
   app.pods do
-    # pod 'SDWebImage'
-    pod 'PocketAPI'
+    pod 'PocketAPI', :git => 'git@github.com:naoya/Pocket-ObjC-SDK.git', :branch => 'cocoapods-dependency'
     pod 'NSDate+TimeAgo'
     pod 'TUSafariActivity'
     pod 'SVProgressHUD'
-    pod 'SSKeychain'
     pod 'JASidePanels'
     pod 'ISBackGesture', :git => 'https://github.com/ishkawa/ISBackGesture.git'
     pod 'BugSense'
@@ -62,6 +60,7 @@ Motion::Project::App.setup do |app|
     pod 'NJKWebViewProgress'
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
+    pod 'HatenaBookmarkSDK', :git => 'https://github.com/hatena/Hatena-Bookmark-iOS-SDK.git'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']

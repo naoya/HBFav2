@@ -1,41 +1,21 @@
 # -*- coding: utf-8 -*-
 class AccountViewController < UIViewController
+  include HBFav2::MenuTableDelegate
+
   def viewDidLoad
     super
-
+    NSNotificationCenter.defaultCenter.addObserver(self, selector:'showOAuthLoginView:', name:KHTBLoginStartNotification, object:nil)
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
+
     @user = ApplicationUser.sharedUser.to_bookmark_user
     self.navigationItem.title = @user.name
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
-    ## 背景
-    view << UITableView.alloc.initWithFrame(view.bounds, style:UITableViewStyleGrouped)
     self.initialize_data_source
 
-    @imageView = UIImageView.new.tap do |v|
-      v.frame = [[10, 10], [48, 48]]
-      v.layer.tap do |l|
-        l.masksToBounds = true
-        l.cornerRadius  = 5.0
-      end
-      v.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
-      view << v
-    end
-
-    @nameLabel = UILabel.new.tap do |v|
-      v.frame = [[68, 10], [200, 48]]
-      v.font  = UIFont.boldSystemFontOfSize(18)
-      v.text  = @user.name
-      v.shadowColor = UIColor.whiteColor
-      v.shadowOffset = [0, 1]
-      v.backgroundColor = UIColor.clearColor
-      view << v
-    end
-
-    @menuTable = UITableView.alloc.initWithFrame([[0, 59], self.view.bounds.size], style:UITableViewStyleGrouped).tap do |v|
-      v.dataSource = v.delegate = self
-      view << v
-    end
+    @profile_view = HBFav2::ProfileView.new
+    @profile_view.menuTable.dataSource = @profile_view.menuTable.delegate = self
+    view << @profile_view
   end
 
   def initialize_data_source
@@ -56,8 +36,14 @@ class AccountViewController < UIViewController
         ],
       },
       {
-        :title => "外部サービス",
+        :title => "サービス連携",
         :rows => [
+          {
+            :label  => "はてなブックマーク",
+            :detail => HTBHatenaBookmarkManager.sharedManager.authorized ? HTBHatenaBookmarkManager.sharedManager.username : "未設定",
+            :action => 'open_hatena',
+            :accessoryType =>  HTBHatenaBookmarkManager.sharedManager.authorized ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone
+          },
           {
             :label  => "Pocket",
             :detail => PocketAPI.sharedAPI.username || "未設定",
@@ -72,64 +58,23 @@ class AccountViewController < UIViewController
   def viewWillAppear(animated)
     super
     self.navigationController.setToolbarHidden(true, animated:animated)
-
-    indexPath = @menuTable.indexPathForSelectedRow
     self.initialize_data_source
-    @menuTable.reloadData
-    @menuTable.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
-    @menuTable.deselectRowAtIndexPath(indexPath, animated:animated);
-  end
 
-  def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    id = "basis-cell"
-    rowData = @dataSource[indexPath.section][:rows][indexPath.row]
+    @profile_view.frame = self.view.bounds
+    @profile_view.user  = @user
 
-    cell = tableView.dequeueReusableCellWithIdentifier(id) || UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue1, reuseIdentifier:id)
-    cell.textLabel.text = rowData[:label]
-    if rowData[:detail]
-      cell.detailTextLabel.text = rowData[:detail]
-    end
-
-    if (color = rowData[:color])
-      cell.textLabel.textColor = color
-    end
-
-    if (accessory = rowData[:accessoryType])
-      cell.accessoryType = accessory
-    end
-
-    cell
-  end
-
-  def tableView(tableView, titleForHeaderInSection:section)
-    if (title = @dataSource[section][:title])
-      return title
-    end
-  end
-
-  def tableView(tableView, numberOfRowsInSection:section)
-    @dataSource[section][:rows].size
-  end
-
-  def numberOfSectionsInTableView (tableView)
-    @dataSource.size
-  end
-
-  def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    if (action = @dataSource[indexPath.section][:rows][indexPath.row][:action])
-      self.send(action)
-    end
+    indexPath = @profile_view.menuTable.indexPathForSelectedRow
+    @profile_view.menuTable.reloadData
+    @profile_view.menuTable.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
+    @profile_view.menuTable.deselectRowAtIndexPath(indexPath, animated:animated);
   end
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id')
       @user = ApplicationUser.sharedUser.to_bookmark_user
-      ## view 更新
-      navigationItem.title = @user.name
-      @imageView.setImageWithURL(@user.profile_image_url.nsurl, placeholderImage:nil)
-      @nameLabel.text = @user.name
       self.initialize_data_source
-      @menuTable.reloadData
+      navigationItem.title = @user.name
+      @profile_view.user  = @user
     end
   end
 
@@ -169,24 +114,49 @@ class AccountViewController < UIViewController
     "https://github.com/naoya/HBFav2/issues?state=open".nsurl.open
   end
 
+  def open_hatena
+    if HTBHatenaBookmarkManager.sharedManager.authorized
+      self.navigationController.pushViewController(HatenaConfigViewController.alloc.initWithStyle(UITableViewStyleGrouped), animated:true)
+    else
+      HTBHatenaBookmarkManager.sharedManager.authorizeWithSuccess(
+        lambda {
+          self.initialize_data_source
+          @profile_view.menuTable.reloadData
+        },
+        failure: lambda {|error| NSLog(error.localizedDescription) }
+      )
+    end
+  end
+
   def open_pocket
     if PocketAPI.sharedAPI.loggedIn?
       self.navigationController.pushViewController(PocketViewController.alloc.initWithStyle(UITableViewStyleGrouped), animated:true)
     else
-      PocketAPI.sharedAPI.loginWithHandler(lambda do |pocket, error|
+      PocketAPI.sharedAPI.loginWithHandler(
+        lambda do |pocket, error|
           if error.nil?
           else
             NSLog(error.localizedDescription)
           end
           self.initialize_data_source
-          @menuTable.reloadData
-      end)
+          @profile_view.menuTable.reloadData
+        end
+      )
     end
+  end
+
+  def showOAuthLoginView(notification)
+    req = notification.object
+    navigationController = UINavigationController.alloc.initWithNavigationBarClass(HTBNavigationBar, toolbarClass:nil)
+    viewController = HTBLoginWebViewController.alloc.initWithAuthorizationRequest(req)
+    navigationController.viewControllers = [viewController]
+    self.presentViewController(navigationController, animated:true, completion:nil)
   end
 
   def dealloc
     NSLog("dealloc: " + self.class.name)
     ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
+    NSNotificationCenter.defaultCenter.removeObserver(self, name:KHTBLoginStartNotification, object:nil)
     super
   end
 end

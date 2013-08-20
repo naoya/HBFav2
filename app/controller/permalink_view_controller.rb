@@ -9,15 +9,7 @@ class PermalinkViewController < UIViewController
     self.view.backgroundColor = UIColor.whiteColor
     self.backGestureEnabled = true
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
-    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
-    #   UIButton.custom.tap do |btn|
-    #     btn.frame = [[0, 0], [38, 38]]
-    #     btn.showsTouchWhenHighlighted = true
-    #     btn.setImage(UIImage.imageNamed('UIButtonBarAction'), forState: :normal.uicontrolstate)
-    #     btn.addTarget(self, action:'on_action', forControlEvents:UIControlEventTouchUpInside)
-    #     btn.setTitleShadowColor(UIColor.grayColor, forState: :normal.uicontrolstate)
-    #   end
-    # )
+    self.configure_toolbar
 
     self.view << @bookmarkView = HBFav2::BookmarkView.new.tap do |v|
       v.frame = self.view.bounds
@@ -56,6 +48,7 @@ class PermalinkViewController < UIViewController
   end
 
   def open_bookmarks
+    # self.presentingViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
     controller = BookmarksViewController.new.tap { |c| c.entry = @bookmark }
     self.presentViewController(HBFav2NavigationController.alloc.initWithRootViewController(controller), animated:true, completion:nil)
   end
@@ -83,6 +76,38 @@ class PermalinkViewController < UIViewController
   def viewWillDisappear(animated)
     super
     self.navigationController.toolbar.translucent = false
+  end
+
+  def configure_toolbar
+    self.navigationController.setToolbarHidden(false, animated:true)
+    self.navigationController.toolbar.translucent = false
+    spacer = UIBarButtonItem.fixedspace
+    spacer.width = self.view.size.width - 110
+    self.toolbarItems = [
+      spacer,
+      UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemCompose, target:self, action: 'on_bookmark'),
+      UIBarButtonItem.flexiblespace,
+      # BookmarkBarButtonItem.alloc.initWithTarget(self, action:'on_bookmark'),
+      UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAction, target:self, action:'on_action'),
+    ]
+  end
+
+  def on_bookmark
+    if HTBHatenaBookmarkManager.sharedManager.authorized
+      open_hatena_bookmark_view
+    else
+      ## TODO
+      # HTBHatenaBookmarkManager.sharedManager.authorizeWithSuccess(
+      #   lambda { open_bookmark_view },
+      #   failure: lambda {|error| NSLog(error.localizedDescription) }
+      # )
+    end
+  end
+
+  def open_hatena_bookmark_view
+    controller = HTBHatenaBookmarkViewController.alloc.init
+    controller.URL = @bookmark.link.nsurl
+    self.presentViewController(controller, animated:true, completion:nil)
   end
 
   def on_action
