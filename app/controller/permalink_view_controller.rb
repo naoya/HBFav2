@@ -21,6 +21,8 @@ class PermalinkViewController < UIViewController
       v.usersButton.addTarget(self, action:'open_bookmarks', forControlEvents:UIControlEventTouchUpInside)
       v.delegate = self
     end
+
+    self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_toolbar'))
   end
 
   def open_profile
@@ -61,9 +63,6 @@ class PermalinkViewController < UIViewController
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
     self.wantsFullScreenLayout = false
 
-    self.navigationController.toolbar.translucent = false
-    self.navigationController.setToolbarHidden(false, animated:animated)
-
     @bookmarkView.tap do |v|
       ## ここでセットすると隠れた toolbar 部分のサイズが勘定されない、なぜ...
       # v.frame = self.view.bounds
@@ -73,14 +72,28 @@ class PermalinkViewController < UIViewController
     end
   end
 
+  def toggle_toolbar
+    if @toolbar_visible
+      @toolbar_visible = false
+      self.navigationController.setToolbarHidden(true, animated:true)
+    else
+      @toolbar_visible = true
+      self.navigationController.setToolbarHidden(false, animated:true)
+    end
+  end
+
+  def viewDidAppear(animated)
+    super
+    @toolbar_visible = false
+    self.navigationController.setToolbarHidden(true, animated:true)
+  end
+
   def viewWillDisappear(animated)
     super
     self.navigationController.toolbar.translucent = false
   end
 
   def configure_toolbar
-    self.navigationController.setToolbarHidden(false, animated:true)
-    self.navigationController.toolbar.translucent = false
     spacer = UIBarButtonItem.fixedspace
     spacer.width = self.view.size.width - 110
     self.toolbarItems = [
