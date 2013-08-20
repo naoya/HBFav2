@@ -63,6 +63,9 @@ class PermalinkViewController < UIViewController
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
     self.wantsFullScreenLayout = false
 
+    @toolbar_visible = false
+    self.navigationController.setToolbarHidden(true, animated:true)
+
     @bookmarkView.tap do |v|
       ## ここでセットすると隠れた toolbar 部分のサイズが勘定されない、なぜ...
       # v.frame = self.view.bounds
@@ -80,12 +83,6 @@ class PermalinkViewController < UIViewController
       @toolbar_visible = true
       self.navigationController.setToolbarHidden(false, animated:true)
     end
-  end
-
-  def viewDidAppear(animated)
-    super
-    @toolbar_visible = false
-    self.navigationController.setToolbarHidden(true, animated:true)
   end
 
   def viewWillDisappear(animated)
