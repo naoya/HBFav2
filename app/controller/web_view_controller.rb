@@ -5,7 +5,7 @@ class WebViewController < UIViewController
   def viewDidLoad
     super
 
-    @bookmark_requestd = {}
+    @bookmark_requested = {}
     @link_clicked = nil
 
     @document_title = nil
@@ -97,20 +97,25 @@ class WebViewController < UIViewController
 
   def update_bookmark
     url = @webview.request.URL.absoluteString
+    @bookmark_requested[url] ||= {}
 
-    if @bookmark_requestd[url]
-      update_bookmark_info(@bookmark_requestd[url])
+    if @bookmark_requested[url][:http_requested]
+      ## 戻るボタンのときは前のブックマークインスタンスに更新
+      update_bookmark_info(@bookmark_requested[url][:bookmark])
       return
     end
+    @bookmark_requested[url][:http_requested] = true
 
     query = BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
+      NSLog("DEBUG: done HTTP request")
+
       if response.ok?
         ## まだ画面遷移が一度も発生してない場合はオブジェクトの更新は必要ない (リダイレクト対策)
         ## ただし、その場合でもブックマークコメントの先読みのためにリクエストはしておく
         if @bookmark.count.nil? or @link_clicked
           autorelease_pool {
             data = BW::JSON.parse(response.body.to_str) || {}
-            @bookmark_requestd[url] = @bookmark = Bookmark.new(
+            @bookmark_requested[url][:bookmark] = @bookmark = Bookmark.new(
               {
                 :eid   => data['eid'] || nil,
                 :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
@@ -130,8 +135,10 @@ class WebViewController < UIViewController
   end
 
   def update_bookmark_info(bookmark)
-    self.navigationItem.titleView.text = bookmark.title if self.navigationItem.present?
-    update_bookmark_count(bookmark)
+    if bookmark.present?
+      self.navigationItem.titleView.text = bookmark.title if self.navigationItem.present?
+      update_bookmark_count(bookmark)
+    end
   end
 
   def update_bookmark_count(bookmark)
