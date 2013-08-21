@@ -26,6 +26,12 @@ class AppDelegate
       consumerSecret:app_config.vars[:hatena][:consumer_secret]
     )
 
+    ## initialize Parse.com
+    Parse.setApplicationId(
+      "nY5jbkvvEKPUaehNgb0q9IIvYxSE2jx6CwNm2b5c",
+      clientKey:"mekSRONfofOj5tpV7e9XxG65nRCc650JevZcRB6l"
+    )
+
     self.initialize_audio_session
     self.configure_navigation_bar
     self.configure_bar_button_item
@@ -82,6 +88,32 @@ class AppDelegate
   def applicationWillEnterForeground(application)
     notify = NSNotification.notificationWithName("applicationWillEnterForeground", object:self)
     NSNotificationCenter.defaultCenter.postNotification(notify)
+  end
+
+  ## pragma - push notification
+
+  def application(application, didRegisterForRemoteNotificationsWithDeviceToken:deviceToken)
+    user = ApplicationUser.sharedUser
+
+    if user.hatena_id.present? and user.webhook_key.present?
+      installation = PFInstallation.currentInstallation
+      installation.setDeviceTokenFromData(deviceToken)
+      installation.setObject(user.hatena_id, forKey:"owner")
+      installation.setObject(user.webhook_key, forKey:"webhook_key")
+      installation.saveInBackground
+    end
+  end
+
+  def application(application, didReceiveRemoteNotification:userInfo)
+    PFPush.handlePush(userInfo)
+  end
+
+  def application(application, didFailToRegisterForRemoteNotificationsWithError:error)
+    if error.code == 3010
+      NSLog("Push notifications don't work in the simulator!")
+    else
+      NSLog("didFailToRegisterForRemoteNotificationsWithError: %@", error)
+    end
   end
 end
 
