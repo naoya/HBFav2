@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class WebViewController < UIViewController
-  attr_accessor :bookmark
+  attr_accessor :bookmark, :on_modal
 
   def viewDidLoad
     super
@@ -38,6 +38,19 @@ class WebViewController < UIViewController
     end
 
     self.navigationItem.rightBarButtonItem = ReadabilityBarButtonItem.alloc.initWithTarget(self, action:'open_readability')
+
+    if self.on_modal == true
+
+      UIBarButtonItem.stop.tap do |btn|
+        btn.action = 'on_close'
+        btn.target = self
+      end
+      self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+        UIBarButtonSystemItemStop,
+        target:self,
+        action:'on_close'
+      )
+    end
   end
 
   def viewWillAppear(animated)
@@ -65,7 +78,7 @@ class WebViewController < UIViewController
       @view_pushed = false
     else
       ## Here, you know that back button was pressed
-      if @webview.loading?
+      if @webview and @webview.loading?
         @webview.stopLoading
       end
     end
@@ -248,12 +261,16 @@ class WebViewController < UIViewController
     @progress.setProgress(progress, animated:false)
   end
 
+  def on_close
+    self.dismissModalViewControllerAnimated(true, completion:nil)
+  end
+
   def dealloc
     NSLog("dealloc: " + self.class.name)
-    if @webview.loading?
-      @webview.stopLoading
+    if @webview
+      @webview.stopLoading if @webview.loading?
+      @webview.delegate = nil
     end
-    @webview.delegate = nil
     super
   end
 end

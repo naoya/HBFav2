@@ -2,6 +2,11 @@
 class AppDelegate
   attr_accessor :viewController
 
+  # "If your app wasn’t running when the notification came in,
+  # it is launched and the notification is passed as part of the launchOptions dictionary."
+  #
+  # "When an app is opened from a notification, the data is made available
+  # in the application:didFinishLaunchingWithOptions: methods through the launchOptions dictionary."
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     NSLog("RUBYMOTION_ENV: " + RUBYMOTION_ENV)
 
@@ -50,6 +55,15 @@ class AppDelegate
     )
     @window.rootViewController = @viewController
     @window.makeKeyAndVisible
+
+    ## Notification Center から開いたとき
+    if launchOptions.present?
+      payload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]
+      if payload.present? and payload['u']
+        self.presentWebViewControllerWithURL(payload['u'])
+      end
+    end
+
     true
   end
 
@@ -104,8 +118,19 @@ class AppDelegate
     end
   end
 
+  # This method is invoked if your app is active when a notification comes in.
+  # On iOS 4.0 or later, if your app was suspended in the background it is woken up and this method is also called.
+  # You can use UIApplication’s applicationState property to find out whether your app was suspended or not.
   def application(application, didReceiveRemoteNotification:userInfo)
-    PFPush.handlePush(userInfo)
+    # PFPush.handlePush(userInfo)
+
+    # FIXME: これだけだといきなりフロントにあるのに presentViewController してうざいのでは
+    # applicationState プロパティをみてサスペンドからの復帰かどうかをチェックする必要あり.
+    # 加えて、フロントにあるとき何も起こらなくなるというのも避けねばならない
+    if userInfo.present? and userInfo['u']
+      url = userInfo['u']
+      self.presentWebViewControllerWithURL(url)
+    end
   end
 
   def application(application, didFailToRegisterForRemoteNotificationsWithError:error)
@@ -114,6 +139,17 @@ class AppDelegate
     else
       NSLog("didFailToRegisterForRemoteNotificationsWithError: %@", error)
     end
+  end
+
+  def presentWebViewControllerWithURL(url)
+    controller = HBFav2NavigationController.alloc.initWithRootViewController(
+      WebViewController.new.tap do |c|
+        c.bookmark = Bookmark.new({ :link => url })
+        c.on_modal = true
+      end
+    )
+    # FIXME: ヒエラルキー違いの中での起動が考慮されてない
+    @viewController.centerPanel.presentViewController(controller, animated:false, completion:nil)
   end
 end
 
