@@ -218,7 +218,7 @@ class WebViewController < UIViewController
   def open_hatena_bookmark_view
     controller = HTBHatenaBookmarkViewController.alloc.init
     controller.URL = @bookmark.link.nsurl
-    present_modal(controller)
+    controller.presentFromRootViewController
   end
 
   def on_action

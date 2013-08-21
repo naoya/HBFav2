@@ -117,7 +117,7 @@ class PermalinkViewController < UIViewController
   def open_hatena_bookmark_view
     controller = HTBHatenaBookmarkViewController.alloc.init
     controller.URL = @bookmark.link.nsurl
-    self.presentViewController(controller, animated:true, completion:nil)
+    controller.presentFromRootViewController
   end
 
   def on_action
