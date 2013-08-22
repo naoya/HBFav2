@@ -165,8 +165,14 @@ class AppDelegate
         c.on_modal = true
       end
     )
-    # FIXME: ヒエラルキー違いの中での起動が考慮されてない
-    @viewController.centerPanel.presentViewController(controller, animated:false, completion:nil)
+
+    if @viewController.centerPanel.presentedViewController.nil?
+      @viewController.centerPanel.presentViewController(controller, animated:false, completion:nil)
+    else
+      @viewController.centerPanel.dismissViewControllerAnimated(true, completion:
+        lambda { @viewController.centerPanel.presentViewController(controller, animated:true, completion:nil) }
+      )
+    end
   end
 end
 
