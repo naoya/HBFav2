@@ -56,7 +56,7 @@ class AppDelegate
     @window.rootViewController = @viewController
     @window.makeKeyAndVisible
 
-    ## Notification Center から開いたとき
+    ## Notification Center のプッシュ通知履歴から開いたとき
     if launchOptions.present?
       payload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]
       if payload.present? and payload['u']
