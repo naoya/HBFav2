@@ -122,14 +122,31 @@ class AppDelegate
   # On iOS 4.0 or later, if your app was suspended in the background it is woken up and this method is also called.
   # You can use UIApplication’s applicationState property to find out whether your app was suspended or not.
   def application(application, didReceiveRemoteNotification:userInfo)
-    # PFPush.handlePush(userInfo)
+    # NSLog(userInfo['body']) if userInfo['body'].present?
+    if userInfo
+      userInfo.each do |k, v|
+        NSLog("#{k} => #{v}")
+      end
+    end
 
-    # FIXME: これだけだといきなりフロントにあるのに presentViewController してうざいのでは
-    # applicationState プロパティをみてサスペンドからの復帰かどうかをチェックする必要あり.
-    # 加えて、フロントにあるとき何も起こらなくなるというのも避けねばならない
-    if userInfo.present? and userInfo['u']
-      url = userInfo['u']
-      self.presentWebViewControllerWithURL(url)
+    case application.applicationState
+    when UIApplicationStateActive then
+      # PFPush.handlePush(userInfo)
+
+      # ## これで Notification に転送できるけどバナーはでない
+      # notification = UILocalNotification.new
+      # if not notification.nil? and userInfo.present? and userInfo['aps']
+      #   notification.alertBody = userInfo['aps']['alert']
+      #   notification.userInfo = { 'u' => userInfo['u'] }
+      #   application.presentLocalNotificationNow(notification)
+      # end
+    when UIApplicationStateInactive then
+      if userInfo.present? and userInfo['u']
+        url = userInfo['u']
+        self.presentWebViewControllerWithURL(url)
+      end
+    when UIApplicationStateBackground then
+      PFPush.handlePush(userInfo)
     end
   end
 
