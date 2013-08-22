@@ -2,11 +2,6 @@
 class AppDelegate
   attr_accessor :viewController
 
-  # "If your app wasn’t running when the notification came in,
-  # it is launched and the notification is passed as part of the launchOptions dictionary."
-  #
-  # "When an app is opened from a notification, the data is made available
-  # in the application:didFinishLaunchingWithOptions: methods through the launchOptions dictionary."
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     NSLog("RUBYMOTION_ENV: " + RUBYMOTION_ENV)
 
@@ -118,17 +113,7 @@ class AppDelegate
     end
   end
 
-  # This method is invoked if your app is active when a notification comes in.
-  # On iOS 4.0 or later, if your app was suspended in the background it is woken up and this method is also called.
-  # You can use UIApplication’s applicationState property to find out whether your app was suspended or not.
   def application(application, didReceiveRemoteNotification:userInfo)
-    # NSLog(userInfo['body']) if userInfo['body'].present?
-    if userInfo
-      userInfo.each do |k, v|
-        NSLog("#{k} => #{v}")
-      end
-    end
-
     case application.applicationState
     when UIApplicationStateActive then
       # PFPush.handlePush(userInfo)
