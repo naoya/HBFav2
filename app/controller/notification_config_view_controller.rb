@@ -20,7 +20,7 @@ class NotificationConfigViewController < Formotion::FormController
               footer:
               "1. 任意の文字列を指定してください\n" +
               "(平文でやり取りされるのでパスワード文字列は利用しないでください)\n\n" +
-              "2. はてなブックマーク本体で Webhook の設定に「イベント通知URL」として http://hbfav-push.herokuapp.com/#{user.hatena_id} を、「キー」にここで入力したのと同じ文字列を設定してください\n\n" +
+              "2. はてなブックマーク本体の Webhook 設定の「イベント通知URL」に http://push.hbfav.com/#{user.hatena_id} を、「キー」にここで入力したのと同じ文字列をそれぞれ設定してください\n\n" +
               "3. 通知して欲しいイベント種類の設定などは、はてなブックマーク本体で行ってください"
             }
           ]
