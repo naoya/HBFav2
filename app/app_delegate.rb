@@ -31,6 +31,7 @@ class AppDelegate
       app_config.vars[:parse][:application_id],
       clientKey:app_config.vars[:parse][:client_key],
     )
+    PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
 
     self.initialize_audio_session
     self.configure_navigation_bar
@@ -126,6 +127,7 @@ class AppDelegate
       #   application.presentLocalNotificationNow(notification)
       # end
     when UIApplicationStateInactive then
+      PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
       if userInfo.present? and userInfo['u']
         url = userInfo['u']
         self.presentWebViewControllerWithURL(url)
