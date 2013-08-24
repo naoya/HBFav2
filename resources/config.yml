@@ -8,3 +8,7 @@ bugsense:
 hatena:
   consumer_key: YgQdHeG6eXq49Q==
   consumer_secret: z0fKritSNCW3UK2y7TOKyaKzgr8=
+
+parse:
+  application_id: "nY5jbkvvEKPUaehNgb0q9IIvYxSE2jx6CwNm2b5c"
+  client_key: "mekSRONfofOj5tpV7e9XxG65nRCc650JevZcRB6l"

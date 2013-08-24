@@ -28,8 +28,8 @@ class AppDelegate
 
     ## initialize Parse.com
     Parse.setApplicationId(
-      "nY5jbkvvEKPUaehNgb0q9IIvYxSE2jx6CwNm2b5c",
-      clientKey:"mekSRONfofOj5tpV7e9XxG65nRCc650JevZcRB6l"
+      app_config.vars[:parse][:application_id],
+      clientKey:app_config.vars[:parse][:client_key],
     )
 
     self.initialize_audio_session
