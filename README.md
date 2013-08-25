@@ -27,3 +27,8 @@ HBFav2 - はてなブックマークお気に入りリーダー
 
 <img src="https://dl.dropboxusercontent.com/u/2586384/image/HBFav2/06.png" width="320" />
 
+ビルド
+--------------------
+
+* resources/config.default.yml を編集して resources/config.yml として保存する必要があります
+    * 各種 API キーの設定が必要です
