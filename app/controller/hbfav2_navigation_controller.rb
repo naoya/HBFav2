@@ -29,6 +29,13 @@ class HBFav2NavigationController < UINavigationController
       subview.class.description.lowercaseString.rangeOfString("itembutton").location != NSNotFound
     end
 
+    ## leftBarButtonItem を探す
+    unless v
+      v = self.navigationBar.subviews
+        .select { |subview| subview.class.description =~ /button/i }
+        .inject { |memo, item| memo.frame.origin.x < item.frame.origin.x ? memo : item }
+    end
+
     ## そのボタンの枠内が押されていたら true
     if v
       point = gestureRecognizer.locationInView(v)
@@ -52,7 +59,17 @@ class HBFav2NavigationController < UINavigationController
 
   def backToRoot(recog)
     if (recog.state == UIGestureRecognizerStateBegan)
-      self.popToRootViewControllerAnimated(true)
+      controller = HBFav2PanelController.sharedController.centerPanel
+      if controller.presentedViewController.nil?
+        self.popToRootViewControllerAnimated(true)
+      else
+        ## 一気に戻る
+        controller.dismissViewControllerAnimated(true, completion:
+          lambda {
+            controller.popToRootViewControllerAnimated(true)
+          }
+        )
+      end
     end
   end
 end
