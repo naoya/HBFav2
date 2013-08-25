@@ -32,7 +32,11 @@ class AccountViewController < UIViewController
             :label  => 'クラッシュレポート',
             :detail => ApplicationUser.sharedUser.send_bugreport? ? "オン" : "オフ",
             :action => 'open_bugreport_config',
-          }
+          },
+          {
+            :label  => '通知 (ベータ版)',
+            :action => 'open_notification_config'
+          },
         ],
       },
       {
@@ -90,6 +94,14 @@ class AccountViewController < UIViewController
   def open_bugreport_config
     self.presentViewController(
       UINavigationController.alloc.initWithRootViewController(BugreportConfigViewController.new),
+      animated:true,
+      completion:nil
+    )
+  end
+
+  def open_notification_config
+    self.presentViewController(
+      UINavigationController.alloc.initWithRootViewController(NotificationConfigViewController.new),
       animated:true,
       completion:nil
     )

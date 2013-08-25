@@ -2,6 +2,7 @@ PODS:
   - AFNetworking (1.3.2)
   - ARChromeActivity (1.0.1)
   - BugSense (3.4)
+  - Facebook-iOS-SDK (3.7.0)
   - HatenaBookmarkSDK (0.2):
     - AFNetworking (~> 1.0)
     - SFHFKeychainUtils
@@ -20,6 +21,7 @@ DEPENDENCIES:
   - AFNetworking (~> 1.3)
   - ARChromeActivity
   - BugSense
+  - Facebook-iOS-SDK
   - HatenaBookmarkSDK (from `https://github.com/hatena/Hatena-Bookmark-iOS-SDK.git`)
   - ISBackGesture (from `https://github.com/ishkawa/ISBackGesture.git`)
   - JASidePanels
@@ -43,6 +45,7 @@ SPEC CHECKSUMS:
   AFNetworking: 7f9bcd7c287a75476cd5c61e82fd3380e93e4c54
   ARChromeActivity: eb9770a933cfe2b914b8e4e22b684eb7f43f24df
   BugSense: 0b0f27d15f29e7b7ff0b56b4f7511ad6999b3cea
+  Facebook-iOS-SDK: 39b55f6c2a8901df8ebcfa23b90c66da1c475f82
   HatenaBookmarkSDK: ae72437178a083721b8cc17b6662100ba21d2b19
   ISBackGesture: 94b94031bc5175ce428e0e9ee169744d37dcda4b
   JASidePanels: c0e642a7311ec9cc9adfa616fa4a795e4e169f20
