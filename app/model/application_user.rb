@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class ApplicationUser
-  attr_accessor :hatena_id, :use_timeline, :send_bugreport
+  attr_accessor :hatena_id, :use_timeline, :send_bugreport, :webhook_key
 
   def self.sharedUser
     Dispatch.once { @instance ||= new }
@@ -11,6 +11,7 @@ class ApplicationUser
     App::Persistence['hatena_id'] = @hatena_id
     App::Persistence['use_timeline'] = @use_timeline
     App::Persistence['send_bugreport'] = @send_bugreport
+    App::Persistence['webhook_key'] = @webhook_key
     self
   end
 
@@ -18,6 +19,7 @@ class ApplicationUser
     self.hatena_id = App::Persistence['hatena_id']
     self.use_timeline = App::Persistence['use_timeline']
     self.send_bugreport = App::Persistence['send_bugreport']
+    self.webhook_key = App::Persistence['webhook_key']
     self
   end
 

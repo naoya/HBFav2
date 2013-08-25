@@ -1,5 +1,6 @@
 .repl_history
 build
+resources/config.yml
 resources/*.nib
 resources/*.momd
 resources/*.storyboardc
