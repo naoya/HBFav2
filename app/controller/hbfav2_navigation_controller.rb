@@ -3,24 +3,39 @@
 # UIBarButtonItem には addGestureRecognizer できないので navigationBar 全体に引っかけて
 # 実際に押下されたらその地点がボタンの上かどうかを調べる
 class HBFav2NavigationController < UINavigationController
+  attr_accessor :rounded_corners
+
+  def initWithRootViewController(controller)
+    if super
+      @rounded_corners = true
+    end
+    self
+  end
+
   def viewDidLoad
     super
     longPressGesture = UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'backToRoot:')
     longPressGesture.delegate = self
     self.navigationBar.addGestureRecognizer(longPressGesture)
+  end
+
+  def viewWillAppear(animated)
+    super
 
     ## naviBar の上部を丸める
-    layer = self.navigationBar.layer
-    maskPath = UIBezierPath.bezierPathWithRoundedRect(
-      layer.bounds,
-      byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight),
-      cornerRadii:CGSizeMake(5.0, 5.0)
-    )
-    maskLayer = CAShapeLayer.alloc.init
-    maskLayer.frame = layer.bounds
-    maskLayer.path = maskPath.CGPath;
-    layer.addSublayer(maskLayer)
-    layer.mask = maskLayer
+    if self.rounded_corners
+      layer = self.navigationBar.layer
+      maskPath = UIBezierPath.bezierPathWithRoundedRect(
+        layer.bounds,
+        byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight),
+        cornerRadii:CGSizeMake(5.0, 5.0)
+      )
+      maskLayer = CAShapeLayer.alloc.init
+      maskLayer.frame = layer.bounds
+      maskLayer.path = maskPath.CGPath;
+      layer.addSublayer(maskLayer)
+      layer.mask = maskLayer
+    end
   end
 
   def gestureRecognizerShouldBegin(gestureRecognizer)
@@ -36,11 +51,8 @@ class HBFav2NavigationController < UINavigationController
         .inject { |memo, item| memo.frame.origin.x < item.frame.origin.x ? memo : item }
     end
 
-    ## そのボタンの枠内が押されていたら true
     if v
       point = gestureRecognizer.locationInView(v)
-      NSLog("[#{point.x}, #{point.y}]")
-      NSLog("[#{v.frame.origin.x}, #{v.frame.origin.y}], [#{v.frame.size.width}, #{v.frame.size.height}]")
 
       # Quick Hack: ボタンは押せてるけど point が枠内に入ってないこともあるので枠を少し広げて計算させる
       # (取得できるのがあくまで中心位置なので)
@@ -50,8 +62,6 @@ class HBFav2NavigationController < UINavigationController
       # 上記理由により v.pointInside(point, withEvent:nil) ではダメ
       if CGRectContainsPoint(rect, point)
         return true
-      else
-        NSLog("おおっと")
       end
     end
     false
@@ -63,7 +73,6 @@ class HBFav2NavigationController < UINavigationController
       if controller.presentedViewController.nil?
         self.popToRootViewControllerAnimated(true)
       else
-        ## 一気に戻る
         controller.dismissViewControllerAnimated(true, completion:
           lambda {
             controller.popToRootViewControllerAnimated(true)

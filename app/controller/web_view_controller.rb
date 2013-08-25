@@ -200,13 +200,15 @@ class WebViewController < UIViewController
   end
 
   def open_readability
-    controller = ReadabilityViewController.new.tap do |c|
+    readability = ReadabilityViewController.new.tap do |c|
       c.entry = {:title => @bookmark.title, :url => @bookmark.link}
     end
 
+    controller = HBFav2NavigationController.alloc.initWithRootViewController(readability)
+    controller.rounded_corners = false
+
     ## 本当は pushViewController にしたいが JASidePanels との相性でフルスクリーンがムズイので modal
-    present_modal(UINavigationController.alloc.initWithRootViewController(controller))
-    # self.navigationController << controller
+    present_modal(controller)
   end
 
   def open_bookmark

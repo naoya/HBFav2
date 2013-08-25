@@ -66,7 +66,7 @@ class PermalinkViewController < UIViewController
 
     # @toolbar_visible = false
     # self.navigationController.setToolbarHidden(true, animated:true)
-    self.navigationController.setToolbarHidden(false, animated:false)
+    self.navigationController.setToolbarHidden(false, animated:true)
 
     @bookmarkView.tap do |v|
       ## ここでセットすると隠れた toolbar 部分のサイズが勘定されない、なぜ...
