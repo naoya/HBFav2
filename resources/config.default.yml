@@ -12,3 +12,6 @@ hatena:
 parse:
   application_id:
   client_key:
+
+readability:
+  api_token:
