@@ -22,7 +22,8 @@ class PermalinkViewController < UIViewController
       v.delegate = self
     end
 
-    self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_toolbar'))
+    ## clickable URL に悪影響を与えるので中止
+    # self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_toolbar'))
   end
 
   def open_profile
@@ -63,8 +64,9 @@ class PermalinkViewController < UIViewController
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
     self.wantsFullScreenLayout = false
 
-    @toolbar_visible = false
-    self.navigationController.setToolbarHidden(true, animated:true)
+    # @toolbar_visible = false
+    # self.navigationController.setToolbarHidden(true, animated:true)
+    self.navigationController.setToolbarHidden(false, animated:false)
 
     @bookmarkView.tap do |v|
       ## ここでセットすると隠れた toolbar 部分のサイズが勘定されない、なぜ...
