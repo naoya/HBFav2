@@ -26,8 +26,9 @@ Motion::Project::App.setup do |app|
 
   app.testflight.distribution_lists = ['testers']
   app.development do
-    app.provisioning_profile = '/Users/naoya/RubyMotion/HBFav2.mobileprovision'
+    app.provisioning_profile = '/Users/naoya/Dropbox/HBFav/HBFav_with_Push_Notification.mobileprovision'
     app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
+    app.entitlements['aps-environment'] = 'development'
   end
 
   app.release do
@@ -61,9 +62,15 @@ Motion::Project::App.setup do |app|
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'https://github.com/hatena/Hatena-Bookmark-iOS-SDK.git'
+
+    ## Parse.com SDK が依存してるけど本来必要ない。現状、解決されてない様子
+    pod 'Facebook-iOS-SDK'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']
+  app.frameworks += %w(AudioToolbox CFNetwork MobileCoreServices QuartzCore StoreKit SystemConfiguration)
+  app.libs += %W(/usr/lib/libz.dylib /usr/lib/libsqlite3.dylib)
+
   app.icons = ["default_app_logo.png", "default_app_logo@2x.png"]
 
   app.entitlements['keychain-access-groups'] = [
@@ -82,6 +89,14 @@ Motion::Project::App.setup do |app|
   app.vendor_project(
     'vendor/ChromeProgressBar',
     :static
+  )
+
+  ## Parse.com
+  app.vendor_project(
+    'vendor/Parse.framework',
+    :static,
+    :products => ['Parse'],
+    :headers_dir => 'Headers'
   )
 
   ## Reveal

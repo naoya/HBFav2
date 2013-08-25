@@ -26,6 +26,13 @@ class AppDelegate
       consumerSecret:app_config.vars[:hatena][:consumer_secret]
     )
 
+    ## initialize Parse.com
+    Parse.setApplicationId(
+      app_config.vars[:parse][:application_id],
+      clientKey:app_config.vars[:parse][:client_key],
+    )
+    PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
+
     self.initialize_audio_session
     self.configure_navigation_bar
     self.configure_bar_button_item
@@ -44,6 +51,15 @@ class AppDelegate
     )
     @window.rootViewController = @viewController
     @window.makeKeyAndVisible
+
+    ## Notification Center のプッシュ通知履歴から開いたとき
+    if launchOptions.present?
+      payload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]
+      if payload.present? and payload['u']
+        self.presentWebViewControllerWithURL(payload['u'])
+      end
+    end
+
     true
   end
 
@@ -82,6 +98,68 @@ class AppDelegate
   def applicationWillEnterForeground(application)
     notify = NSNotification.notificationWithName("applicationWillEnterForeground", object:self)
     NSNotificationCenter.defaultCenter.postNotification(notify)
+  end
+
+  ## pragma - push notification
+
+  def application(application, didRegisterForRemoteNotificationsWithDeviceToken:deviceToken)
+    user = ApplicationUser.sharedUser
+
+    if user.hatena_id.present? and user.webhook_key.present?
+      installation = PFInstallation.currentInstallation
+      installation.setDeviceTokenFromData(deviceToken)
+      installation.setObject(user.hatena_id, forKey:"owner")
+      installation.setObject(user.webhook_key, forKey:"webhook_key")
+      installation.saveInBackground
+    end
+  end
+
+  def application(application, didReceiveRemoteNotification:userInfo)
+    case application.applicationState
+    when UIApplicationStateActive then
+      # PFPush.handlePush(userInfo)
+
+      # ## これで Notification に転送できるけどバナーはでない
+      # notification = UILocalNotification.new
+      # if not notification.nil? and userInfo.present? and userInfo['aps']
+      #   notification.alertBody = userInfo['aps']['alert']
+      #   notification.userInfo = { 'u' => userInfo['u'] }
+      #   application.presentLocalNotificationNow(notification)
+      # end
+    when UIApplicationStateInactive then
+      PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+      if userInfo.present? and userInfo['u']
+        url = userInfo['u']
+        self.presentWebViewControllerWithURL(url)
+      end
+    when UIApplicationStateBackground then
+      PFPush.handlePush(userInfo)
+    end
+  end
+
+  def application(application, didFailToRegisterForRemoteNotificationsWithError:error)
+    if error.code == 3010
+      NSLog("Push notifications don't work in the simulator!")
+    else
+      NSLog("didFailToRegisterForRemoteNotificationsWithError: %@", error)
+    end
+  end
+
+  def presentWebViewControllerWithURL(url)
+    controller = HBFav2NavigationController.alloc.initWithRootViewController(
+      WebViewController.new.tap do |c|
+        c.bookmark = Bookmark.new({ :link => url })
+        c.on_modal = true
+      end
+    )
+
+    if @viewController.centerPanel.presentedViewController.nil?
+      @viewController.centerPanel.presentViewController(controller, animated:false, completion:nil)
+    else
+      @viewController.centerPanel.dismissViewControllerAnimated(true, completion:
+        lambda { @viewController.centerPanel.presentViewController(controller, animated:true, completion:nil) }
+      )
+    end
   end
 end
 
