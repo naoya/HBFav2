@@ -19,4 +19,14 @@ class HBFav2PanelController < JASidePanelController
     # panel.layer.mask = maskLayer
     # panel.clipsToBounds = true
   end
+
+  def presentViewController(controller)
+    if self.centerPanel.presentedViewController.nil?
+      self.centerPanel.presentViewController(controller, animated:false, completion:nil)
+    else
+      self.centerPanel.dismissViewControllerAnimated(true, completion:
+        lambda { self.centerPanel.presentViewController(controller, animated:true, completion:nil) }
+      )
+    end
+  end
 end

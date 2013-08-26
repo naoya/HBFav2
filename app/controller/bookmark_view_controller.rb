@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class BookmarkViewController < UIViewController
-  attr_accessor :bookmark, :url, :user_name
+  attr_accessor :bookmark, :url, :user_name, :on_modal
 
   def viewDidLoad
     super
@@ -24,6 +24,18 @@ class BookmarkViewController < UIViewController
 
     ## clickable URL に悪影響を与えるので中止
     # self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_toolbar'))
+
+    if self.on_modal == true
+      UIBarButtonItem.stop.tap do |btn|
+        btn.action = 'on_close'
+        btn.target = self
+      end
+      self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+        UIBarButtonSystemItemStop,
+        target:self,
+        action:'on_close'
+      )
+    end
   end
 
   def open_profile
@@ -64,7 +76,7 @@ class BookmarkViewController < UIViewController
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
     self.wantsFullScreenLayout = false
 
-    self.navigationController.setToolbarHidden(false, animated:true)
+    self.navigationController.setToolbarHidden(false, animated:self.on_modal ? false : true)
 
     if self.bookmark.present?
       @bookmarkView.bookmark = self.bookmark
@@ -150,6 +162,10 @@ class BookmarkViewController < UIViewController
     controller = WebViewController.new
     controller.bookmark = bookmark
     self.navigationController.pushViewController(controller, animated:true)
+  end
+
+  def on_close
+    self.dismissModalViewControllerAnimated(true, completion:nil)
   end
 
   def dealloc
