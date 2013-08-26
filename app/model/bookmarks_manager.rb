@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-class BookmarkManager
+class BookmarksManager
   attr_accessor :url
 
   def self.factory(user)
     @bookmarks = if user and user.use_timeline?
-                   BookmarkManager::TimeBased.new
+                   BookmarksManager::TimeBased.new
                  else
-                   BookmarkManager::Offset.new
+                   BookmarksManager::Offset.new
                  end
     @bookmarks.url = user.timeline_feed_url
     @bookmarks
@@ -67,7 +67,7 @@ class BookmarkManager
     super
   end
 
-  class TimeBased < BookmarkManager
+  class TimeBased < BookmarksManager
     def prepend_url
       @url
     end
@@ -161,7 +161,7 @@ class BookmarkManager
     end
   end
 
-  class Offset < BookmarkManager
+  class Offset < BookmarksManager
     def prepend_url
       @url
     end

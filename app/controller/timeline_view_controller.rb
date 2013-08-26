@@ -81,10 +81,10 @@ class TimelineViewController < UITableViewController
 
   def initialize_bookmark_manager(user)
     if (content_type == :bookmark)
-      manager = BookmarkManager::Offset.new
+      manager = BookmarksManager::Offset.new
       manager.url = user.bookmark_feed_url
     else
-      manager = BookmarkManager.factory(user)
+      manager = BookmarksManager.factory(user)
     end
     manager
   end
