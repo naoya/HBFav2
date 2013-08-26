@@ -76,6 +76,7 @@ module HBFav2
           btn.backgroundColor = UIColor.whiteColor
           btn.setTitleColor('#3B5998'.uicolor, forState:UIControlStateNormal)
           btn.setTitleColor('#69c'.uicolor, forState:UIControlStateHighlighted)
+          btn.setTitle("", forState:UIControlStateNormal)
         end
 
         @bodyView << @urlLabel = UILabel.new.tap do |v|
@@ -84,6 +85,7 @@ module HBFav2
           v.font = UIFont.systemFontOfSize(14)
           v.textColor = '#666'.uicolor
           v.lineBreakMode = NSLineBreakByCharWrapping
+          v.text = ""
         end
 
         @bodyView << @dateLabel = UILabel.new.tap do |v|
@@ -134,24 +136,6 @@ module HBFav2
         @commentLabel.addLinkToURL("twitter://#{mention}".nsurl, withRange:range)
       end
 
-      # @commentLabel.text = bookmark.comment if bookmark.comment.present?
-
-      # ## handle Hatena ID
-      # if bookmark.comment =~ %r{(id:[a-zA-Z\-]{3,32})}
-      #   id = $1
-      #   range = bookmark.comment.rangeOfString(id)
-      #   id.gsub!(/id:/, '')
-      #   @commentLabel.addLinkToURL("bookmark://#{id}".nsurl, withRange:range)
-      # end
-
-      # ## handle Twitter mention
-      # if bookmark.comment =~ %r{(@[0-9a-zA-Z_]{1,15})}
-      #   mention = $1
-      #   range = bookmark.comment.rangeOfString(mention)
-      #   mention.gsub!(/^@/, '')
-      #   @commentLabel.addLinkToURL("twitter://#{mention}".nsurl, withRange:range)
-      # end
-
       @titleButton.setTitle(bookmark.title, forState:UIControlStateNormal)
       @urlLabel.text     = bookmark.link
       @dateLabel.text    = bookmark.datetime.timeAgo
@@ -181,13 +165,6 @@ module HBFav2
       ## body
       if @commentLabel.text.present?
         constrain = CGSize.new(self.frame.size.width - 20, 1000)
-
-        ## BUG: it doesn't have consideration for paragraph style
-        # rect = @commentLabel.attributedText.boundingRectWithSize(
-        #   constrain,
-        #   options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingUsesDeviceMetrics,
-        #   context:nil
-        # )
 
         ## workaround: http://stackoverflow.com/questions/13621084/boundingrectwithsize-for-nsattributedstring-returning-wrong-size
         fitSize = CTFramesetterSuggestFrameSizeWithConstraints(

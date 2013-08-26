@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-class PermalinkViewController < UIViewController
-  attr_accessor :bookmark
+class BookmarkViewController < UIViewController
+  attr_accessor :bookmark, :url, :user_name
 
   def viewDidLoad
     super
@@ -64,14 +64,20 @@ class PermalinkViewController < UIViewController
     UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
     self.wantsFullScreenLayout = false
 
-    # @toolbar_visible = false
-    # self.navigationController.setToolbarHidden(true, animated:true)
     self.navigationController.setToolbarHidden(false, animated:true)
 
+    if self.bookmark.present?
+      @bookmarkView.bookmark = self.bookmark
+    elsif self.url and self.user_name
+      BookmarkManager.sharedManager.get_bookmark(self.url, self.user_name) do |response, bm|
+        if bm
+          self.bookmark = bm
+          @bookmarkView.bookmark = bm
+        end
+      end
+    end
+
     @bookmarkView.tap do |v|
-      ## ここでセットすると隠れた toolbar 部分のサイズが勘定されない、なぜ...
-      # v.frame = self.view.bounds
-      v.bookmark = self.bookmark
       v.starView.highlighted = false
       v.starView.backgroundColor = UIColor.whiteColor
     end

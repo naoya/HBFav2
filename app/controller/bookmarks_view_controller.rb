@@ -52,7 +52,6 @@ class BookmarksViewController < UITableViewController
               )
             end
           else
-            NSLog('private?')
             App.alert("ブックマークが全てプライベートモード、もしくはコメント非表示設定のエントリーです")
           end
         }
@@ -112,7 +111,7 @@ class BookmarksViewController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    PermalinkViewController.new.tap do |c|
+    BookmarkViewController.new.tap do |c|
       c.bookmark = @bookmarks[indexPath.row]
       self.navigationController.pushViewController(c, animated:true)
     end

@@ -231,7 +231,7 @@ class TimelineViewController < UITableViewController
         cell.endRefreshing
       end
     else
-      controller = PermalinkViewController.new.tap { |c| c.bookmark = @bookmarks[indexPath.row] }
+      controller = BookmarkViewController.new.tap { |c| c.bookmark = @bookmarks[indexPath.row] }
       self.navigationController.pushViewController(controller, animated:true)
     end
   end
