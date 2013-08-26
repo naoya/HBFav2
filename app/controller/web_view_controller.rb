@@ -219,21 +219,13 @@ class WebViewController < UIViewController
   end
 
   def on_bookmark
-    if HTBHatenaBookmarkManager.sharedManager.authorized
-      open_hatena_bookmark_view
-    else
-      ## TODO
-      # HTBHatenaBookmarkManager.sharedManager.authorizeWithSuccess(
-      #   lambda { open_bookmark_view },
-      #   failure: lambda {|error| NSLog(error.localizedDescription) }
-      # )
-    end
+    open_hatena_bookmark_view
   end
 
   def open_hatena_bookmark_view
     controller = HTBHatenaBookmarkViewController.alloc.init
     controller.URL = @bookmark.link.nsurl
-    controller.presentFromRootViewController
+    self.presentViewController(controller, animated:true, completion:nil)
   end
 
   def on_action

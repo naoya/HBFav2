@@ -4,7 +4,6 @@ class AccountViewController < UIViewController
 
   def viewDidLoad
     super
-    NSNotificationCenter.defaultCenter.addObserver(self, selector:'showOAuthLoginView:', name:KHTBLoginStartNotification, object:nil)
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
 
     @user = ApplicationUser.sharedUser.to_bookmark_user
@@ -130,6 +129,7 @@ class AccountViewController < UIViewController
     if HTBHatenaBookmarkManager.sharedManager.authorized
       self.navigationController.pushViewController(HatenaConfigViewController.alloc.initWithStyle(UITableViewStyleGrouped), animated:true)
     else
+      NSNotificationCenter.defaultCenter.addObserver(self, selector:'showOAuthLoginView:', name:KHTBLoginStartNotification, object:nil)
       HTBHatenaBookmarkManager.sharedManager.authorizeWithSuccess(
         lambda {
           self.initialize_data_source
@@ -158,6 +158,7 @@ class AccountViewController < UIViewController
   end
 
   def showOAuthLoginView(notification)
+    NSNotificationCenter.defaultCenter.removeObserver(self, name:KHTBLoginStartNotification, object:nil)
     req = notification.object
     navigationController = UINavigationController.alloc.initWithNavigationBarClass(HTBNavigationBar, toolbarClass:nil)
     viewController = HTBLoginWebViewController.alloc.initWithAuthorizationRequest(req)
@@ -168,7 +169,6 @@ class AccountViewController < UIViewController
   def dealloc
     NSLog("dealloc: " + self.class.name)
     ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
-    NSNotificationCenter.defaultCenter.removeObserver(self, name:KHTBLoginStartNotification, object:nil)
     super
   end
 end
