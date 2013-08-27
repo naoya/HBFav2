@@ -38,4 +38,27 @@ class ApplicationUser
   def to_bookmark_user
     User.new({ :name => @hatena_id, :use_timeline => @use_timeline })
   end
+
+  def wants_remote_notification?
+    self.webhook_key ? true : false
+  end
+
+  def enable_remote_notification!(token)
+    if self.configured? and self.wants_remote_notification?
+      installation = PFInstallation.currentInstallation
+      installation.setDeviceTokenFromData token
+      installation.setObject self.hatena_id, forKey:"owner"
+      installation.setObject self.webhook_key, forKey:"webhook_key"
+      installation.setObject 'yes', forKey:"enabled"
+      installation.saveInBackground
+    end
+  end
+
+  def disable_remote_notification!
+    self.webhook_key = nil
+    self.save
+    installation = PFInstallation.currentInstallation
+    installation.setObject 'no', forKey:"enabled"
+    installation.saveInBackground
+  end
 end

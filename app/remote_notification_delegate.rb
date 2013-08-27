@@ -3,13 +3,8 @@ module HBFav2
   module RemoteNotificationDelegate
     def application(application, didRegisterForRemoteNotificationsWithDeviceToken:deviceToken)
       user = ApplicationUser.sharedUser
-
-      if user.hatena_id.present? and user.webhook_key.present?
-        installation = PFInstallation.currentInstallation
-        installation.setDeviceTokenFromData(deviceToken)
-        installation.setObject(user.hatena_id, forKey:"owner")
-        installation.setObject(user.webhook_key, forKey:"webhook_key")
-        installation.saveInBackground
+      if user.configured? and user.wants_remote_notification?
+        user.enable_remote_notification!(deviceToken)
       end
     end
 

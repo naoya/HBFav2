@@ -90,9 +90,18 @@ class AccountConfigViewController < Formotion::FormController
           App.alert("非公開設定のアカウントは利用できません")
         else
           user = ApplicationUser.sharedUser
+          previous_id = user.hatena_id
+
           user.use_timeline = data["use_timeline"]
           user.hatena_id = data["hatena_id"]
           user.save
+
+          if previous_id and previous_id != data["hatena_id"]
+            if user.wants_remote_notification?
+              user.disable_remote_notification!
+            end
+          end
+
           self.dismissModalViewControllerAnimated(true, completion:nil)
         end
       end
