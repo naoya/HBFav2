@@ -52,9 +52,9 @@ class HotentryViewController < UITableViewController
     self.refreshControl.beginRefreshing
 
     if self.list_type == :hotentry
-      feed_url = 'http://hbfav.herokuapp.com/hotentry'
+      feed_url = 'http://feed.hbfav.com/hotentry'
     else
-      feed_url = 'http://hbfav.herokuapp.com/entrylist'
+      feed_url = 'http://feed.hbfav.com/entrylist'
     end
 
     if not self.category.nil?

@@ -25,11 +25,11 @@ class User
   end
 
   def timeline_feed_url
-    return "http://hbfav.herokuapp.com/#{@name}"
+    return "http://feed.hbfav.com/#{@name}"
   end
 
   def bookmark_feed_url
-    return "http://hbfav.herokuapp.com/#{@name}/bookmark"
+    return "http://feed.hbfav.com/#{@name}/bookmark"
   end
 
   # def dealloc
