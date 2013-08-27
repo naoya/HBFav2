@@ -236,14 +236,6 @@ class TimelineViewController < UITableViewController
     end
   end
 
-  def open_profile
-    controller = ProfileViewController.new.tap do |c|
-      c.user    = @user
-      c.as_mine = true
-    end
-    self.navigationController.pushViewController(controller, animated:true)
-  end
-
   def open_account_config
     controller = AccountConfigViewController.new.tap { |c| c.allow_cancellation = false }
     self.presentModalViewController(
