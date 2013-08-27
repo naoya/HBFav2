@@ -57,10 +57,16 @@ class StarsViewController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    ProfileViewController.new.tap do |c|
-      c.user = @stars[indexPath.row].user
-      self.navigationController.pushViewController(c, animated:true)
+    # ProfileViewController.new.tap do |c|
+    #  c.user = @stars[indexPath.row].user
+    # end
+
+    controller = TimelineViewController.new.tap do |c|
+      c.user  = @stars[indexPath.row].user
+      c.content_type = :bookmark
+      c.title = @stars[indexPath.row].user.name
     end
+    self.navigationController.pushViewController(controller, animated:true)
   end
 
   def dealloc

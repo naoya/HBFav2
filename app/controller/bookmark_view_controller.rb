@@ -39,7 +39,12 @@ class BookmarkViewController < UIViewController
   end
 
   def open_profile
-    controller = ProfileViewController.new.tap { |c| c.user = bookmark.user }
+    # controller = ProfileViewController.new.tap { |c| c.user = bookmark.user }
+    controller = TimelineViewController.new.tap do |c|
+      c.user  = bookmark.user
+      c.content_type = :bookmark
+      c.title = bookmark.user.name
+    end
     self.navigationController.pushViewController(controller, animated:true)
   end
 
