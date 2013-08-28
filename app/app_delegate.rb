@@ -27,13 +27,7 @@ class AppDelegate
       consumerSecret:app_config.vars[:hatena][:consumer_secret]
     )
 
-    ## initialize Parse.com
-    Parse.setApplicationId(
-      app_config.vars[:parse][:application_id],
-      clientKey:app_config.vars[:parse][:client_key],
-    )
-    PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
-
+    self.configure_parse_service(launchOptions)
     self.initialize_audio_session
     self.configure_navigation_bar
     self.configure_bar_button_item
@@ -59,6 +53,32 @@ class AppDelegate
       self.handleNotificationPayload(payload) if payload.present?
     end
     true
+  end
+
+  def development?
+    RUBYMOTION_ENV == "development"
+  end
+
+  def release?
+    !development?
+  end
+
+  def configure_parse_service(launchOptions)
+    app_config = ApplicationConfig.sharedConfig
+
+    ## initialize Parse.com
+    if development?
+      Parse.setApplicationId(
+        app_config.vars[:parse][:development][:application_id],
+        clientKey:app_config.vars[:parse][:development][:client_key],
+      )
+    else
+      Parse.setApplicationId(
+        app_config.vars[:parse][:production][:application_id],
+        clientKey:app_config.vars[:parse][:production][:client_key],
+      )
+    end
+    PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
   end
 
   def initialize_audio_session
