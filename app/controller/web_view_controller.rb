@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 class WebViewController < UIViewController
   attr_accessor :bookmark, :on_modal
 
   def viewDidLoad
     super
 
-    @bookmark_requested = {}
+    @bookmark_requested = {
+      @bookmark.link => {
+        :http_requested => false,
+        :bookmark       => @bookmark
+      }
+    }
+
     @link_clicked = nil
 
     @document_title = nil
@@ -129,7 +136,7 @@ class WebViewController < UIViewController
         if @bookmark.count.nil? or @link_clicked
           autorelease_pool {
             data = BW::JSON.parse(response.body.to_str) || {}
-            @bookmark_requested[url][:bookmark] = @bookmark = Bookmark.new(
+            @bookmark_requested[url][:bookmark] = bookmark = Bookmark.new(
               {
                 :eid   => data['eid'] || nil,
                 :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
@@ -137,7 +144,7 @@ class WebViewController < UIViewController
                 :count => data['count'] || 0,
               }
             )
-            update_bookmark_info(@bookmark)
+            update_bookmark_info(bookmark)
           }
         end
       else
@@ -150,6 +157,7 @@ class WebViewController < UIViewController
 
   def update_bookmark_info(bookmark)
     if bookmark.present?
+      @bookmark = bookmark
       self.navigationItem.titleView.text = bookmark.title if self.navigationItem.present?
       update_bookmark_count(bookmark)
     end
