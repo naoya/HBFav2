@@ -34,7 +34,7 @@ module HBFav2
             duration:3.0,
             andTouchBlock:lambda { |notificationView| self.handleNotificationPayload(userInfo) }
           )
-          banner.detailTextLabel.font = UIFont.systemFontOfSize(12)
+          banner.detailTextLabel.font = UIFont.systemFontOfSize(13)
           banner.detailTextLabel.textColor = "#333333".uicolor
         end
       when UIApplicationStateInactive then
