@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class BookmarkViewController < UIViewController
-  attr_accessor :bookmark, :url, :user_name, :on_modal
+  attr_accessor :bookmark, :url, :short_url, :user_name, :on_modal
 
   def viewDidLoad
     super
@@ -85,14 +85,20 @@ class BookmarkViewController < UIViewController
 
     if self.bookmark.present?
       @bookmarkView.bookmark = self.bookmark
-    elsif self.url and self.user_name
+    elsif self.short_url and self.user_name
       @indicator.center = self.view.center
       @indicator.startAnimating
-      BookmarkManager.sharedManager.get_bookmark(self.url, self.user_name) do |response, bm|
-        @indicator.stopAnimating
-        if bm
-          self.bookmark = bm
-          @bookmarkView.bookmark = bm
+
+      ## FIXME: error handling
+      GoogleAPI.sharedAPI.expand_url(self.short_url) do |response, long_url|
+        if response.ok? and long_url
+          BookmarkManager.sharedManager.get_bookmark(long_url, self.user_name) do |res, bm|
+            @indicator.stopAnimating
+            if bm
+              self.bookmark = bm
+              @bookmarkView.bookmark = bm
+            end
+          end
         end
       end
     end

@@ -34,6 +34,8 @@ class AppDelegate
       consumerSecret:app_config.vars[:hatena][:consumer_secret]
     )
 
+    GoogleAPI.sharedAPI.api_key = app_config.vars[:google][:api_key]
+
     self.configure_parse_service(launchOptions)
     self.initialize_audio_session
     self.configure_navigation_bar

@@ -71,24 +71,14 @@ module HBFav2
     end
 
     def presentBookmarkViewControllerWithURL(url, user:user)
-      app_config = ApplicationConfig.sharedConfig
-
-      google = GoogleAPI.sharedAPI
-      google.api_key = app_config.vars[:google][:api_key]
-
-      ## FIXME: ここでメインスレッドブロックしてるのいまいち ⇒ BookmarkViewController 開いてから
-      google.expand_url(url) do |response, long_url|
-        if response.ok? and long_url
-          controller = HBFav2NavigationController.alloc.initWithRootViewController(
-            BookmarkViewController.new.tap do |c|
-              c.url = long_url
-              c.user_name = user
-              c.on_modal = true
-            end
-          )
-          @viewController.presentViewController(controller)
+      controller = HBFav2NavigationController.alloc.initWithRootViewController(
+        BookmarkViewController.new.tap do |c|
+          c.short_url = url
+          c.user_name = user
+          c.on_modal = true
         end
-      end
+      )
+      @viewController.presentViewController(controller)
     end
 
     def presentWebViewControllerWithURL(url)
