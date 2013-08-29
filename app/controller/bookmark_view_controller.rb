@@ -145,8 +145,13 @@ class BookmarkViewController < UIViewController
   def attributedLabel(label, didSelectLinkWithURL:url)
     if url.scheme == 'bookmark'
       name = url.host
-      controller = ProfileViewController.new
-      controller.user = User.new({ :name => name })
+
+      controller = TimelineViewController.new.tap do |c|
+        user = User.new({ :name => name })
+        c.user  = user
+        c.content_type = :bookmark
+        c.title = user.name
+      end
       return self.navigationController.pushViewController(controller, animated:true)
     end
 
