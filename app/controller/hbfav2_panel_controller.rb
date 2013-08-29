@@ -5,7 +5,6 @@ class HBFav2PanelController < JASidePanelController
     @instance
   end
 
-  ## 上角だけ丸める : 有効にすると画面全体が Offscreen Rendered になって重い･･･
   def stylePanel(panel)
   end
 
