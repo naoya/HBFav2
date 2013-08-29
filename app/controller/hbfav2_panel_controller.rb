@@ -22,7 +22,7 @@ class HBFav2PanelController < JASidePanelController
 
   def presentViewController(controller)
     if self.centerPanel.presentedViewController.nil?
-      self.centerPanel.presentViewController(controller, animated:false, completion:nil)
+      self.centerPanel.presentViewController(controller, animated:true, completion:nil)
     else
       self.centerPanel.dismissViewControllerAnimated(true, completion:
         lambda { self.centerPanel.presentViewController(controller, animated:true, completion:nil) }
