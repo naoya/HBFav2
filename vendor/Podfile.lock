@@ -3,7 +3,7 @@ PODS:
   - ARChromeActivity (1.0.1)
   - BugSense (3.4)
   - Facebook-iOS-SDK (3.7.0)
-  - HatenaBookmarkSDK (0.3):
+  - HatenaBookmarkSDK (1.0):
     - AFNetworking (~> 1.0)
     - SFHFKeychainUtils
   - ISBackGesture (0.0.4)
@@ -24,7 +24,7 @@ DEPENDENCIES:
   - ARChromeActivity
   - BugSense
   - Facebook-iOS-SDK
-  - HatenaBookmarkSDK (from `https://github.com/hatena/Hatena-Bookmark-iOS-SDK.git`)
+  - HatenaBookmarkSDK
   - ISBackGesture (from `https://github.com/ishkawa/ISBackGesture.git`)
   - iVersion (from `git@github.com:naoya/iVersion.git`, branch `fix/japanese`)
   - JASidePanels
@@ -37,8 +37,6 @@ DEPENDENCIES:
   - TUSafariActivity
 
 EXTERNAL SOURCES:
-  HatenaBookmarkSDK:
-    :git: https://github.com/hatena/Hatena-Bookmark-iOS-SDK.git
   ISBackGesture:
     :git: https://github.com/ishkawa/ISBackGesture.git
   iVersion:
@@ -53,7 +51,7 @@ SPEC CHECKSUMS:
   ARChromeActivity: eb9770a933cfe2b914b8e4e22b684eb7f43f24df
   BugSense: 0b0f27d15f29e7b7ff0b56b4f7511ad6999b3cea
   Facebook-iOS-SDK: 39b55f6c2a8901df8ebcfa23b90c66da1c475f82
-  HatenaBookmarkSDK: cc59808ec15ef36e22b80fb92592614bd4d05e26
+  HatenaBookmarkSDK: 9f74037d1a227e9ca1f3bddaf7de031367ae015b
   ISBackGesture: 94b94031bc5175ce428e0e9ee169744d37dcda4b
   iVersion: 260d17038c6e2c256b17d77c4ca2f74cddd5128a
   JASidePanels: c0e642a7311ec9cc9adfa616fa4a795e4e169f20
