@@ -41,7 +41,6 @@ class BookmarkViewController < UIViewController
   end
 
   def open_profile
-    # controller = ProfileViewController.new.tap { |c| c.user = bookmark.user }
     controller = TimelineViewController.new.tap do |c|
       c.user  = bookmark.user
       c.content_type = :bookmark
@@ -70,7 +69,6 @@ class BookmarkViewController < UIViewController
   end
 
   def open_bookmarks
-    # self.presentingViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
     controller = BookmarksViewController.new.tap { |c| c.entry = @bookmark }
     self.presentViewController(HBFav2NavigationController.alloc.initWithRootViewController(controller), animated:true, completion:nil)
   end
