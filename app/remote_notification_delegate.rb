@@ -19,7 +19,7 @@ module HBFav2
       when UIApplicationStateActive then
         @logo ||= UIImage.imageNamed("default_app_logo.png")
         if userInfo.present? and userInfo['aps']
-          ## Notification Center に転送
+          ## LocalNotification で Notification Center に転送
           notification = UILocalNotification.new
           if not notification.nil?
             notification.alertBody = userInfo['aps']['alert']
@@ -27,23 +27,16 @@ module HBFav2
             application.presentLocalNotificationNow(notification)
           end
 
-          ## バナー
-          MPNotificationView.notifyWithText(
+          banner = MPNotificationView.notifyWithText(
             "HBFav",
             detail:userInfo['aps']['alert'],
             image:@logo,
             duration:3.0,
             andTouchBlock:lambda { |notificationView| self.handleNotificationPayload(userInfo) }
           )
+          banner.detailTextLabel.font = UIFont.systemFontOfSize(12)
+          banner.detailTextLabel.textColor = "#333333".uicolor
         end
-
-        # ## これで Notification に転送できるけどバナーはでない
-        # notification = UILocalNotification.new
-        # if not notification.nil? and userInfo.present? and userInfo['aps']
-        #   notification.alertBody = userInfo['aps']['alert']
-        #   notification.userInfo = { 'u' => userInfo['u'] }
-        #   application.presentLocalNotificationNow(notification)
-        # end
       when UIApplicationStateInactive then
         PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         self.handleNotificationPayload(userInfo)
