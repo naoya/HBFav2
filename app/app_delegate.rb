@@ -56,7 +56,12 @@ class AppDelegate
 
     ## Notification Center のプッシュ通知履歴から開いたとき
     if launchOptions.present?
-      payload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]
+      notification = launchOptions[UIApplicationLaunchOptionsLocalNotificationKey]
+      if notification
+        payload = notification.userInfo
+      else
+        payload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]
+      end
       self.handleNotificationPayload(payload) if payload.present?
     end
     true

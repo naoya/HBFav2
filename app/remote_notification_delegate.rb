@@ -8,10 +8,34 @@ module HBFav2
       end
     end
 
+    def application(application, didReceiveLocalNotification:notification)
+      if application.applicationState == UIApplicationStateInactive
+        self.handleNotificationPayload(notification.userInfo)
+      end
+    end
+
     def application(application, didReceiveRemoteNotification:userInfo)
       case application.applicationState
       when UIApplicationStateActive then
-        # PFPush.handlePush(userInfo)
+        @logo ||= UIImage.imageNamed("default_app_logo.png")
+        if userInfo.present? and userInfo['aps']
+          ## Notification Center に転送
+          notification = UILocalNotification.new
+          if not notification.nil?
+            notification.alertBody = userInfo['aps']['alert']
+            notification.userInfo = userInfo
+            application.presentLocalNotificationNow(notification)
+          end
+
+          ## バナー
+          MPNotificationView.notifyWithText(
+            "HBFav",
+            detail:userInfo['aps']['alert'],
+            image:@logo,
+            duration:3.0,
+            andTouchBlock:lambda { |notificationView| self.handleNotificationPayload(userInfo) }
+          )
+        end
 
         # ## これで Notification に転送できるけどバナーはでない
         # notification = UILocalNotification.new
@@ -51,6 +75,8 @@ module HBFav2
 
       google = GoogleAPI.sharedAPI
       google.api_key = app_config.vars[:google][:api_key]
+
+      ## FIXME: ここでメインスレッドブロックしてるのいまいち ⇒ BookmarkViewController 開いてから
       google.expand_url(url) do |response, long_url|
         if response.ok? and long_url
           controller = HBFav2NavigationController.alloc.initWithRootViewController(

@@ -64,6 +64,7 @@ Motion::Project::App.setup do |app|
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'https://github.com/hatena/Hatena-Bookmark-iOS-SDK.git'
     pod 'iVersion', :git => 'git@github.com:naoya/iVersion.git', :branch => 'fix/japanese'
+    pod 'MPNotificationView'
 
     ## Parse.com SDK が依存してるけど本来必要ない。現状、解決されてない様子
     pod 'Facebook-iOS-SDK'

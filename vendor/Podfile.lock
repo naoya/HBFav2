@@ -9,6 +9,7 @@ PODS:
   - ISBackGesture (0.0.4)
   - iVersion (1.10.6)
   - JASidePanels (1.3.2)
+  - MPNotificationView (1.1.0)
   - NJKWebViewProgress (0.1.6)
   - NSDate+TimeAgo (1.0.2)
   - PocketAPI (1.0.2):
@@ -27,6 +28,7 @@ DEPENDENCIES:
   - ISBackGesture (from `https://github.com/ishkawa/ISBackGesture.git`)
   - iVersion (from `git@github.com:naoya/iVersion.git`, branch `fix/japanese`)
   - JASidePanels
+  - MPNotificationView
   - NJKWebViewProgress
   - NSDate+TimeAgo
   - PocketAPI (from `git@github.com:naoya/Pocket-ObjC-SDK.git`, branch `cocoapods-dependency`)
@@ -55,6 +57,7 @@ SPEC CHECKSUMS:
   ISBackGesture: 94b94031bc5175ce428e0e9ee169744d37dcda4b
   iVersion: 260d17038c6e2c256b17d77c4ca2f74cddd5128a
   JASidePanels: c0e642a7311ec9cc9adfa616fa4a795e4e169f20
+  MPNotificationView: 5c71d3776ac594fba2828505c37cb797fcc76866
   NJKWebViewProgress: 5181e8af629e60e8dd48c8b738b39e89eeecb351
   NSDate+TimeAgo: fe93d3042e83093ae3630bc47ae7d57f782733f6
   PocketAPI: d4b8f31c5a29e20da84b6a19055344bb1ad06099
