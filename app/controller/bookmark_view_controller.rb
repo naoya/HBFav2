@@ -22,6 +22,8 @@ class BookmarkViewController < UIViewController
       v.delegate = self
     end
 
+    self.view << @indicator = UIActivityIndicatorView.gray
+
     ## clickable URL に悪影響を与えるので中止
     # self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_toolbar'))
 
@@ -86,7 +88,10 @@ class BookmarkViewController < UIViewController
     if self.bookmark.present?
       @bookmarkView.bookmark = self.bookmark
     elsif self.url and self.user_name
+      @indicator.center = self.view.center
+      @indicator.startAnimating
       BookmarkManager.sharedManager.get_bookmark(self.url, self.user_name) do |response, bm|
+        @indicator.stopAnimating
         if bm
           self.bookmark = bm
           @bookmarkView.bookmark = bm

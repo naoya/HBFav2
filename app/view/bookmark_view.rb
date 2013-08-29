@@ -109,7 +109,8 @@ module HBFav2
     end
 
     def bookmark=(bookmark)
-      @nameLabel.text    = bookmark.user.name
+      @bookmark = bookmark
+      @nameLabel.text = bookmark.user.name
 
 
       if bookmark.comment.present?
@@ -151,8 +152,15 @@ module HBFav2
     ## FIXME: hard to read
     def layoutSubviews
       super
-      @bodyView.frame = self.bounds
+      if @bookmark.nil?
+        @bodyView.frame = CGRectZero
+      else
+        @bodyView.frame = self.bounds
+        layoutBodyView
+      end
+    end
 
+    def layoutBodyView
       ## header
       @headerView.frame = [self.bounds.origin, [self.bounds.size.width, 68]]
       @profileImageView.frame = [[10, 10], [48, 48]]
