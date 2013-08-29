@@ -28,13 +28,14 @@ class AccountViewController < UIViewController
             :action => 'open_hatena_config'
           },
           {
+            :label  => 'プッシュ通知',
+            :detail => ApplicationUser.sharedUser.wants_remote_notification? ? "設定済み" : "未設定",
+            :action => 'open_notification_config'
+          },
+          {
             :label  => 'クラッシュレポート',
             :detail => ApplicationUser.sharedUser.send_bugreport? ? "オン" : "オフ",
             :action => 'open_bugreport_config',
-          },
-          {
-            :label  => '通知 (ベータ版)',
-            :action => 'open_notification_config'
           },
         ],
       },
