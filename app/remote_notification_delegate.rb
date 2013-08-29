@@ -27,18 +27,15 @@ module HBFav2
             application.presentLocalNotificationNow(notification)
           end
 
-          ## GCD で UI いじって上手くいってるけどアリなんだろうか?
-          Dispatch::Queue.concurrent.async do
-            banner = MPNotificationView.notifyWithText(
-              "HBFav",
-              detail:userInfo['aps']['alert'],
-              image:@logo,
-              duration:3.0,
-              andTouchBlock:lambda { |notificationView| self.handleNotificationPayload(userInfo) }
-            )
-            banner.detailTextLabel.font = UIFont.systemFontOfSize(13)
-            banner.detailTextLabel.textColor = "#333333".uicolor
-          end
+          banner = MPNotificationView.notifyWithText(
+            "HBFav",
+            detail:userInfo['aps']['alert'],
+            image:@logo,
+            duration:3.0,
+            andTouchBlock:lambda { |notificationView| self.handleNotificationPayload(userInfo) }
+          )
+          banner.detailTextLabel.font = UIFont.systemFontOfSize(13)
+          banner.detailTextLabel.textColor = "#333333".uicolor
         end
       when UIApplicationStateInactive then
         PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
