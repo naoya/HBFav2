@@ -5,7 +5,12 @@ class BookmarkManager
   end
 
   def get_bookmark(url, user_name, &block)
-    BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
+    BW::HTTP.get(
+      "http://b.hatena.ne.jp/entry/jsonlite/", {
+        :payload => {url: url},
+        :headers => {"Cache-Control" => "no-cache"},
+      }
+    ) do |response|
       if response.ok?
         autorelease_pool {
           entry = BW::JSON.parse(response.body.to_str)

@@ -27,7 +27,12 @@ class BookmarksViewController < UITableViewController
   end
 
   def loadBookmarks
-    query = BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: entry.link}}) do |response|
+    query = BW::HTTP.get(
+      "http://b.hatena.ne.jp/entry/jsonlite/", {
+        :payload => {url: entry.link},
+        :headers => {"Cache-Control" => "no-cache"},
+      }
+    ) do |response|
       @connection = nil
 
       if response.ok?
