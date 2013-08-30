@@ -77,9 +77,9 @@ class BookmarkViewController < UIViewController
     super
 
     ## 応急処置
-    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
-    UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
-    self.wantsFullScreenLayout = false
+    # UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
+    # UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
+    # self.wantsFullScreenLayout = false
 
     self.navigationController.setToolbarHidden(false, animated:self.on_modal ? false : true)
 

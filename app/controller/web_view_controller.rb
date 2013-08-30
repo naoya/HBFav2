@@ -64,9 +64,9 @@ class WebViewController < UIViewController
     super
 
     ## 応急処置
-    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
-    UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
-    self.wantsFullScreenLayout = false
+    # UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
+    # UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
+    # self.wantsFullScreenLayout = false
 
     self.navigationController.toolbar.translucent = false
     self.navigationController.setToolbarHidden(false, animated:animated)

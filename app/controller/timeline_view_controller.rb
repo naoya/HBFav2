@@ -177,9 +177,9 @@ class TimelineViewController < UITableViewController
     self.update_title
 
     ## 応急処置
-    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
-    UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
-    self.wantsFullScreenLayout = false
+    # UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
+    # UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
+    # self.wantsFullScreenLayout = false
 
     self.navigationController.setToolbarHidden(true, animated:true)
 
