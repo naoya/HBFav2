@@ -97,6 +97,8 @@ class BookmarkViewController < UIViewController
             if bm
               self.bookmark = bm
               @bookmarkView.bookmark = bm
+            else
+              App.alert("ブックマークが見つかりません。時間をおいて再度試行してください")
             end
           end
         end
