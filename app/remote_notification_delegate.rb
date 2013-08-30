@@ -27,15 +27,10 @@ module HBFav2
             application.presentLocalNotificationNow(notification)
           end
 
-          banner = MPNotificationView.notifyWithText(
-            "HBFav",
-            detail:userInfo['aps']['alert'],
-            image:@logo,
-            duration:3.0,
-            andTouchBlock:lambda { |notificationView| self.handleNotificationPayload(userInfo) }
-          )
-          banner.detailTextLabel.font = UIFont.systemFontOfSize(13)
-          banner.detailTextLabel.textColor = "#333333".uicolor
+          banner = StatusBarNotifierView.alloc.initWithMessage(userInfo['aps']['alert'], delegate:self)
+          banner.timeOnScreen = 4.0
+          banner.userInfo = userInfo
+          banner.showInWindow(@window)
         end
       when UIApplicationStateInactive then
         PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
@@ -82,6 +77,11 @@ module HBFav2
         end
       )
       @viewController.presentViewController(controller)
+    end
+
+    def notifierViewTapped(notifierView)
+      UIApplication.sharedApplication.setStatusBarHidden(false, withAnimation:UIStatusBarAnimationSlide)
+      self.handleNotificationPayload(notifierView.userInfo)
     end
   end
 end
