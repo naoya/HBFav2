@@ -19,22 +19,22 @@ class AppDelegate
     ## initialize BugSense
     if app_user.send_bugreport?
       BugSenseController.sharedControllerWithBugSenseAPIKey(
-        app_config.vars[:bugsense][:api_key]
+        app_config.vars['bugsense']['api_key']
       )
     end
 
     ## initialize PocketAPI
     PocketAPI.sharedAPI.setConsumerKey(
-      app_config.vars[:pocket][:consumer_key]
+      app_config.vars["pocket"]["consumer_key"]
     )
 
     ## initialize Hatena-Bookmark SDK
     HTBHatenaBookmarkManager.sharedManager.setConsumerKey(
-      app_config.vars[:hatena][:consumer_key],
-      consumerSecret:app_config.vars[:hatena][:consumer_secret]
+      app_config.vars['hatena']['consumer_key'],
+      consumerSecret:app_config.vars['hatena']['consumer_secret']
     )
 
-    GoogleAPI.sharedAPI.api_key = app_config.vars[:google][:api_key]
+    GoogleAPI.sharedAPI.api_key = app_config.vars['google']['api_key']
 
     self.configure_parse_service(launchOptions)
     self.initialize_audio_session
@@ -83,13 +83,13 @@ class AppDelegate
     ## initialize Parse.com
     if development?
       Parse.setApplicationId(
-        app_config.vars[:parse][:development][:application_id],
-        clientKey:app_config.vars[:parse][:development][:client_key],
+        app_config.vars['parse']['development']['application_id'],
+        clientKey:app_config.vars['parse']['development']['client_key'],
       )
     else
       Parse.setApplicationId(
-        app_config.vars[:parse][:production][:application_id],
-        clientKey:app_config.vars[:parse][:production][:client_key],
+        app_config.vars['parse']['production']['application_id'],
+        clientKey:app_config.vars['parse']['production']['client_key'],
       )
     end
     PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)

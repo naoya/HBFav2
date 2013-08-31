@@ -1,0 +1,24 @@
+--- 
+pocket:
+  consumer_key: 
+
+bugsense:
+  api_key:
+
+hatena:
+  consumer_key:
+  consumer_secret:
+
+parse:
+  development:
+    application_id:
+    client_key:
+  production:
+    application_id:
+    client_key:
+
+readability:
+  api_token:
+
+google:
+  api_key:

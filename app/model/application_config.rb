@@ -7,8 +7,6 @@ class ApplicationConfig
   end
 
   def initialize
-    if path = NSBundle.mainBundle.pathForResource("config", ofType:"yml")
-      @vars = YAML.load File.read path
-    end
+    @vars = MY_ENV
   end
 end

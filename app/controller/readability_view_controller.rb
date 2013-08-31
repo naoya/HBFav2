@@ -43,7 +43,7 @@ class ReadabilityViewController < UIViewController
 
     app_config = ApplicationConfig.sharedConfig
     rd = Readability::Parser.new
-    rd.api_token = app_config.vars[:readability][:api_token]
+    rd.api_token = app_config.vars['readability']['api_token']
     query = rd.parse_url(entry[:url]) do |response, html|
       @connection = nil
 

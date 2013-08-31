@@ -6,6 +6,7 @@ resources/*.momd
 resources/*.storyboardc
 vendor/Pods/
 vendor/bundle/
+config/environment.yaml
 
 vendor/ChromeProgressBar/build-*
 vendor/ChromeProgressBar/*.bridgesupport

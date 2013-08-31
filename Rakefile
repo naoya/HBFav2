@@ -17,6 +17,8 @@ Motion::Project::App.setup do |app|
   app.identifier = "HBFav"
   app.prerendered_icon = true
 
+  app.my_env.file = './config/environment.yaml'
+
   ## TestFlight
   # % bundle exec rake testflight notes="..."
   app.testflight.sdk = 'vendor/TestFlightSDK2.0.0'
