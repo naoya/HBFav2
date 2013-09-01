@@ -256,7 +256,7 @@ module HBFav2
               self.frame.size.width - 19 - 20 - @thumbnailImageView.size.width - 5
             end
 
-        constrain = CGSize.new(w, 80) ## 末尾... にしたいな
+        constrain = CGSize.new(w, 80)
         size = @descriptionLabel.text.sizeWithFont(
           UIFont.systemFontOfSize(13),
           constrainedToSize:constrain,
