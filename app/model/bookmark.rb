@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class Bookmark
-  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime, :thumbnail_url, :category
+  attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime, :thumbnail_url, :category, :description
 
   def self.date_formatter
     @@date_formatter ||= NSDateFormatter.alloc.initWithGregorianCalendar.tap do |f|
@@ -17,6 +17,10 @@ class Bookmark
     @permalink    = dict[:permalink]
     @thumbnail_url = dict[:thumbnail_url]
     @category     = dict[:category]
+    @description  = dict[:description]
+    if @description
+      @description = @description.gsub(/^\s+$/, "")
+    end
 
     unless dict[:count].nil?
       @count = Count.new(dict[:count].to_i)
