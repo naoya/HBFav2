@@ -107,7 +107,7 @@ module HBFav2
           v.frame = CGRectZero
           v.numberOfLines = 0
           v.font = UIFont.systemFontOfSize(13)
-          v.textColor = '#999'.uicolor
+          v.textColor = '#666'.uicolor
           v.lineBreakMode = NSLineBreakByCharWrapping
           v.text = ""
         end
@@ -115,7 +115,7 @@ module HBFav2
         @bodyView << @dateLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.font = UIFont.systemFontOfSize(13)
-          v.textColor = '#999'.uicolor
+          v.textColor = '#666'.uicolor
         end
 
         @bodyView << @starView = HBFav2::HatenaStarView.new
