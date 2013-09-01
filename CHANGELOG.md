@@ -1,4 +1,6 @@
-# 2.2 / _In progress_
+# 2.3 / _In progress_
+
+# 2.2 / _In review_
 
 * プッシュ通知
 * ブックマーク追加をSDKのUIに変更
