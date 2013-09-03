@@ -9,19 +9,27 @@ class NotificationConfigViewController < Formotion::FormController
             {
               title: "プッシュ通知",
               rows: [
-                title: "Webhookキー",
-                key: "webhook_key",
-                type: :ascii,
-                placeholder: '必須',
-                auto_correction: :no,
-                auto_capitalization: :none,
-                value: user.webhook_key
+                {
+                  title: "Webhookキー",
+                  key: "webhook_key",
+                  type: :ascii,
+                  placeholder: '必須',
+                  auto_correction: :no,
+                  auto_capitalization: :none,
+                  value: user.webhook_key
+                },
+                {
+                  title: "アプリ利用中も通知",
+                  key: 'notify_when_state_active',
+                  type: 'switch',
+                  value: user.wants_notification_when_state_active?
+                }
               ],
               footer:
-              "1. 任意の文字列を指定してください\n" +
+              "1. Webhookキーに任意の文字列を指定してください\n" +
               "(平文でやり取りされるのでパスワード文字列は利用しないでください)\n\n" +
-              "2. はてなブックマーク本体の Webhook 設定の「イベント通知URL」に http://push.hbfav.com/#{user.hatena_id} を、「キー」にここで入力したのと同じ文字列をそれぞれ設定してください\n\n" +
-              "3. 通知して欲しいイベント種類の設定などは、はてなブックマーク本体で行ってください"
+              "2. はてなブックマーク本体の Webhook 設定で「イベント通知URL」に http://push.hbfav.com/#{user.hatena_id} を、「キー」にここで入力したのと同じ文字列をそれぞれ設定してください\n\n" +
+              "3. 受け取る通知種類の設定は、はてなブックマーク本体で行ってください"
             }
           ]
         }
@@ -33,7 +41,6 @@ class NotificationConfigViewController < Formotion::FormController
   def viewDidLoad
     super
     self.navigationItem.title = "設定"
-    # self.view.backgroundColor = UIColor.groupTableViewBackgroundColor
   end
 
   def viewWillAppear(animated)
@@ -63,6 +70,7 @@ class NotificationConfigViewController < Formotion::FormController
     else
       user = ApplicationUser.sharedUser
       user.webhook_key = data["webhook_key"]
+      user.disable_notification_when_state_active = !data['notify_when_state_active']
       user.save
 
       UIApplication.sharedApplication.registerForRemoteNotificationTypes(
