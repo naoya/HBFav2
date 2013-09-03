@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class ApplicationUser
-  attr_accessor :hatena_id, :use_timeline, :send_bugreport, :webhook_key
+  attr_accessor :hatena_id, :use_timeline, :send_bugreport, :webhook_key, :disable_notification_when_state_active
 
   def self.sharedUser
     Dispatch.once { @instance ||= new }
@@ -12,6 +12,7 @@ class ApplicationUser
     App::Persistence['use_timeline'] = @use_timeline
     App::Persistence['send_bugreport'] = @send_bugreport
     App::Persistence['webhook_key'] = @webhook_key
+    App::Persistence['disable_notification_when_state_active'] = @disable_notification_when_state_active
     self
   end
 
@@ -20,6 +21,7 @@ class ApplicationUser
     self.use_timeline = App::Persistence['use_timeline']
     self.send_bugreport = App::Persistence['send_bugreport']
     self.webhook_key = App::Persistence['webhook_key']
+    self.disable_notification_when_state_active = App::Persistence['disable_notification_when_state_active']
     self
   end
 
@@ -41,6 +43,10 @@ class ApplicationUser
 
   def wants_remote_notification?
     self.webhook_key ? true : false
+  end
+
+  def wants_notification_when_state_active?
+    self.disable_notification_when_state_active ? false : true
   end
 
   def enable_remote_notification!(token)
