@@ -2,6 +2,25 @@
 class Bookmark
   attr_reader :title, :profile_image_url, :link, :user_name, :created_at, :comment, :user, :count, :datetime, :thumbnail_url, :category, :description
 
+  def self.new_from_data(entry, bookmark)
+    Bookmark.new(
+      {
+        :eid   => entry['eid'],
+        :title => entry['title'] || '',
+        :link  => entry['url'],
+        :count => entry['count'],
+        :eid   => entry['eid'],
+        :user => {
+          :name => bookmark['user']
+        },
+        :comment    => bookmark['comment'] || '',
+        :created_at => bookmark['timestamp'],
+        # 2005/02/10 20:55:55 => 2005-02-10T20:55:55+09:00
+        :datetime   =>  bookmark['timestamp'].gsub(/\//, '-').gsub(/ /, 'T') + '+09:00'
+      }
+    )
+  end
+
   def self.date_formatter
     @@date_formatter ||= NSDateFormatter.alloc.initWithGregorianCalendar.tap do |f|
       f.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
