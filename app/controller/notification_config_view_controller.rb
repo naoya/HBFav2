@@ -70,7 +70,7 @@ class NotificationConfigViewController < Formotion::FormController
     else
       user = ApplicationUser.sharedUser
       user.webhook_key = data["webhook_key"]
-      user.disable_notification_when_state_active = !data['notify_when_state_active']
+      user.enable_notification_when_state_active = data['notify_when_state_active']
       user.save
 
       UIApplication.sharedApplication.registerForRemoteNotificationTypes(
