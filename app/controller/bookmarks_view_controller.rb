@@ -6,11 +6,7 @@ class BookmarksViewController < UITableViewController
   def viewDidLoad
     super
 
-    ## TODO: 別のモデルクラスに分離 (コネクションも)
-    @bookmarks = {
-      :popular => [],
-      :all     => [],
-    }
+    @bookmarks = BookmarksManager.new(entry.link)
 
     self.navigationItem.title = entry.count.to_s
     view.backgroundColor = UIColor.whiteColor
@@ -28,60 +24,29 @@ class BookmarksViewController < UITableViewController
     end
     view << @indicator
 
-    load_bookmarks(entry.link, @bookmarks) do
-      view.reloadData
-      @indicator.stopAnimating
-      ## Show "scrolls to bottom" button
-      if (tableView.contentSize.height > tableView.frame.size.height)
-        button = UIBarButtonItem.titled("下へ").tap do |btn|
-          btn.action = "on_navigate"
-          btn.target = self
-        end
-        self.navigationItem.setRightBarButtonItem(button, animated:true)
-      end
-    end
-  end
+    Dispatch::Queue.concurrent.async do
+      response = @bookmarks.sync!
 
-  def load_popluar_bookmarks(url, collection, &block)
-    BW::HTTP.get("http://b.hatena.ne.jp/api/viewer.popular_bookmarks", { :payload => {url:url} }) do |response|
-      if response.ok?
-        autorelease_pool {
-          entry = BW::JSON.parse(response.body.to_str)
-          if entry and entry['bookmarks'].present?
-            entry['bookmarks'].each { |bookmark| collection[:popular].push(Bookmark.new_from_data(entry, bookmark)) }
+      Dispatch::Queue.main.sync do
+        if not response.ok?
+          App.alert(response.message)
+        elsif @bookmarks.all.size == 0
+          App.alert("ブックマークが全てプライベートモード、もしくはコメント非表示設定のエントリーです")
+        end
+
+        view.reloadData
+        @indicator.stopAnimating
+
+        ## Show "scrolls to bottom" button
+        if (tableView.contentSize.height > tableView.frame.size.height)
+          button = UIBarButtonItem.titled("下へ").tap do |btn|
+            btn.action = "on_navigate"
+            btn.target = self
           end
-        }
-      end
-      block.call
-    end
-  end
-
-  ## TODO: GCD group で並行処理して同期待ち合わせ
-  def load_bookmarks (url, collection, &block)
-    popular_query = load_popluar_bookmarks(url, collection) do
-      q = BW::HTTP.get(
-        "http://b.hatena.ne.jp/entry/jsonlite/", {
-          :payload => {url:url},
-          :headers => {"Cache-Control" => "no-cache"},
-        }
-      ) do |response|
-        if response.ok?
-          autorelease_pool {
-            entry = BW::JSON.parse(response.body.to_str)
-            if entry and entry['bookmarks'].present?
-              entry['bookmarks'].each { |bookmark| collection[:all].push(Bookmark.new_from_data(entry, bookmark)) }
-            else
-              App.alert("ブックマークが全てプライベートモード、もしくはコメント非表示設定のエントリーです")
-            end
-          }
-        else
-          App.alert("通信エラー: " + response.status_code.to_s)
+          self.navigationItem.setRightBarButtonItem(button, animated:true)
         end
-        block.call
       end
-      @connection = q.connection
     end
-    @connection_to_popular = popular_query.connection
   end
 
   def viewWillAppear(animated)
@@ -102,22 +67,10 @@ class BookmarksViewController < UITableViewController
   def viewWillDisappear(animated)
     super
     self.unreceive_application_switch_notification
-    if @connection.present?
-      @connection.cancel
-      App.shared.networkActivityIndicatorVisible = false
-    end
-
-    if @connection_to_popular.present?
-      @connection_to_popular.cancel
-    end
-  end
-
-  def has_popular_bookmarks?
-    @bookmarks[:popular].size > 0
   end
 
   def numberOfSectionsInTableView(tableView)
-    if self.has_popular_bookmarks?
+    if @bookmarks.has_popular_bookmarks?
       2
     else
       1
@@ -125,18 +78,18 @@ class BookmarksViewController < UITableViewController
   end
 
   def bookmarks (section)
-    if self.has_popular_bookmarks? and section == 0
-      @bookmarks[:popular]
+    if @bookmarks.has_popular_bookmarks? and section == 0
+      @bookmarks.popular
     else
-      @bookmarks[:all]
+      @bookmarks.all
     end
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    if self.has_popular_bookmarks? and section == 0
-      return @bookmarks[:popular].size
+    if @bookmarks.has_popular_bookmarks? and section == 0
+      return @bookmarks.popular.size
     else
-      return @bookmarks[:all].size
+      return @bookmarks.all.size
     end
   end
 
@@ -149,7 +102,7 @@ class BookmarksViewController < UITableViewController
   end
 
   def tableView(tableView, titleForHeaderInSection:section)
-    if self.has_popular_bookmarks?
+    if @bookmarks.has_popular_bookmarks?
       section == 0 ? "人気" : "すべて"
     else
       nil
