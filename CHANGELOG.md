@@ -1,5 +1,6 @@
 # 2.3 / _In progress_
 
+* 人気コメント
 * コメント画面 (BookmarkView) に description とサムネイルを表示
 * アプリ利用時の通知オン/オフ設定追加
 * プッシュ通知の形式を MPNotificationView に再度変更
