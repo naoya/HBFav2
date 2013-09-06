@@ -33,7 +33,7 @@ class TimelineViewController < UITableViewController
       )
     end
 
-    @bookmarks = self.initialize_bookmark_manager(self.user)
+    @bookmarks = self.initialize_feed_manager(self.user)
 
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
@@ -79,12 +79,12 @@ class TimelineViewController < UITableViewController
     end
   end
 
-  def initialize_bookmark_manager(user)
+  def initialize_feed_manager(user)
     if (content_type == :bookmark)
-      manager = BookmarksManager::Offset.new
+      manager = FeedManager::Offset.new
       manager.url = user.bookmark_feed_url
     else
-      manager = BookmarksManager.factory(user)
+      manager = FeedManager.factory(user)
     end
     manager
   end
@@ -151,7 +151,7 @@ class TimelineViewController < UITableViewController
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
       self.user = ApplicationUser.sharedUser.to_bookmark_user
       @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
-      @bookmarks = self.initialize_bookmark_manager(self.user)
+      @bookmarks = self.initialize_feed_manager(self.user)
       @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
       initialize_bookmarks
     end
