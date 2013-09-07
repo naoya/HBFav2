@@ -22,19 +22,6 @@ class TimelineViewController < HBFav2::UITableViewController
   def viewDidLoad
     super
 
-    ## これ要るの?
-    if HTBHatenaBookmarkManager.sharedManager.authorized
-      HTBHatenaBookmarkManager.sharedManager.getMyEntryWithSuccess(
-        lambda { |entry| },
-        failure: lambda { |error| }
-      )
-
-      HTBHatenaBookmarkManager.sharedManager.getMyTagsWithSuccess(
-        lambda { |tags| },
-        failure: lambda { |error| }
-      )
-    end
-
     @bookmarks = self.initialize_feed_manager(self.user)
 
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
