@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-class AppInfoViewController < UIViewController
+class AppInfoViewController < HBFav2::UIViewController
   include HBFav2::ApplicationSwitchNotification
   include HBFav2::MenuTableDelegate
 
   def viewDidLoad
     super
     self.title = "アプリについて"
+    self.tracked_view_name = "AppInfo"
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
     @dataSource = [

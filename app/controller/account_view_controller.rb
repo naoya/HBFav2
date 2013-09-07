@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class AccountViewController < UIViewController
+class AccountViewController < HBFav2::UIViewController
   include HBFav2::MenuTableDelegate
 
   def viewDidLoad
@@ -9,6 +9,7 @@ class AccountViewController < UIViewController
     @user = ApplicationUser.sharedUser.to_bookmark_user
     self.navigationItem.title = @user.name
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
+    self.tracked_view_name = "Account"
 
     self.initialize_data_source
 

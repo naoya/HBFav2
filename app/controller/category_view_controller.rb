@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-class CategoryViewController < UITableViewController
+class CategoryViewController < HBFav2::UITableViewController
   attr_accessor :current_category, :hotentry_controller
   def viewDidLoad
     super
     self.title = "カテゴリ"
+    self.tracked_view_name = "Category"
     @dataSource = CategoryList.sharedCategories.to_datasource
   end
 

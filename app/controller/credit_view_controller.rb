@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-class CreditViewController < UIViewController
+class CreditViewController < HBFav2::UIViewController
   def viewDidLoad
     super
 
     self.title = "クレジット"
+    self.tracked_view_name = "Credit"
     self.backGestureEnabled = true
 
     view << @webview = HBFav2::WebView.new.tap do |v|
