@@ -81,7 +81,7 @@ class AppDelegate
   def configure_google_analytics(app_config)
     GAI.sharedInstance.trackerWithTrackingId(app_config.vars['google_analytics']['tracking_id'])
     GAI.sharedInstance.logger.setLogLevel(KGAILogLevelVerbose) if development?
-    GAI.sharedInstance.setDispatchInterval(30) if development?
+    GAI.sharedInstance.setDispatchInterval(30)
     GAI.sharedInstance.setDryRun(false)
   end
 
