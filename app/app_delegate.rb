@@ -2,6 +2,7 @@
 class AppDelegate
   attr_accessor :viewController
   include HBFav2::RemoteNotificationDelegate
+  include HBFav2::GoogleAnalytics
 
   def initialize
     IVersion.sharedInstance.appStoreID = 477950722
@@ -36,7 +37,7 @@ class AppDelegate
 
     GoogleAPI.sharedAPI.api_key = app_config.vars['google']['api_key']
 
-    self.configure_google_analytics(app_config)
+    self.configure_google_analytics(app_config.vars['google_analytics']['tracking_id'])
     self.configure_parse_service(app_config, launchOptions)
     self.initialize_audio_session
     self.configure_navigation_bar
@@ -76,13 +77,6 @@ class AppDelegate
 
   def release?
     !development?
-  end
-
-  def configure_google_analytics(app_config)
-    GAI.sharedInstance.trackerWithTrackingId(app_config.vars['google_analytics']['tracking_id'])
-    GAI.sharedInstance.logger.setLogLevel(KGAILogLevelVerbose) if development?
-    GAI.sharedInstance.setDispatchInterval(30)
-    GAI.sharedInstance.setDryRun(false)
   end
 
   def configure_parse_service(app_config, launchOptions)
