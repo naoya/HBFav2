@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class BookmarksViewController < UITableViewController
+class BookmarksViewController < HBFav2::UITableViewController
   attr_accessor :entry
   include HBFav2::ApplicationSwitchNotification
 
@@ -9,6 +9,7 @@ class BookmarksViewController < UITableViewController
     @bookmarks = BookmarksManager.new(entry.link)
 
     self.navigationItem.title = entry.count.to_s
+    self.tracked_view_name = "EntryBookmarks"
     view.backgroundColor = UIColor.whiteColor
 
     ## Set RefreshControl background (work around)

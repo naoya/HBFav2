@@ -36,7 +36,8 @@ class AppDelegate
 
     GoogleAPI.sharedAPI.api_key = app_config.vars['google']['api_key']
 
-    self.configure_parse_service(launchOptions)
+    self.configure_google_analytics(app_config)
+    self.configure_parse_service(app_config, launchOptions)
     self.initialize_audio_session
     self.configure_navigation_bar
     self.configure_bar_button_item
@@ -77,9 +78,14 @@ class AppDelegate
     !development?
   end
 
-  def configure_parse_service(launchOptions)
-    app_config = ApplicationConfig.sharedConfig
+  def configure_google_analytics(app_config)
+    GAI.sharedInstance.trackerWithTrackingId(app_config.vars['google_analytics']['tracking_id'])
+    GAI.sharedInstance.logger.setLogLevel(KGAILogLevelVerbose) if development?
+    GAI.sharedInstance.setDispatchInterval(30) if development?
+    GAI.sharedInstance.setDryRun(false)
+  end
 
+  def configure_parse_service(app_config, launchOptions)
     ## initialize Parse.com
     if development?
       Parse.setApplicationId(

@@ -3,6 +3,7 @@ PODS:
   - ARChromeActivity (1.0.1)
   - BugSense (3.4)
   - Facebook-iOS-SDK (3.7.0)
+  - GoogleAnalytics-iOS-SDK (3.0)
   - HatenaBookmarkSDK (1.0):
     - AFNetworking (~> 1.0)
     - SFHFKeychainUtils
@@ -24,6 +25,7 @@ DEPENDENCIES:
   - ARChromeActivity
   - BugSense
   - Facebook-iOS-SDK
+  - GoogleAnalytics-iOS-SDK
   - HatenaBookmarkSDK
   - ISBackGesture (from `https://github.com/ishkawa/ISBackGesture.git`)
   - iVersion (from `git@github.com:naoya/iVersion.git`, branch `fix/japanese`)
@@ -51,6 +53,7 @@ SPEC CHECKSUMS:
   ARChromeActivity: eb9770a933cfe2b914b8e4e22b684eb7f43f24df
   BugSense: 0b0f27d15f29e7b7ff0b56b4f7511ad6999b3cea
   Facebook-iOS-SDK: 39b55f6c2a8901df8ebcfa23b90c66da1c475f82
+  GoogleAnalytics-iOS-SDK: f8d5faf4862b679667be0c270531a189572275d1
   HatenaBookmarkSDK: 9f74037d1a227e9ca1f3bddaf7de031367ae015b
   ISBackGesture: 8d67984a799b5a70abf569e5c184113129c4270d
   iVersion: 260d17038c6e2c256b17d77c4ca2f74cddd5128a

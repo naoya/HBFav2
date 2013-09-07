@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class HotentryViewController < UITableViewController
+class HotentryViewController < HBFav2::UITableViewController
   attr_accessor :category, :list_type
   include HBFav2::ApplicationSwitchNotification
 
@@ -9,6 +9,7 @@ class HotentryViewController < UITableViewController
 
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
+    self.tracked_view_name = list_type == :hotentry ? "Hotentry" : "Entrylist"
 
     self.navigationItem.titleView = TitleLabel.new.tap do |label|
       label.frame = [[0, 0], [view.frame.size.width, 44]]

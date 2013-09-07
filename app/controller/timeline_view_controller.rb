@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class TimelineViewController < UITableViewController
+class TimelineViewController < HBFav2::UITableViewController
   attr_accessor :user, :as_home, :content_type
   include HBFav2::ApplicationSwitchNotification
 
@@ -21,6 +21,8 @@ class TimelineViewController < UITableViewController
 
   def viewDidLoad
     super
+
+    ## これ要るの?
     if HTBHatenaBookmarkManager.sharedManager.authorized
       HTBHatenaBookmarkManager.sharedManager.getMyEntryWithSuccess(
         lambda { |entry| },
@@ -39,6 +41,7 @@ class TimelineViewController < UITableViewController
     self.view.backgroundColor = UIColor.whiteColor
     self.initialize_footerview
     self.backGestureEnabled = true unless home?
+    self.tracked_view_name = content_type == :bookmark ? "UserBookmarks" : "Timeline"
 
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|

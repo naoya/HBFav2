@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class StarsViewController < UITableViewController
+class StarsViewController < HBFav2::UITableViewController
   attr_accessor :url
 
   def viewDidLoad
@@ -7,6 +7,7 @@ class StarsViewController < UITableViewController
 
     @stars = []
     navigationItem.title = "スター"
+    self.tracked_view_name = "Stars"
     view.backgroundColor = UIColor.whiteColor
 
     BW::HTTP.get('http://s.hatena.com/entry.json', {payload: {uri: url}}) do |response|
