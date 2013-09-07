@@ -10,7 +10,7 @@ class ReadabilityViewControllerDelegated
   end
 end
 
-class ReadabilityViewController < UIViewController
+class ReadabilityViewController < HBFav2::UIViewController
   attr_accessor :entry
 
   def viewDidLoad
@@ -19,6 +19,7 @@ class ReadabilityViewController < UIViewController
     ## 先に viewDidLoad でも設定しておかないと、webview が正しい高さを取れないみたい
     prepare_fullscreen
 
+    self.tracked_view_name  = "Readability"
     self.navigationItem.titleView = TitleLabel.new.tap do |label|
       label.frame = [[0, 0], [view.frame.size.width, 44]]
       if entry[:title].present?
