@@ -21,7 +21,10 @@ class BookmarksManager
     Dispatch::Queue.concurrent.async(group) do
       @all = get_bookmarks(
         "http://b.hatena.ne.jp/entry/jsonlite/?url=#{@url.escape_url}",
-        { "Cache-Control" => "no-cache" }
+        {
+          :headers      => { "Cache-Control" => "no-cache" },
+          :cache_policy => NSURLRequestReloadIgnoringLocalCacheData
+        }
       )
     end
 
@@ -32,10 +35,11 @@ class BookmarksManager
     Response.new(@responses)
   end
 
-  def get_bookmarks(url, headers = {})
+  def get_bookmarks(url, options = {})
     bookmarks = []
     http = HBFav2::HTTPClient.new
-    http.headers = headers
+    http.headers      = options[:headers] if options[:headers]
+    http.cache_policy = options[:cache_policy] if options[:cache_policy]
     http.get(url) do |response|
       if response.ok?
         autorelease_pool {

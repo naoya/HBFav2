@@ -1,13 +1,15 @@
 module HBFav2
   class HTTPClient
-    attr_accessor :headers
+    attr_accessor :headers, :cache_policy, :timeout
 
     def initialize
       @headers = {}
+      @cache_policy = NSURLRequestUseProtocolCachePolicy
+      @timeout = 10.0
     end
 
     def get(url, &block)
-      request = NSURLRequest.alloc.initWithURL(url.nsurl)
+      request = NSURLRequest.alloc.initWithURL(url.nsurl, cachePolicy:@cache_policy, timeoutInterval:@timeout)
 
       if self.headers.size > 0
         mutableRequest = request.mutableCopy
