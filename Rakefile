@@ -64,7 +64,7 @@ Motion::Project::App.setup do |app|
     pod 'NJKWebViewProgress'
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
-    pod 'HatenaBookmarkSDK'
+    pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
     pod 'iVersion', :git => 'git@github.com:naoya/iVersion.git', :branch => 'fix/japanese'
     pod 'MPNotificationView'
     pod 'GoogleAnalytics-iOS-SDK'
