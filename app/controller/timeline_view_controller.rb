@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class TimelineViewController < UITableViewController
+class TimelineViewController < HBFav2::UITableViewController
   attr_accessor :user, :as_home, :content_type
   include HBFav2::ApplicationSwitchNotification
 
@@ -21,24 +21,14 @@ class TimelineViewController < UITableViewController
 
   def viewDidLoad
     super
-    if HTBHatenaBookmarkManager.sharedManager.authorized
-      HTBHatenaBookmarkManager.sharedManager.getMyEntryWithSuccess(
-        lambda { |entry| },
-        failure: lambda { |error| }
-      )
 
-      HTBHatenaBookmarkManager.sharedManager.getMyTagsWithSuccess(
-        lambda { |tags| },
-        failure: lambda { |error| }
-      )
-    end
-
-    @bookmarks = self.initialize_bookmark_manager(self.user)
+    @bookmarks = self.initialize_feed_manager(self.user)
 
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
     self.initialize_footerview
     self.backGestureEnabled = true unless home?
+    self.tracked_view_name = content_type == :bookmark ? "UserBookmarks" : "Timeline"
 
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
@@ -79,12 +69,12 @@ class TimelineViewController < UITableViewController
     end
   end
 
-  def initialize_bookmark_manager(user)
+  def initialize_feed_manager(user)
     if (content_type == :bookmark)
-      manager = BookmarksManager::Offset.new
+      manager = FeedManager::Offset.new
       manager.url = user.bookmark_feed_url
     else
-      manager = BookmarksManager.factory(user)
+      manager = FeedManager.factory(user)
     end
     manager
   end
@@ -151,7 +141,7 @@ class TimelineViewController < UITableViewController
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
       self.user = ApplicationUser.sharedUser.to_bookmark_user
       @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
-      @bookmarks = self.initialize_bookmark_manager(self.user)
+      @bookmarks = self.initialize_feed_manager(self.user)
       @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
       initialize_bookmarks
     end

@@ -6,6 +6,11 @@ module HBFav2
     end
 
     def dealloc
+      if self.loading?
+        self.stopLoading
+      end
+      self.delegate = nil
+
       NSLog("dealloc: " + self.class.name)
       super
     end

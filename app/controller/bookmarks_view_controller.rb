@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-class BookmarksViewController < UITableViewController
+class BookmarksViewController < HBFav2::UITableViewController
   attr_accessor :entry
   include HBFav2::ApplicationSwitchNotification
 
   def viewDidLoad
     super
-    @bookmarks = []
+
+    @bookmarks = BookmarksManager.new(entry.link)
 
     self.navigationItem.title = entry.count.to_s
+    self.tracked_view_name = "EntryBookmarks"
     view.backgroundColor = UIColor.whiteColor
 
     ## Set RefreshControl background (work around)
@@ -23,58 +25,29 @@ class BookmarksViewController < UITableViewController
     end
     view << @indicator
 
-    loadBookmarks
-  end
+    Dispatch::Queue.concurrent.async do
+      response = @bookmarks.sync!
 
-  def loadBookmarks
-    query = BW::HTTP.get(
-      "http://b.hatena.ne.jp/entry/jsonlite/", {
-        :payload => {url: entry.link},
-        :headers => {"Cache-Control" => "no-cache"},
-      }
-    ) do |response|
-      @connection = nil
-
-      if response.ok?
-        autorelease_pool {
-          json = BW::JSON.parse(response.body.to_str)
-          if json and json['bookmarks'].present?
-            @bookmarks = json['bookmarks'].collect do |dict|
-              Bookmark.new(
-                {
-                  :title => entry.title,
-                  :link  => entry.link,
-                  :count => entry.count.to_s,
-                  :eid   => json['eid'],
-                  :user => {
-                    :name => dict[:user]
-                  },
-                  :comment => dict[:comment],
-                  :created_at => dict[:timestamp],
-                  # 2005/02/10 20:55:55 => 2005-02-10T20:55:55+09:00
-                  :datetime =>  dict[:timestamp].gsub(/\//, '-').gsub(/ /, 'T') + '+09:00'
-                }
-              )
-            end
-          else
-            App.alert("ブックマークが全てプライベートモード、もしくはコメント非表示設定のエントリーです")
-          end
-        }
-        view.reloadData
-      else
-        App.alert("通信エラー: " + response.status_code.to_s)
-      end
-      @indicator.stopAnimating
-      ## Show "scrolls to bottom" button
-      if (tableView.contentSize.height > tableView.frame.size.height)
-        button = UIBarButtonItem.titled("下へ").tap do |btn|
-          btn.action = "on_navigate"
-          btn.target = self
+      Dispatch::Queue.main.sync do
+        if not response.ok?
+          App.alert(response.message)
+        elsif @bookmarks.all.size == 0
+          App.alert("ブックマークが全てプライベートモード、もしくはコメント非表示設定のエントリーです")
         end
-        self.navigationItem.setRightBarButtonItem(button, animated:true)
+
+        view.reloadData
+        @indicator.stopAnimating
+
+        ## Show "scrolls to bottom" button
+        if (tableView.contentSize.height > tableView.frame.size.height)
+          button = UIBarButtonItem.titled("下へ").tap do |btn|
+            btn.action = "on_navigate"
+            btn.target = self
+          end
+          self.navigationItem.setRightBarButtonItem(button, animated:true)
+        end
       end
     end
-    @connection = query.connection
   end
 
   def viewWillAppear(animated)
@@ -95,29 +68,55 @@ class BookmarksViewController < UITableViewController
   def viewWillDisappear(animated)
     super
     self.unreceive_application_switch_notification
-    if @connection.present?
-      @connection.cancel
-      App.shared.networkActivityIndicatorVisible = false
+  end
+
+  def numberOfSectionsInTableView(tableView)
+    if @bookmarks.has_popular_bookmarks?
+      2
+    else
+      1
+    end
+  end
+
+  def bookmarks (section)
+    if @bookmarks.has_popular_bookmarks? and section == 0
+      @bookmarks.popular
+    else
+      @bookmarks.all
     end
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    return @bookmarks.size
+    if @bookmarks.has_popular_bookmarks? and section == 0
+      return @bookmarks.popular.size
+    else
+      return @bookmarks.all.size
+    end
   end
 
   def tableView(tableView, heightForRowAtIndexPath:indexPath)
-    ## FIXME: ここの引数最後のわかりづらい
-    BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width, true)
+    BookmarkFastCell.heightForBookmark(bookmarks(indexPath.section)[indexPath.row], tableView.frame.size.width, true)
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    bookmark = @bookmarks[indexPath.row]
-    BookmarkFastCell.cellForBookmarkNoTitle(bookmark, inTableView:tableView)
+    BookmarkFastCell.cellForBookmarkNoTitle(bookmarks(indexPath.section)[indexPath.row], inTableView:tableView)
+  end
+
+  def tableView(tableView, titleForHeaderInSection:section)
+    if @bookmarks.has_popular_bookmarks?
+      section == 0 ? "人気" : "すべて"
+    else
+      nil
+    end
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+    open_bookmark(bookmarks(indexPath.section)[indexPath.row])
+  end
+
+  def open_bookmark (bookmark)
     BookmarkViewController.new.tap do |c|
-      c.bookmark = @bookmarks[indexPath.row]
+      c.bookmark = bookmark
       self.navigationController.pushViewController(c, animated:true)
     end
   end

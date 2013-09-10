@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-class BookmarkViewController < UIViewController
+class BookmarkViewController < HBFav2::UIViewController
   attr_accessor :bookmark, :url, :short_url, :user_name, :on_modal
 
   def viewDidLoad
     super
 
     self.navigationItem.title = "ブックマーク"
+    self.tracked_view_name = "Bookmark"
     self.view.backgroundColor = UIColor.whiteColor
     self.backGestureEnabled = true
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")

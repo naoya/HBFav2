@@ -17,7 +17,6 @@ module HBFav2
     def application(application, didReceiveRemoteNotification:userInfo)
       case application.applicationState
       when UIApplicationStateActive then
-        @logo ||= UIImage.imageNamed("default_app_logo.png")
         if userInfo.present? and userInfo['aps']
           ## LocalNotification で Notification Center に転送
           notification = UILocalNotification.new
@@ -27,10 +26,18 @@ module HBFav2
             application.presentLocalNotificationNow(notification)
           end
 
-          banner = StatusBarNotifierView.alloc.initWithMessage(userInfo['aps']['alert'], delegate:self)
-          banner.timeOnScreen = 4.0
-          banner.userInfo = userInfo
-          banner.showInWindow(@window)
+          if ApplicationUser.sharedUser.wants_notification_when_state_active?
+            @logo ||= UIImage.imageNamed("default_app_logo.png")
+            banner = MPNotificationView.notifyWithText(
+              "HBFav",
+              detail:userInfo['aps']['alert'],
+              image:@logo,
+              duration:3.0,
+              andTouchBlock:lambda { |notificationView| self.handleNotificationPayload(userInfo) }
+            )
+            banner.detailTextLabel.font = UIFont.systemFontOfSize(13)
+            banner.detailTextLabel.textColor = "#333333".uicolor
+          end
         end
       when UIApplicationStateInactive then
         PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
@@ -77,11 +84,6 @@ module HBFav2
         end
       )
       @viewController.presentViewController(controller)
-    end
-
-    def notifierViewTapped(notifierView)
-      UIApplication.sharedApplication.setStatusBarHidden(false, withAnimation:UIStatusBarAnimationSlide)
-      self.handleNotificationPayload(notifierView.userInfo)
     end
   end
 end

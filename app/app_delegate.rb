@@ -2,6 +2,7 @@
 class AppDelegate
   attr_accessor :viewController
   include HBFav2::RemoteNotificationDelegate
+  include HBFav2::GoogleAnalytics
 
   def initialize
     IVersion.sharedInstance.appStoreID = 477950722
@@ -36,7 +37,8 @@ class AppDelegate
 
     GoogleAPI.sharedAPI.api_key = app_config.vars['google']['api_key']
 
-    self.configure_parse_service(launchOptions)
+    self.configure_google_analytics(app_config.vars['google_analytics']['tracking_id'])
+    self.configure_parse_service(app_config, launchOptions)
     self.initialize_audio_session
     self.configure_navigation_bar
     self.configure_bar_button_item
@@ -77,9 +79,7 @@ class AppDelegate
     !development?
   end
 
-  def configure_parse_service(launchOptions)
-    app_config = ApplicationConfig.sharedConfig
-
+  def configure_parse_service(app_config, launchOptions)
     ## initialize Parse.com
     if development?
       Parse.setApplicationId(

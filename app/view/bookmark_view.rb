@@ -3,6 +3,18 @@ module HBFav2
   class BookmarkView < UIView
     attr_accessor :headerView, :usersButton, :starView, :titleButton
 
+    def self.sizeForThumbnail(image)
+      if image.nil?
+        [0, 0]
+      else
+        if image.landscape?
+          [80, 60]
+        else
+          [60, 80]
+        end
+      end
+    end
+
     def initWithFrame(frame)
       if super
         self << @bodyView = UIScrollView.new.tap {|v| v.frame = CGRectZero }
@@ -79,19 +91,31 @@ module HBFav2
           btn.setTitle("", forState:UIControlStateNormal)
         end
 
+        @bodyView << @thumbnailImageView = UIImageView.new.tap do |v|
+          v.frame = CGRectZero
+        end
+
+        @bodyView << @descriptionLabel = UILabel.new.tap do |v|
+          v.frame = CGRectZero
+          v.numberOfLines = 0
+          v.font = UIFont.systemFontOfSize(13)
+          v.textColor = '#666'.uicolor
+          v.lineBreakMode = NSLineBreakByWordWrapping|NSLineBreakByTruncatingTail
+        end
+
         @bodyView << @urlLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
-          v.font = UIFont.systemFontOfSize(14)
-          v.textColor = '#666'.uicolor
+          v.font = UIFont.systemFontOfSize(13)
+          v.textColor = '#999'.uicolor
           v.lineBreakMode = NSLineBreakByCharWrapping
           v.text = ""
         end
 
         @bodyView << @dateLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
-          v.font = UIFont.systemFontOfSize(14)
-          v.textColor = '#666'.uicolor
+          v.font = UIFont.systemFontOfSize(13)
+          v.textColor = '#999'.uicolor
         end
 
         @bodyView << @starView = HBFav2::HatenaStarView.new
@@ -138,6 +162,21 @@ module HBFav2
       end
 
       @titleButton.setTitle(bookmark.title, forState:UIControlStateNormal)
+
+      if bookmark.thumbnail_url.present?
+        @thumbnailImageView.setImageWithURLRequest(bookmark.thumbnail_url.nsurl.request, placeholderImage:"thumbnail_placeholder".uiimage,
+          success: lambda { |request, response, image |
+            @thumbnailImageView.image = image
+            self.setNeedsLayout
+          },
+          failure: lambda { |request, response, error | },
+        )
+      end
+
+      if bookmark.description.present?
+        @descriptionLabel.text = bookmark.description
+      end
+
       @urlLabel.text     = bookmark.link
       @dateLabel.text    = bookmark.datetime.timeAgo
       @starView.url      = bookmark.permalink
@@ -201,14 +240,41 @@ module HBFav2
       )
       @titleButton.frame = [[@faviconView.right + 3, y + 4], size]
 
+      ## thumbnail
+      if @thumbnailImageView.image
+        size = self.class.sizeForThumbnail(@thumbnailImageView.image)
+        @thumbnailImageView.frame = [[0, 0], size]
+        @thumbnailImageView.right = @bodyView.right - 10
+        @thumbnailImageView.top   = @titleButton.bottom + 4 + 2
+      end
+
+      ## description
+      if @descriptionLabel.text.present?
+        w = if @thumbnailImageView.image.nil?
+              self.frame.size.width - 19 - 20
+            else
+              self.frame.size.width - 19 - 20 - @thumbnailImageView.size.width - 5
+            end
+
+        constrain = CGSize.new(w, 80)
+        size = @descriptionLabel.text.sizeWithFont(
+          UIFont.systemFontOfSize(13),
+          constrainedToSize:constrain,
+          lineBreakMode:NSLineBreakByCharWrapping
+        )
+        @descriptionLabel.frame = [[@titleButton.left, @titleButton.bottom + 4], size]
+      end
+
+      y = @descriptionLabel.text.present? ? @descriptionLabel.bottom + 5 : @titleButton.bottom + 5
+
       # URL
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000)
       size = @urlLabel.text.sizeWithFont(
-        UIFont.systemFontOfSize(14),
+        UIFont.systemFontOfSize(13),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByCharWrapping
       )
-      @urlLabel.frame = [[@titleButton.left, @titleButton.bottom + 4], size]
+      @urlLabel.frame = [[@titleButton.left, y], size]
 
       # date
       @dateLabel.frame = [[@titleButton.left, @urlLabel.bottom + 4], [0, 0]]

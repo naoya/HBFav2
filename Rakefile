@@ -9,8 +9,8 @@ require 'sugarcube-attributedstring'
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'HBFav'
-  app.version = "2.2"
-  app.short_version = "2.2"
+  app.version = "2.3"
+  app.short_version = "2.3"
   app.sdk_version = '6.1'
   app.deployment_target = '6.1'
   app.device_family = [:iphone]
@@ -64,11 +64,10 @@ Motion::Project::App.setup do |app|
     pod 'NJKWebViewProgress'
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
-    # pod 'HatenaBookmarkSDK', :git => 'https://github.com/hatena/Hatena-Bookmark-iOS-SDK.git'
-    pod 'HatenaBookmarkSDK'
+    pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
     pod 'iVersion', :git => 'git@github.com:naoya/iVersion.git', :branch => 'fix/japanese'
-    # pod 'MPNotificationView'
-    pod 'FDStatusBarNotifierView'
+    pod 'MPNotificationView'
+    pod 'GoogleAnalytics-iOS-SDK'
 
     ## Parse.com SDK が依存してるけど本来必要ない。現状、解決されてない様子
     pod 'Facebook-iOS-SDK'
