@@ -1,4 +1,4 @@
-# 2.3 / _In progress_
+# 2.3 / _In review_
 
 * 人気コメント
 * コメント画面 (BookmarkView) に description とサムネイルを表示
