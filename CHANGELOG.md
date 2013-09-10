@@ -1,4 +1,12 @@
-# 2.2 / _In progress_
+# 2.3 / _In review_
+
+* 人気コメント
+* コメント画面 (BookmarkView) に description とサムネイルを表示
+* アプリ利用時の通知オン/オフ設定追加
+* プッシュ通知の形式を MPNotificationView に再度変更
+* Google Analytics 組み込み
+
+# 2.2 / _In review_
 
 * プッシュ通知
 * ブックマーク追加をSDKのUIに変更

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-class HelpViewController < UIViewController
+class HelpViewController < HBFav2::UIViewController
   def viewDidLoad
     super
 
     self.title = "開発者より"
+    self.tracked_view_name = "Help"
     self.backGestureEnabled = true
 
     view << @webview = HBFav2::WebView.new.tap do |v|
