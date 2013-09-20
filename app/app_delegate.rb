@@ -116,9 +116,20 @@ class AppDelegate
   end
 
   def application(application, openURL:url, sourceApplication:sourceApplication, annotation:annotation)
-    if PocketAPI.sharedAPI.handleOpenURL(url)
-      return true
+
+    case sourceApplication
+    when 'com.apple.mobilesafari'
+      target_url = url.absoluteString.match(/^hbfav2\:(.*)/)[1]
+
+      unless target_url.empty?
+        self.presentWebViewControllerWithURL(target_url)
+      end
+    else
+      if PocketAPI.sharedAPI.handleOpenURL(url)
+        return true
+      end
     end
+
     return true
   end
 
