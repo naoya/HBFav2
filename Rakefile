@@ -99,7 +99,7 @@ Motion::Project::App.setup do |app|
 
   ## Parse.com
   app.vendor_project(
-    'vendor/Parse.framework',
+    'vendor/Parse 3.framework',
     :static,
     :products => ['Parse'],
     :headers_dir => 'Headers'
