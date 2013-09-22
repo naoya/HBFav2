@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-class BookmarkFastCellContentView < UIView
-  def drawRect(rect)
-    self.superview.superview.drawRectContent(rect)
-  end
-end
-
 class BookmarkFastCell < UITableViewCell
   @@profile_placeholder_image = UIImage.imageNamed('profile_placeholder')
   @@blank_image = UIImage.imageNamed('blank')
@@ -88,7 +82,7 @@ class BookmarkFastCell < UITableViewCell
 
   def initWithStyle(style, reuseIdentifier:cellid)
     if super
-      @contentView = BookmarkFastCellContentView.alloc.initWithFrame(CGRectZero)
+      @contentView = HBFav2::CustomCellContentView.alloc.initWithFrame(CGRectZero)
       @contentView.backgroundColor = UIColor.whiteColor
       @contentView.opaque = true
       self.contentView << @contentView

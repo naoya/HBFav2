@@ -1,9 +1,3 @@
-class LeftViewCellContentView < UIView
-  def drawRect(rect)
-    self.superview.superview.drawRectContent(rect)
-  end
-end
-
 class LeftViewCell < UITableViewCell
   def self.cellForLeftView(tableView)
     cell_id = 'left-view-cell'
@@ -18,7 +12,7 @@ class LeftViewCell < UITableViewCell
         v.backgroundColor = [41, 47, 59].uicolor
       end
 
-      @contentView = LeftViewCellContentView.alloc.initWithFrame(CGRectZero)
+      @contentView = HBFav2::CustomCellContentView.alloc.initWithFrame(CGRectZero)
       @contentView.backgroundColor = [50, 57, 73].uicolor
       @contentView.opaque = true
       self.contentView << @contentView
