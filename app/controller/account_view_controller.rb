@@ -11,6 +11,10 @@ class AccountViewController < HBFav2::UIViewController
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.tracked_view_name = "Account"
 
+    if UIDevice.currentDevice.ios7?
+      self.edgesForExtendedLayout = UIRectEdgeNone
+    end
+
     self.initialize_data_source
 
     @profile_view = HBFav2::ProfileView.new

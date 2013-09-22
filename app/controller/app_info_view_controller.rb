@@ -9,6 +9,10 @@ class AppInfoViewController < HBFav2::UIViewController
     self.tracked_view_name = "AppInfo"
     self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
+    if UIDevice.currentDevice.ios7?
+      self.edgesForExtendedLayout = UIRectEdgeNone
+    end
+
     @dataSource = [
       {
         :rows => [
