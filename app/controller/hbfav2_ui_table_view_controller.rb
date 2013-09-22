@@ -6,6 +6,10 @@ module HBFav2
     def viewDidLoad
       super
 
+      if UIDevice.currentDevice.ios7?
+        self.tableView.setSeparatorInset(UIEdgeInsetsZero)
+      end
+
       ## Set RefreshControl background (work around)
       unless UIDevice.currentDevice.ios7?
         frame = self.tableView.bounds
