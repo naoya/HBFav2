@@ -7,7 +7,6 @@ class HotentryViewController < HBFav2::UITableViewController
     super
     @bookmarks = []
 
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
     self.tracked_view_name = list_type == :hotentry ? "Hotentry" : "Entrylist"
 

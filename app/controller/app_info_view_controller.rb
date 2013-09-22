@@ -7,7 +7,6 @@ class AppInfoViewController < HBFav2::UIViewController
     super
     self.title = "アプリについて"
     self.tracked_view_name = "AppInfo"
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
     if UIDevice.currentDevice.ios7?
       self.edgesForExtendedLayout = UIRectEdgeNone

@@ -24,7 +24,6 @@ class TimelineViewController < HBFav2::UITableViewController
 
     @bookmarks = self.initialize_feed_manager(self.user)
 
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
     self.initialize_footerview
     self.backGestureEnabled = true unless home?

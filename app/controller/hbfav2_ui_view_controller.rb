@@ -1,3 +1,4 @@
+# -*- coding: undecided -*-
 module HBFav2
   class UIViewController < UIViewController
     attr_accessor :tracked_view_name
@@ -5,6 +6,7 @@ module HBFav2
 
     def viewDidAppear(animated)
       super
+      self.navigationItem.backBarButtonItem = NavigationBackButton.create
       track_pageview(@tracked_view_name)
     end
   end

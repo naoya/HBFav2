@@ -6,6 +6,8 @@ module HBFav2
     def viewDidLoad
       super
 
+      self.navigationItem.backBarButtonItem = NavigationBackButton.create
+
       if UIDevice.currentDevice.ios7?
         self.tableView.setSeparatorInset(UIEdgeInsetsZero)
       end
