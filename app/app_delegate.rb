@@ -105,14 +105,18 @@ class AppDelegate
   end
 
   def configure_navigation_bar
-    background_image = UIImage.imageNamed("UINavigationBarBackGround.png")
-    UINavigationBar.appearance.setBackgroundImage(background_image, forBarMetrics:UIBarMetricsDefault)
+    unless UIDevice.currentDevice.ios7?
+      background_image = UIImage.imageNamed("UINavigationBarBackGround.png")
+      UINavigationBar.appearance.setBackgroundImage(background_image, forBarMetrics:UIBarMetricsDefault)
+    end
   end
 
   def configure_bar_button_item
-    background_image = UIImage.imageNamed("UIBarButtonItemBarBackGround.png")
-    UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
-    UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackButtonBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
+    unless UIDevice.currentDevice.ios7?
+      background_image = UIImage.imageNamed("UIBarButtonItemBarBackGround.png")
+      UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
+      UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackButtonBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
+    end
   end
 
   def application(application, openURL:url, sourceApplication:sourceApplication, annotation:annotation)

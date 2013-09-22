@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 class WebViewController < HBFav2::UIViewController
   attr_accessor :bookmark, :on_modal
 

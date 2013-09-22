@@ -12,13 +12,6 @@ class BookmarksViewController < HBFav2::UITableViewController
     self.tracked_view_name = "EntryBookmarks"
     view.backgroundColor = UIColor.whiteColor
 
-    ## Set RefreshControl background (work around)
-    frame = self.tableView.bounds
-    frame.origin.y = -frame.size.height
-    bgview = UIView.alloc.initWithFrame(frame)
-    bgview.backgroundColor = '#e2e7ed'.uicolor
-    self.tableView.insertSubview(bgview, atIndex: 0)
-
     @indicator = UIActivityIndicatorView.new.tap do |v|
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating

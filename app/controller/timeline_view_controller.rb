@@ -37,13 +37,6 @@ class TimelineViewController < HBFav2::UITableViewController
       refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged)
     end
 
-    ## Set RefreshControl background (work around)
-    frame = self.tableView.bounds
-    frame.origin.y = -frame.size.height
-    bgview = UIView.alloc.initWithFrame(frame)
-    bgview.backgroundColor = '#e2e7ed'.uicolor
-    self.tableView.insertSubview(bgview, atIndex: 0)
-
     if ApplicationUser.sharedUser.configured?
       ## Finally, fetch latest timeline feed
       initialize_bookmarks
@@ -165,12 +158,6 @@ class TimelineViewController < HBFav2::UITableViewController
   def viewWillAppear(animated)
     self.receive_application_switch_notifcation
     self.update_title
-
-    ## 応急処置
-    # UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
-    # UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
-    # self.wantsFullScreenLayout = false
-
     self.navigationController.setToolbarHidden(true, animated:true)
 
     indexPath = tableView.indexPathForSelectedRow
