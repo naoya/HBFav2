@@ -57,8 +57,9 @@ class BookmarkFastCell < UITableViewCell
   def self.sizeForComment(comment, width)
     constrain = CGSize.new(self.bodyWidth(width), 1000)
     if comment.length > 0
-      comment.sizeWithFont(
-        BookmarkLabelAttributes.sharedAttributes.attributes[:comment][:font],
+      HBFav2::TextUtil.text(
+        comment,
+        sizeWithFont:BookmarkLabelAttributes.sharedAttributes.attributes[:comment][:font],
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByWordWrapping
       )
@@ -73,8 +74,8 @@ class BookmarkFastCell < UITableViewCell
 
   def self.sizeForTitle(title, width)
     constrain = CGSize.new(self.bodyWidth(width) - 17, 1000) # 17 ･･･ favicon (14) + margin (3)
-    title.sizeWithFont(
-      BookmarkLabelAttributes.sharedAttributes.attributes[:title][:font],
+    HBFav2::TextUtil.text(title,
+      sizeWithFont:BookmarkLabelAttributes.sharedAttributes.attributes[:title][:font],
       constrainedToSize:constrain,
       lineBreakMode:NSLineBreakByWordWrapping
     )
@@ -111,23 +112,8 @@ class BookmarkFastCell < UITableViewCell
 
     self.imageView.setImageWithURL(bookmark.user.profile_image_url.nsurl, placeholderImage:@@profile_placeholder_image)
 
-    # self.imageView.setImageWithURLRequest(bookmark.user.profile_image_url.nsurl.request, placeholderImage:"profile_placeholder.png".uiimage,
-    #   success: lambda {|request, response, image|
-    #     self.imageView.image = image
-    #     self.setNeedsLayout
-    #   },
-    #   failure: lambda {|request, response, error| NSLog(error.localizedDescription) }
-    # )
-
     unless self.no_title
       @faviconView.setImageWithURL(bookmark.favicon_url.nsurl, placeholderImage:@@blank_image)
-      # @faviconView.setImageWithURLRequest(bookmark.favicon_url.nsurl.request, placeholderImage:@@blank_image,
-      #   success: lambda {|request, response, image|
-      #     @faviconView.image = image
-      #     self.setNeedsDisplay
-      #   },
-      #   failure: lambda {|request, response, error|}
-      # )
     end
 
     @starView.set_url(bookmark.permalink) do |request, reponse, image|
@@ -199,7 +185,14 @@ class BookmarkFastCell < UITableViewCell
     if @labels[:comment]
       size = self.class.sizeForComment(@labels[:comment], self.frame.size.width)
       comment_height = size.height
-      @labels[:comment].drawInRect([[SideWidth, current_y], size], withFont:attributes[:comment][:font], lineBreakMode:NSLineBreakByWordWrapping)
+
+      HBFav2::TextUtil.text(
+        @labels[:comment],
+        drawInRect:[[SideWidth, current_y], size],
+        withFont:attributes[:comment][:font],
+        color:color[:text].uicolor,
+        lineBreakMode:NSLineBreakByWordWrapping
+      )
     end
 
     margin = comment_height > 0 ? 4 : 0
@@ -211,7 +204,14 @@ class BookmarkFastCell < UITableViewCell
       @faviconView.frame = [[SideWidth, current_y + 2], [15, 15]]
       color[:link].uicolor.set
       size = self.class.sizeForTitle(@labels[:title], self.frame.size.width)
-      @labels[:title].drawInRect([[SideWidth + 17, current_y], size], withFont:attributes[:title][:font], lineBreakMode:NSLineBreakByWordWrapping)
+
+      HBFav2::TextUtil.text(
+        @labels[:title],
+        drawInRect:[[SideWidth + 17, current_y], size],
+        withFont:attributes[:title][:font],
+        color:color[:link].uicolor,
+        lineBreakMode:NSLineBreakByWordWrapping
+      )
     end
   end
 
