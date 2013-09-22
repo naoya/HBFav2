@@ -11,7 +11,7 @@ Motion::Project::App.setup do |app|
   app.name = 'HBFav'
   app.version = "2.3"
   app.short_version = "2.3"
-  app.sdk_version = '6.1'
+  app.sdk_version = '7.0'
   app.deployment_target = '6.1'
   app.device_family = [:iphone]
   app.identifier = "HBFav"
