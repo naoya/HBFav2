@@ -87,12 +87,26 @@ class BookmarksViewController < HBFav2::UITableViewController
     end
   end
 
-  def tableView(tableView, heightForRowAtIndexPath:indexPath)
-    BookmarkFastCell.heightForBookmark(bookmarks(indexPath.section)[indexPath.row], tableView.frame.size.width, true)
+  def tableView(tableView, heightForHeaderInSection:section)
+    if UIDevice.currentDevice.ios7?
+      if @bookmarks.has_popular_bookmarks?
+        21
+      else
+        0
+      end
+    else
+      super
+    end
   end
 
-  def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    BookmarkFastCell.cellForBookmarkNoTitle(bookmarks(indexPath.section)[indexPath.row], inTableView:tableView)
+  def tableView(tableView, viewForHeaderInSection:section)
+    if UIDevice.currentDevice.ios7?
+      SectionHeaderView.new.tap do |label|
+        label.text = section == 0 ? "人気" : "すべて"
+      end
+    else
+      super
+    end
   end
 
   def tableView(tableView, titleForHeaderInSection:section)
@@ -101,6 +115,15 @@ class BookmarksViewController < HBFav2::UITableViewController
     else
       nil
     end
+  end
+
+
+  def tableView(tableView, heightForRowAtIndexPath:indexPath)
+    BookmarkFastCell.heightForBookmark(bookmarks(indexPath.section)[indexPath.row], tableView.frame.size.width, true)
+  end
+
+  def tableView(tableView, cellForRowAtIndexPath:indexPath)
+    BookmarkFastCell.cellForBookmarkNoTitle(bookmarks(indexPath.section)[indexPath.row], inTableView:tableView)
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
