@@ -43,7 +43,12 @@ class AppDelegate
     self.configure_navigation_bar
     self.configure_bar_button_item
 
-    UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
+    if UIDevice.currentDevice.ios7?
+      UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleLightContent)
+    else
+      UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
+    end
+
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 
     @viewController = HBFav2PanelController.sharedController
@@ -105,7 +110,11 @@ class AppDelegate
   end
 
   def configure_navigation_bar
-    unless UIDevice.currentDevice.ios7?
+    if UIDevice.currentDevice.ios7?
+      UINavigationBar.appearance.barTintColor = UIColor.colorWithRed(0.000, green:0.450, blue:0.800, alpha:1.000)
+      UINavigationBar.appearance.titleTextAttributes = { NSForegroundColorAttributeName => UIColor.whiteColor }
+      UINavigationBar.appearance.tintColor = UIColor.whiteColor
+    else
       background_image = UIImage.imageNamed("UINavigationBarBackGround.png")
       UINavigationBar.appearance.setBackgroundImage(background_image, forBarMetrics:UIBarMetricsDefault)
     end

@@ -51,6 +51,7 @@ Motion::Project::App.setup do |app|
       'CFBundleURLSchemes' => ['pocketapp16058']
     }
   ]
+  app.info_plist['UIViewControllerBasedStatusBarAppearance'] = false
 
   app.pods do
     pod 'PocketAPI', :git => 'git@github.com:naoya/Pocket-ObjC-SDK.git', :branch => 'cocoapods-dependency'

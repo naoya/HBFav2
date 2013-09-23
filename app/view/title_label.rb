@@ -4,10 +4,10 @@ class TitleLabel < UILabel
       self.font = UIFont.boldSystemFontOfSize(14.0)
       self.backgroundColor = UIColor.clearColor
       self.textAlignment = UITextAlignmentCenter
+      self.textColor = UIColor.whiteColor
 
       unless UIDevice.currentDevice.ios7?
         self.shadowColor = UIColor.colorWithWhite(0.0, alpha: 0.5)
-        self.textColor = UIColor.whiteColor
       end
     end
     self
