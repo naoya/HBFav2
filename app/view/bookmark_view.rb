@@ -124,6 +124,18 @@ module HBFav2
           button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
           button.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
         end
+
+        if UIDevice.currentDevice.ios7?
+          @usersButtonBorderTop = UIView.new.tap do |v|
+            v.backgroundColor = '#ccc'.uicolor
+            @bodyView << v
+          end
+
+          @usersButtonBorderBottom = UIView.new.tap do |v|
+            v.backgroundColor = '#ccc'.uicolor
+            @bodyView << v
+          end
+        end
       end
       self
     end
@@ -294,6 +306,12 @@ module HBFav2
 
       # button
       @usersButton.frame = [[10, @dateLabel.bottom + 10], [self.frame.size.width - 20, 40]]
+
+      if UIDevice.currentDevice.ios7?
+        @usersButtonBorderTop.frame    = [[0, @usersButton.top], [self.frame.size.width, 1]]
+        @usersButtonBorderBottom.frame = [[0, @usersButton.bottom], [self.frame.size.width, 1]]
+      end
+
       @bodyView.contentSize = [self.frame.size.width, @usersButton.bottom + 142]
     end
 
