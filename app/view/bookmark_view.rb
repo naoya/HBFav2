@@ -122,17 +122,21 @@ module HBFav2
 
         @bodyView << @usersButton = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |button|
           button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
-          button.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
+          if UIDevice.currentDevice.ios7?
+            button.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
+          else
+            button.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
+          end
         end
 
         if UIDevice.currentDevice.ios7?
           @usersButtonBorderTop = UIView.new.tap do |v|
-            v.backgroundColor = '#ccc'.uicolor
+            v.backgroundColor = '#ddd'.uicolor
             @bodyView << v
           end
 
           @usersButtonBorderBottom = UIView.new.tap do |v|
-            v.backgroundColor = '#ccc'.uicolor
+            v.backgroundColor = '#ddd'.uicolor
             @bodyView << v
           end
         end
@@ -308,8 +312,8 @@ module HBFav2
       @usersButton.frame = [[10, @dateLabel.bottom + 10], [self.frame.size.width - 20, 40]]
 
       if UIDevice.currentDevice.ios7?
-        @usersButtonBorderTop.frame    = [[0, @usersButton.top], [self.frame.size.width, 1]]
-        @usersButtonBorderBottom.frame = [[0, @usersButton.bottom], [self.frame.size.width, 1]]
+        @usersButtonBorderTop.frame    = [[15, @usersButton.top], [self.frame.size.width, 1]]
+        @usersButtonBorderBottom.frame = [[15, @usersButton.bottom], [self.frame.size.width, 1]]
       end
 
       @bodyView.contentSize = [self.frame.size.width, @usersButton.bottom + 142]
