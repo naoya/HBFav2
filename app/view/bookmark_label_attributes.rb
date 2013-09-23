@@ -7,24 +7,13 @@ class BookmarkLabelAttributes
   end
 
   def initialize
-    if UIDevice.currentDevice.ios7?
-      @attributes = {
-        :name             => { :color => '#000',    :font => UIFont.boldSystemFontOfSize(16) },
-        :title            => { :color => '#3b5998', :font => UIFont.fontWithName("HiraKakuProN-W3", size:15) },
-        :hotentry_title   => { :color => '#000',    :font => UIFont.fontWithName("HiraKakuProN-W3", size:15) },
-        :comment          => { :color => '#000',    :font => UIFont.fontWithName("HiraKakuProN-W3", size:15) },
-        :date             => { :color => '#999',    :font => UIFont.systemFontOfSize(13) },
-        :host             => { :color => '#999',    :font => UIFont.systemFontOfSize(13) },
-      }
-    else
-      @attributes = {
-        :name             => { :color => '#000',    :font => UIFont.boldSystemFontOfSize(16) },
-        :title            => { :color => '#3b5998', :font => UIFont.systemFontOfSize(15) },
-        :hotentry_title   => { :color => '#000',    :font => UIFont.systemFontOfSize(15) },
-        :comment          => { :color => '#000',    :font => UIFont.systemFontOfSize(15) },
-        :date             => { :color => '#999',    :font => UIFont.systemFontOfSize(13) },
-        :host             => { :color => '#999',    :font => UIFont.systemFontOfSize(13) },
-      }
-    end
+    @attributes = {
+      :name             => { :color => '#000',    :font => UIFont.boldSystemFontOfSize(16) },
+      :title            => { :color => '#3b5998', :font => ApplicationConfig.sharedConfig.fontOfSize(15) },
+      :hotentry_title   => { :color => '#000',    :font => ApplicationConfig.sharedConfig.fontOfSize(15) },
+      :comment          => { :color => '#000',    :font => ApplicationConfig.sharedConfig.fontOfSize(15) },
+      :date             => { :color => '#999',    :font => UIFont.systemFontOfSize(13) },
+      :host             => { :color => '#999',    :font => UIFont.systemFontOfSize(13) },
+    }
   end
 end

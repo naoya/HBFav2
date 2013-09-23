@@ -56,7 +56,7 @@ module HBFav2
           label.lineBreakMode = NSLineBreakByWordWrapping
 
           ## workaround: System Font では ParagraphStyle の日本語とASCIIのline height計算が異なっておかしくなる
-          label.font = UIFont.fontWithName("HiraKakuProN-W3", size:17)
+          label.font = UIFont.fontWithName("Helvetica", size:17)
 
           label.dataDetectorTypes = NSTextCheckingTypeLink
           label.textAlignment = NSTextAlignmentLeft
@@ -66,7 +66,7 @@ module HBFav2
           ## link attributes
           paragraph = NSMutableParagraphStyle.new
           paragraph.lineBreakMode = NSLineBreakByWordWrapping
-          paragraph.lineHeightMultiple = 0.8
+          # paragraph.lineHeightMultiple = 0.8
 
           label.linkAttributes       = {
             KCTForegroundColorAttributeName => '#3B5998'.uicolor,
@@ -81,7 +81,7 @@ module HBFav2
         @bodyView << @faviconView = UIImageView.new.tap {|v| v.frame = CGRectZero }
 
         @bodyView << @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
-          btn.titleLabel.font = UIFont.systemFontOfSize(17)
+          btn.titleLabel.font = ApplicationConfig.sharedConfig.fontOfSize(17)
           btn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping
           btn.titleLabel.numberOfLines = 0
           btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
@@ -98,7 +98,7 @@ module HBFav2
         @bodyView << @descriptionLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
-          v.font = UIFont.systemFontOfSize(13)
+          v.font = ApplicationConfig.sharedConfig.fontOfSize(13)
           v.textColor = '#666'.uicolor
           v.lineBreakMode = NSLineBreakByWordWrapping|NSLineBreakByTruncatingTail
         end
