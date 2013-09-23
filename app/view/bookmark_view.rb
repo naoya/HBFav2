@@ -34,8 +34,10 @@ module HBFav2
         @nameLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.font  = UIFont.boldSystemFontOfSize(18)
-          v.shadowColor = UIColor.whiteColor
-          v.shadowOffset = [0, 1]
+          if UIDevice.currentDevice.ios7?
+            v.shadowColor = UIColor.whiteColor
+            v.shadowOffset = [0, 1]
+          end
           v.backgroundColor = UIColor.clearColor
         end
         @headerView << @nameLabel
@@ -46,7 +48,7 @@ module HBFav2
         @headerView << @discImageView
 
         @bodyView << @border = UIView.new.tap do |v|
-          v.backgroundColor = '#ababab'.uicolor
+          v.backgroundColor = '#ddd'.uicolor
         end
 
         ## body

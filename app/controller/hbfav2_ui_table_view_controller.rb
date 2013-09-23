@@ -9,7 +9,8 @@ module HBFav2
       self.navigationItem.backBarButtonItem = NavigationBackButton.create
 
       if UIDevice.currentDevice.ios7?
-        self.tableView.setSeparatorInset(UIEdgeInsetsZero)
+        self.tableView.separatorInset = UIEdgeInsetsMake(0, 20, 0, 0)
+        self.tableView.separatorColor = '#ddd'.uicolor
       end
 
       ## Set RefreshControl background (work around)
