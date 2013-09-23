@@ -13,7 +13,7 @@ module HBFav2
       end
 
       ## Set RefreshControl background (work around)
-      unless UIDevice.currentDevice.ios7?
+      if not UIDevice.currentDevice.ios7?
         frame = self.tableView.bounds
         frame.origin.y = -frame.size.height
         bgview = UIView.alloc.initWithFrame(frame)

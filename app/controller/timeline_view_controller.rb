@@ -36,6 +36,10 @@ class TimelineViewController < HBFav2::UITableViewController
       refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged)
     end
 
+    view << @indicator = UIActivityIndicatorView.new.tap do |v|
+      v.style = UIActivityIndicatorViewStyleGray
+    end
+
     if ApplicationUser.sharedUser.configured?
       ## Finally, fetch latest timeline feed
       initialize_bookmarks
@@ -72,9 +76,11 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def initialize_bookmarks
-    self.refreshControl.beginRefreshing
+    # self.refreshControl.beginRefreshing
+    @indicator.startAnimating
     @bookmarks.update(true) do |res|
       self.refreshControl.endRefreshing
+      @indicator.stopAnimating
       if not res.ok?
         self.refreshControl.update_title(res.error_message)
       else
@@ -164,6 +170,7 @@ class TimelineViewController < HBFav2::UITableViewController
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
 
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
     @footer_indicator.center = [@footerView.frame.size.width / 2, @footerView.frame.size.height / 2]
 
     super

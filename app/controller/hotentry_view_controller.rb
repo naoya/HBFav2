@@ -21,6 +21,11 @@ class HotentryViewController < HBFav2::UITableViewController
       refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged)
     end
 
+    view << @indicator = UIActivityIndicatorView.new.tap do |v|
+      v.style = UIActivityIndicatorViewStyleGray
+      v.startAnimating
+    end
+
     load_hotentry
 
     self.tableView.addGestureRecognizer(
@@ -44,8 +49,6 @@ class HotentryViewController < HBFav2::UITableViewController
   end
 
   def load_hotentry
-    self.refreshControl.beginRefreshing
-
     if self.list_type == :hotentry
       feed_url = 'http://feed.hbfav.com/hotentry'
     else
@@ -70,6 +73,7 @@ class HotentryViewController < HBFav2::UITableViewController
       end
       tableView.reloadData
       self.refreshControl.endRefreshing
+      @indicator.stopAnimating
     end
     @connection = query.connection
   end
@@ -77,6 +81,7 @@ class HotentryViewController < HBFav2::UITableViewController
   def viewWillAppear(animated)
     self.receive_application_switch_notifcation
     self.navigationController.setToolbarHidden(true, animated:animated)
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
 
     ## category selector
     label =  CategoryList.sharedCategories.key_to_label(self.category)
