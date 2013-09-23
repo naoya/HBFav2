@@ -43,6 +43,11 @@ class LeftViewCell < UITableViewCell
       i = image.kind_of?(UIImageView) ? image.image : image
       self.imageView.image = i
     end
+
+    if properties[:blank]
+      @contentView.backgroundColor = [41, 47, 59].uicolor
+    end
+
     self.setNeedsDisplay
   end
 
