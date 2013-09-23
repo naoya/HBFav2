@@ -106,7 +106,7 @@ module HBFav2
         @bodyView << @urlLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
-          v.font = UIFont.systemFontOfSize(13)
+          v.font = ApplicationConfig.sharedConfig.fontOfSize(13)
           v.textColor = '#999'.uicolor
           v.lineBreakMode = NSLineBreakByCharWrapping
           v.text = ""
@@ -233,8 +233,14 @@ module HBFav2
 
       # title
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000) # 19 = favicon (16) + margin (3), 20 = margin left,right
-      size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
-        UIFont.systemFontOfSize(17),
+      # size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
+      #   ApplicationConfig.sharedConfig.fontOfSize(17),
+      #   constrainedToSize:constrain,
+      #   lineBreakMode:NSLineBreakByWordWrapping
+      # )
+      size = HBFav2::TextUtil.text(
+        @titleButton.titleForState(UIControlStateNormal),
+        sizeWithFont:ApplicationConfig.sharedConfig.fontOfSize(17),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByWordWrapping
       )
@@ -257,10 +263,11 @@ module HBFav2
             end
 
         constrain = CGSize.new(w, 80)
-        size = @descriptionLabel.text.sizeWithFont(
-          UIFont.systemFontOfSize(13),
+        size = HBFav2::TextUtil.text(
+          @descriptionLabel.text,
+          sizeWithFont:ApplicationConfig.sharedConfig.fontOfSize(13),
           constrainedToSize:constrain,
-          lineBreakMode:NSLineBreakByCharWrapping
+          lineBreakMode:NSLineBreakByWordWrapping
         )
         @descriptionLabel.frame = [[@titleButton.left, @titleButton.bottom + 4], size]
       end
@@ -269,8 +276,9 @@ module HBFav2
 
       # URL
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000)
-      size = @urlLabel.text.sizeWithFont(
-        UIFont.systemFontOfSize(13),
+      size = HBFav2::TextUtil.text(
+        @urlLabel.text,
+        sizeWithFont:ApplicationConfig.sharedConfig.fontOfSize(13),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByCharWrapping
       )
