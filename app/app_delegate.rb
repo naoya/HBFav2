@@ -117,13 +117,11 @@ class AppDelegate
 
   def application(application, openURL:url, sourceApplication:sourceApplication, annotation:annotation)
 
-    case sourceApplication
-    when 'com.apple.mobilesafari'
-      target_url = url.absoluteString.match(/^hbfav2\:(.*)/)[1]
+    case
+    when matches = url.absoluteString.match(/^hbfav2:\/\/page\/open\/(.*)/)
+      target_url = matches[1]
 
-      unless target_url.empty?
-        self.presentWebViewControllerWithURL(target_url)
-      end
+      self.presentWebViewControllerWithURL(target_url)
     else
       if PocketAPI.sharedAPI.handleOpenURL(url)
         return true
