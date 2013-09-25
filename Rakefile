@@ -76,6 +76,7 @@ Motion::Project::App.setup do |app|
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']
   app.frameworks += %w(AudioToolbox CFNetwork MobileCoreServices QuartzCore StoreKit SystemConfiguration)
+  app.weak_frameworks += ['MediaAccessibility']
   app.libs += %W(/usr/lib/libz.dylib /usr/lib/libsqlite3.dylib)
 
   app.icons = ["default_app_logo.png", "default_app_logo@2x.png"]
