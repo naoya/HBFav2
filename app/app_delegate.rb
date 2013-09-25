@@ -116,18 +116,13 @@ class AppDelegate
   end
 
   def application(application, openURL:url, sourceApplication:sourceApplication, annotation:annotation)
-
-    case
-    when matches = url.absoluteString.match(/^hbfav2:\/\/page\/open\/(.*)/)
-      target_url = matches[1]
-
-      self.presentWebViewControllerWithURL(target_url)
+    if matches = url.absoluteString.match(%r{^hbfav:/entry/(https?://.*)})
+      self.presentWebViewControllerWithURL(matches[1])
     else
       if PocketAPI.sharedAPI.handleOpenURL(url)
         return true
       end
     end
-
     return true
   end
 

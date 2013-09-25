@@ -1,5 +1,11 @@
 # 2.4 / _In progress_
 
+* URL scheme : hbfav:/entry/http://example.com/... に対応 (@toshiwo)
+
+## Thanks to our contributors
+
+* [Toshiwo][toshiwo]
+
 # 2.3 / _In review_
 
 * 人気コメント
@@ -82,3 +88,4 @@
 [nagayama]:https://github.com/nagayama
 [Watson1978]:https://github.com/Watson1978
 [ugtkbtk]:https://github.com/ugtkbtk
+[toshiwo]:https://github.com/toshiwo
