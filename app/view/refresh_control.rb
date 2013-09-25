@@ -1,6 +1,16 @@
 # -*- coding: utf-8 -*-
 module HBFav2
   class RefreshControl < UIRefreshControl
+    def init
+      super
+      if self
+        if UIDevice.currentDevice.ios7?
+          self.backgroundColor = '#e2e7ed'.uicolor
+        end
+      end
+      self
+    end
+
     def update_title(msg = nil)
       unless UIDevice.currentDevice.ios7?
         color = "#678"

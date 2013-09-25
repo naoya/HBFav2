@@ -17,7 +17,6 @@ class HotentryViewController < HBFav2::UITableViewController
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
       refresh.update_title("フィード取得中...")
-      refresh.backgroundColor = '#e2e7ed'.uicolor
       refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged)
     end
 

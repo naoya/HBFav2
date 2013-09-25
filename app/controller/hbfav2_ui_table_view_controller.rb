@@ -12,15 +12,6 @@ module HBFav2
         self.tableView.separatorInset = UIEdgeInsetsMake(0, 20, 0, 0)
         self.tableView.separatorColor = '#ddd'.uicolor
       end
-
-      ## Set RefreshControl background (work around)
-      if not UIDevice.currentDevice.ios7?
-        frame = self.tableView.bounds
-        frame.origin.y = -frame.size.height
-        bgview = UIView.alloc.initWithFrame(frame)
-        bgview.backgroundColor = '#e2e7ed'.uicolor
-        self.tableView.insertSubview(bgview, atIndex: 0)
-      end
     end
 
     def viewDidAppear(animated)
