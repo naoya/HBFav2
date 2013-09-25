@@ -33,8 +33,8 @@ module HBFav2
 
         @nameLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
-          v.font  = UIFont.boldSystemFontOfSize(18)
-          if UIDevice.currentDevice.ios7?
+          v.font = ApplicationConfig.sharedConfig.boldApplicationFontOfSize(18)
+          unless UIDevice.currentDevice.ios7?
             v.shadowColor = UIColor.whiteColor
             v.shadowOffset = [0, 1]
           end
@@ -83,7 +83,7 @@ module HBFav2
         @bodyView << @faviconView = UIImageView.new.tap {|v| v.frame = CGRectZero }
 
         @bodyView << @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
-          btn.titleLabel.font = ApplicationConfig.sharedConfig.fontOfSize(17)
+          btn.titleLabel.font = ApplicationConfig.sharedConfig.systemFontOfSize(17)
           btn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping
           btn.titleLabel.numberOfLines = 0
           btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
@@ -100,7 +100,7 @@ module HBFav2
         @bodyView << @descriptionLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
-          v.font = ApplicationConfig.sharedConfig.fontOfSize(13)
+          v.font = ApplicationConfig.sharedConfig.systemFontOfSize(13)
           v.textColor = '#666'.uicolor
           v.lineBreakMode = NSLineBreakByWordWrapping|NSLineBreakByTruncatingTail
         end
@@ -108,7 +108,7 @@ module HBFav2
         @bodyView << @urlLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
-          v.font = ApplicationConfig.sharedConfig.fontOfSize(13)
+          v.font = ApplicationConfig.sharedConfig.systemFontOfSize(13)
           v.textColor = '#999'.uicolor
           v.lineBreakMode = NSLineBreakByCharWrapping
           v.text = ""
@@ -258,7 +258,7 @@ module HBFav2
       # )
       size = HBFav2::TextUtil.text(
         @titleButton.titleForState(UIControlStateNormal),
-        sizeWithFont:ApplicationConfig.sharedConfig.fontOfSize(17),
+        sizeWithFont:ApplicationConfig.sharedConfig.systemFontOfSize(17),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByWordWrapping
       )
@@ -283,7 +283,7 @@ module HBFav2
         constrain = CGSize.new(w, 80)
         size = HBFav2::TextUtil.text(
           @descriptionLabel.text,
-          sizeWithFont:ApplicationConfig.sharedConfig.fontOfSize(13),
+          sizeWithFont:ApplicationConfig.sharedConfig.systemFontOfSize(13),
           constrainedToSize:constrain,
           lineBreakMode:NSLineBreakByWordWrapping
         )
@@ -296,7 +296,7 @@ module HBFav2
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000)
       size = HBFav2::TextUtil.text(
         @urlLabel.text,
-        sizeWithFont:ApplicationConfig.sharedConfig.fontOfSize(13),
+        sizeWithFont:ApplicationConfig.sharedConfig.systemFontOfSize(13),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByCharWrapping
       )

@@ -15,11 +15,19 @@ class ApplicationConfig
     @is_ios7
   end
 
-  def fontOfSize(size)
+  def applicationFontOfSize(size)
+    ios7? ? UIFont.fontWithName("HelveticaNeue", size:size) : UIFont.systemFontOfSize(size)
+  end
+
+  def boldApplicationFontOfSize(size)
+    ios7? ? UIFont.fontWithName("HelveticaNeue", size:size) : UIFont.boldSystemFontOfSize(size)
+  end
+
+  def systemFontOfSize(size)
     ios7? ? UIFont.fontWithName("Helvetica", size:size) : UIFont.systemFontOfSize(size)
   end
 
-  def boldFontOfSize(size)
+  def boldSystemFontOfSize(size)
     ios7? ? UIFont.fontWithName("Helvetica-Bold", size:size) : UIFont.boldSystemFontOfSize(size)
   end
 end

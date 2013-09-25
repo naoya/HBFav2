@@ -60,8 +60,8 @@ class LeftViewCell < UITableViewCell
   end
 
   def drawRectContent(rect)
-    size =  @title.sizeWithFont(UIFont.systemFontOfSize(18))
-    title = @title.attrd.foreground_color([196, 204, 217].uicolor).font(UIFont.systemFontOfSize(18))
+    size =  @title.sizeWithFont(ApplicationConfig.sharedConfig.applicationFontOfSize(18))
+    title = @title.attrd.foreground_color([196, 204, 217].uicolor).font(ApplicationConfig.sharedConfig.applicationFontOfSize(18))
 
     if not UIDevice.currentDevice.ios7?
       title = title.shadow(@titleShadow)
