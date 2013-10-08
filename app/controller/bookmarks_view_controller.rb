@@ -90,7 +90,7 @@ class BookmarksViewController < HBFav2::UITableViewController
   def tableView(tableView, heightForHeaderInSection:section)
     if UIDevice.currentDevice.ios7?
       if @bookmarks.has_popular_bookmarks?
-        21
+        SectionHeaderView.heightForHeader
       else
         0
       end
