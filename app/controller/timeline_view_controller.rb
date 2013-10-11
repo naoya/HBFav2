@@ -189,7 +189,8 @@ class TimelineViewController < HBFav2::UITableViewController
     if bookmark.kind_of? Placeholder
       super
     else
-      BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+      height = BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+      height.ceil
     end
   end
 
