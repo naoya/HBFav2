@@ -114,7 +114,7 @@ class AppDelegate
       UINavigationBar.appearance.barTintColor = UIColor.colorWithRed(0.000, green:0.450, blue:0.800, alpha:1.000)
       UINavigationBar.appearance.titleTextAttributes = {
         NSForegroundColorAttributeName => UIColor.whiteColor,
-        NSFontAttributeName            =>  ApplicationConfig.sharedConfig.applicationFontOfSize(18)
+        NSFontAttributeName            => ApplicationConfig.sharedConfig.applicationFontOfSize(20)
       }
       UINavigationBar.appearance.tintColor = UIColor.whiteColor
     else
