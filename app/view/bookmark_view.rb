@@ -126,6 +126,7 @@ module HBFav2
           button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
           if UIDevice.currentDevice.ios7?
             button.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
+            button.titleLabel.font = ApplicationConfig.sharedConfig.systemFontOfSize(18)
           else
             button.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
           end
