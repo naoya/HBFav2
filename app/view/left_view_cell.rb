@@ -1,9 +1,3 @@
-class LeftViewCellContentView < UIView
-  def drawRect(rect)
-    self.superview.superview.drawRectContent(rect)
-  end
-end
-
 class LeftViewCell < UITableViewCell
   def self.cellForLeftView(tableView)
     cell_id = 'left-view-cell'
@@ -18,7 +12,7 @@ class LeftViewCell < UITableViewCell
         v.backgroundColor = [41, 47, 59].uicolor
       end
 
-      @contentView = LeftViewCellContentView.alloc.initWithFrame(CGRectZero)
+      @contentView = HBFav2::CustomCellContentView.alloc.initWithFrame(CGRectZero)
       @contentView.backgroundColor = [50, 57, 73].uicolor
       @contentView.opaque = true
       self.contentView << @contentView
@@ -49,6 +43,11 @@ class LeftViewCell < UITableViewCell
       i = image.kind_of?(UIImageView) ? image.image : image
       self.imageView.image = i
     end
+
+    if properties[:blank]
+      @contentView.backgroundColor = [41, 47, 59].uicolor
+    end
+
     self.setNeedsDisplay
   end
 
@@ -61,18 +60,33 @@ class LeftViewCell < UITableViewCell
   end
 
   def drawRectContent(rect)
-    size =  @title.sizeWithFont(UIFont.systemFontOfSize(18))
-    title = @title.attrd.shadow(@titleShadow).foreground_color([196, 204, 217].uicolor).font(UIFont.systemFontOfSize(18))
+    size =  @title.sizeWithFont(ApplicationConfig.sharedConfig.applicationFontOfSize(18))
+    title = @title.attrd.foreground_color([196, 204, 217].uicolor).font(ApplicationConfig.sharedConfig.applicationFontOfSize(18))
+
+    if not UIDevice.currentDevice.ios7?
+      title = title.shadow(@titleShadow)
+    end
+
     title.drawInRect([[self.imageView.right + 8, self.imageView.top + 4], size])
 
-    ## shadowed border line
-    unless selected?
-      context = UIGraphicsGetCurrentContext()
-      [62, 69, 84].uicolor(1.0).setStroke
-      CGContextSetLineWidth(context, 2)
-      CGContextMoveToPoint(context, 0, 0)
-      CGContextAddLineToPoint(context, self.right, 0)
-      CGContextStrokePath(context)
+    if UIDevice.currentDevice.ios7?
+      unless selected?
+        context = UIGraphicsGetCurrentContext()
+        [36, 42, 54].uicolor(1.0).setStroke
+        CGContextSetLineWidth(context, 1)
+        CGContextMoveToPoint(context, 42, 0)
+        CGContextAddLineToPoint(context, self.right, 0)
+        CGContextStrokePath(context)
+      end
+    else
+      unless selected?
+        context = UIGraphicsGetCurrentContext()
+        [62, 69, 84].uicolor(1.0).setStroke
+        CGContextSetLineWidth(context, 2)
+        CGContextMoveToPoint(context, 0, 0)
+        CGContextAddLineToPoint(context, self.right, 0)
+        CGContextStrokePath(context)
+      end
     end
   end
 end

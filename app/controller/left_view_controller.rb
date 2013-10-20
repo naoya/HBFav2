@@ -3,21 +3,26 @@ class LeftViewController < UITableViewController
   def viewDidLoad
     super
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
-
-    self.title = "メニュー"
     @dataSource = initialize_controllers_for(ApplicationUser.sharedUser.to_bookmark_user)
 
-    # self.view.backgroundColor = [50, 57, 73].uicolor
-    self.view.backgroundColor = [41, 47, 59].uicolor
-    self.view.separatorColor = [36, 42, 54].uicolor
+    self.configure_separator_color
+    @selected = [0, rowForTimeline].nsindexpath
+  end
 
-    @selected = [0, 1].nsindexpath
+  def configure_separator_color
+    self.view.backgroundColor = [41, 47, 59].uicolor
+    self.view.backgroundView = nil
+
+    if UIDevice.currentDevice.ios7?
+      self.view.separatorStyle = UITableViewCellSeparatorStyleNone
+    else
+      self.view.separatorColor = [36, 42, 54].uicolor
+    end
   end
 
   def initialize_controllers_for(user)
     ## initialize navigation controllers
     @timeline = self.sidePanelController.centerPanel
-
     @bookmark = HBFav2NavigationController.alloc.initWithRootViewController(
       TimelineViewController.new.tap do |c|
         c.user  = user
@@ -43,7 +48,7 @@ class LeftViewController < UITableViewController
       AppInfoViewController.new
     )
 
-    return [
+    src = [
       {
         :title      => user.name,
         :controller => @config,
@@ -75,6 +80,13 @@ class LeftViewController < UITableViewController
         :image      => UIImage.imageNamed('default_app_logo')
       }
     ]
+
+    ## FIXME: ステータスバー分を空の row でごまかしている･･･
+    if UIDevice.currentDevice.ios7?
+      src.unshift({ :title => "", :blank => true })
+    end
+
+    return src
   end
 
   def profile_image_for(user)
@@ -82,17 +94,34 @@ class LeftViewController < UITableViewController
       iv.setImageWithURLRequest(user.profile_image_url.nsurl.request, placeholderImage:UIImage.imageNamed("profile_placeholder"),
         success: lambda do |request, response, image|
           iv.image = image
-          self.tableView.reloadRowsAtIndexPaths([[0, 0].nsindexpath], withRowAnimation:UITableViewRowAnimationNone)
+          self.tableView.reloadRowsAtIndexPaths([[0, rowForProfile].nsindexpath], withRowAnimation:UITableViewRowAnimationNone)
         end,
         failure: lambda { |request, response, error| }
       )
     end
   end
 
+  def rowForProfile
+    UIDevice.currentDevice.ios7? ? 1 : 0
+  end
+
+  def rowForTimeline
+    rowForProfile + 1
+  end
+
   def viewWillAppear(animated)
     super
+    self.configure_separator_color
     if tableView.indexPathForSelectedRow.nil?
       tableView.selectRowAtIndexPath(@selected, animated:true, scrollPosition:UITableViewScrollPositionNone);
+    end
+  end
+
+  def tableView(tableView, heightForRowAtIndexPath:indexPath)
+    if UIDevice.currentDevice.ios7? and indexPath.row == 0
+      21
+    else
+      super
     end
   end
 
@@ -115,7 +144,7 @@ class LeftViewController < UITableViewController
     @selected = indexPath
     row = @dataSource[indexPath.row]
     controller = row[:controller]
-    self.sidePanelController.centerPanel = controller
+    self.sidePanelController.centerPanel = controller if controller
   end
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)

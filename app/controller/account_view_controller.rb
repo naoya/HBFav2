@@ -8,8 +8,11 @@ class AccountViewController < HBFav2::UIViewController
 
     @user = ApplicationUser.sharedUser.to_bookmark_user
     self.navigationItem.title = @user.name
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.tracked_view_name = "Account"
+
+    if UIDevice.currentDevice.ios7?
+      self.edgesForExtendedLayout = UIRectEdgeNone
+    end
 
     self.initialize_data_source
 

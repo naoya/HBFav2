@@ -33,9 +33,11 @@ module HBFav2
 
         @nameLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
-          v.font  = UIFont.boldSystemFontOfSize(18)
-          v.shadowColor = UIColor.whiteColor
-          v.shadowOffset = [0, 1]
+          v.font = ApplicationConfig.sharedConfig.boldApplicationFontOfSize(18)
+          unless UIDevice.currentDevice.ios7?
+            v.shadowColor = UIColor.whiteColor
+            v.shadowOffset = [0, 1]
+          end
           v.backgroundColor = UIColor.clearColor
         end
         @headerView << @nameLabel
@@ -46,7 +48,7 @@ module HBFav2
         @headerView << @discImageView
 
         @bodyView << @border = UIView.new.tap do |v|
-          v.backgroundColor = '#ababab'.uicolor
+          v.backgroundColor = '#ddd'.uicolor
         end
 
         ## body
@@ -56,7 +58,7 @@ module HBFav2
           label.lineBreakMode = NSLineBreakByWordWrapping
 
           ## workaround: System Font では ParagraphStyle の日本語とASCIIのline height計算が異なっておかしくなる
-          label.font = UIFont.fontWithName("HiraKakuProN-W3", size:17)
+          label.font = UIFont.fontWithName("Helvetica", size:17)
 
           label.dataDetectorTypes = NSTextCheckingTypeLink
           label.textAlignment = NSTextAlignmentLeft
@@ -66,7 +68,7 @@ module HBFav2
           ## link attributes
           paragraph = NSMutableParagraphStyle.new
           paragraph.lineBreakMode = NSLineBreakByWordWrapping
-          paragraph.lineHeightMultiple = 0.8
+          # paragraph.lineHeightMultiple = 0.8
 
           label.linkAttributes       = {
             KCTForegroundColorAttributeName => '#3B5998'.uicolor,
@@ -81,7 +83,7 @@ module HBFav2
         @bodyView << @faviconView = UIImageView.new.tap {|v| v.frame = CGRectZero }
 
         @bodyView << @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
-          btn.titleLabel.font = UIFont.systemFontOfSize(17)
+          btn.titleLabel.font = ApplicationConfig.sharedConfig.systemFontOfSize(17)
           btn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping
           btn.titleLabel.numberOfLines = 0
           btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
@@ -98,7 +100,7 @@ module HBFav2
         @bodyView << @descriptionLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
-          v.font = UIFont.systemFontOfSize(13)
+          v.font = ApplicationConfig.sharedConfig.systemFontOfSize(13)
           v.textColor = '#666'.uicolor
           v.lineBreakMode = NSLineBreakByWordWrapping|NSLineBreakByTruncatingTail
         end
@@ -106,7 +108,7 @@ module HBFav2
         @bodyView << @urlLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
-          v.font = UIFont.systemFontOfSize(13)
+          v.font = ApplicationConfig.sharedConfig.systemFontOfSize(13)
           v.textColor = '#999'.uicolor
           v.lineBreakMode = NSLineBreakByCharWrapping
           v.text = ""
@@ -122,7 +124,24 @@ module HBFav2
 
         @bodyView << @usersButton = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |button|
           button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
-          button.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
+          if UIDevice.currentDevice.ios7?
+            button.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
+            button.titleLabel.font = ApplicationConfig.sharedConfig.systemFontOfSize(18)
+          else
+            button.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
+          end
+        end
+
+        if UIDevice.currentDevice.ios7?
+          @usersButtonBorderTop = UIView.new.tap do |v|
+            v.backgroundColor = '#ddd'.uicolor
+            @bodyView << v
+          end
+
+          @usersButtonBorderBottom = UIView.new.tap do |v|
+            v.backgroundColor = '#ddd'.uicolor
+            @bodyView << v
+          end
         end
       end
       self
@@ -233,8 +252,14 @@ module HBFav2
 
       # title
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000) # 19 = favicon (16) + margin (3), 20 = margin left,right
-      size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
-        UIFont.systemFontOfSize(17),
+      # size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
+      #   ApplicationConfig.sharedConfig.fontOfSize(17),
+      #   constrainedToSize:constrain,
+      #   lineBreakMode:NSLineBreakByWordWrapping
+      # )
+      size = HBFav2::TextUtil.text(
+        @titleButton.titleForState(UIControlStateNormal),
+        sizeWithFont:ApplicationConfig.sharedConfig.systemFontOfSize(17),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByWordWrapping
       )
@@ -257,10 +282,11 @@ module HBFav2
             end
 
         constrain = CGSize.new(w, 80)
-        size = @descriptionLabel.text.sizeWithFont(
-          UIFont.systemFontOfSize(13),
+        size = HBFav2::TextUtil.text(
+          @descriptionLabel.text,
+          sizeWithFont:ApplicationConfig.sharedConfig.systemFontOfSize(13),
           constrainedToSize:constrain,
-          lineBreakMode:NSLineBreakByCharWrapping
+          lineBreakMode:NSLineBreakByWordWrapping
         )
         @descriptionLabel.frame = [[@titleButton.left, @titleButton.bottom + 4], size]
       end
@@ -269,8 +295,9 @@ module HBFav2
 
       # URL
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000)
-      size = @urlLabel.text.sizeWithFont(
-        UIFont.systemFontOfSize(13),
+      size = HBFav2::TextUtil.text(
+        @urlLabel.text,
+        sizeWithFont:ApplicationConfig.sharedConfig.systemFontOfSize(13),
         constrainedToSize:constrain,
         lineBreakMode:NSLineBreakByCharWrapping
       )
@@ -286,6 +313,12 @@ module HBFav2
 
       # button
       @usersButton.frame = [[10, @dateLabel.bottom + 10], [self.frame.size.width - 20, 40]]
+
+      if UIDevice.currentDevice.ios7?
+        @usersButtonBorderTop.frame    = [[15, @usersButton.top], [self.right - 30, 1]]
+        @usersButtonBorderBottom.frame = [[15, @usersButton.bottom], [self.right - 30, 1]]
+      end
+
       @bodyView.contentSize = [self.frame.size.width, @usersButton.bottom + 142]
     end
 

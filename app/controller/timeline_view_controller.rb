@@ -24,7 +24,6 @@ class TimelineViewController < HBFav2::UITableViewController
 
     @bookmarks = self.initialize_feed_manager(self.user)
 
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
     self.initialize_footerview
     self.backGestureEnabled = true unless home?
@@ -33,16 +32,12 @@ class TimelineViewController < HBFav2::UITableViewController
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
       refresh.update_title("フィード取得中...")
-      refresh.backgroundColor = '#e2e7ed'.uicolor
       refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged)
     end
 
-    ## Set RefreshControl background (work around)
-    frame = self.tableView.bounds
-    frame.origin.y = -frame.size.height
-    bgview = UIView.alloc.initWithFrame(frame)
-    bgview.backgroundColor = '#e2e7ed'.uicolor
-    self.tableView.insertSubview(bgview, atIndex: 0)
+    view << @indicator = UIActivityIndicatorView.new.tap do |v|
+      v.style = UIActivityIndicatorViewStyleGray
+    end
 
     if ApplicationUser.sharedUser.configured?
       ## Finally, fetch latest timeline feed
@@ -80,9 +75,11 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def initialize_bookmarks
-    self.refreshControl.beginRefreshing
+    # self.refreshControl.beginRefreshing
+    @indicator.startAnimating
     @bookmarks.update(true) do |res|
       self.refreshControl.endRefreshing
+      @indicator.stopAnimating
       if not res.ok?
         self.refreshControl.update_title(res.error_message)
       else
@@ -165,12 +162,6 @@ class TimelineViewController < HBFav2::UITableViewController
   def viewWillAppear(animated)
     self.receive_application_switch_notifcation
     self.update_title
-
-    ## 応急処置
-    # UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
-    # UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
-    # self.wantsFullScreenLayout = false
-
     self.navigationController.setToolbarHidden(true, animated:true)
 
     indexPath = tableView.indexPathForSelectedRow
@@ -178,6 +169,7 @@ class TimelineViewController < HBFav2::UITableViewController
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
 
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
     @footer_indicator.center = [@footerView.frame.size.width / 2, @footerView.frame.size.height / 2]
 
     super
@@ -197,7 +189,8 @@ class TimelineViewController < HBFav2::UITableViewController
     if bookmark.kind_of? Placeholder
       super
     else
-      BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+      height = BookmarkFastCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+      height.ceil
     end
   end
 

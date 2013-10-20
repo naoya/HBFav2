@@ -7,7 +7,6 @@ class ProfileViewController < UIViewController
 
     self.navigationItem.title = @user.name
     self.backGestureEnabled = true
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
 
     @dataSource = [
       {

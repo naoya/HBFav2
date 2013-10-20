@@ -23,7 +23,7 @@ class HBFav2NavigationController < UINavigationController
     super
 
     ## naviBar の上部を丸める
-    if self.rounded_corners
+    if not UIDevice.currentDevice.ios7? and self.rounded_corners
       layer = self.navigationBar.layer
       maskPath = UIBezierPath.bezierPathWithRoundedRect(
         layer.bounds,

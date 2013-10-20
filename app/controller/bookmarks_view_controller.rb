@@ -12,13 +12,6 @@ class BookmarksViewController < HBFav2::UITableViewController
     self.tracked_view_name = "EntryBookmarks"
     view.backgroundColor = UIColor.whiteColor
 
-    ## Set RefreshControl background (work around)
-    frame = self.tableView.bounds
-    frame.origin.y = -frame.size.height
-    bgview = UIView.alloc.initWithFrame(frame)
-    bgview.backgroundColor = '#e2e7ed'.uicolor
-    self.tableView.insertSubview(bgview, atIndex: 0)
-
     @indicator = UIActivityIndicatorView.new.tap do |v|
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating
@@ -57,7 +50,7 @@ class BookmarksViewController < HBFav2::UITableViewController
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
     self.navigationController.setToolbarHidden(true, animated:animated)
-    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 21]
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
     self.navigationItem.leftBarButtonItem  = UIBarButtonItem.stop.tap do |btn|
       btn.action = 'on_close'
       btn.target = self
@@ -94,12 +87,22 @@ class BookmarksViewController < HBFav2::UITableViewController
     end
   end
 
-  def tableView(tableView, heightForRowAtIndexPath:indexPath)
-    BookmarkFastCell.heightForBookmark(bookmarks(indexPath.section)[indexPath.row], tableView.frame.size.width, true)
-  end
+  if UIDevice.currentDevice.ios7?
+    def tableView(tableView, heightForHeaderInSection:section)
+      if @bookmarks.has_popular_bookmarks?
+        SectionHeaderView.heightForHeader
+      else
+        0
+      end
+    end
 
-  def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    BookmarkFastCell.cellForBookmarkNoTitle(bookmarks(indexPath.section)[indexPath.row], inTableView:tableView)
+    def tableView(tableView, viewForHeaderInSection:section)
+      if UIDevice.currentDevice.ios7?
+        SectionHeaderView.new.tap do |label|
+          label.text = section == 0 ? "人気" : "すべて"
+        end
+      end
+    end
   end
 
   def tableView(tableView, titleForHeaderInSection:section)
@@ -108,6 +111,16 @@ class BookmarksViewController < HBFav2::UITableViewController
     else
       nil
     end
+  end
+
+
+  def tableView(tableView, heightForRowAtIndexPath:indexPath)
+    height = BookmarkFastCell.heightForBookmark(bookmarks(indexPath.section)[indexPath.row], tableView.frame.size.width, true)
+    return height.ceil
+  end
+
+  def tableView(tableView, cellForRowAtIndexPath:indexPath)
+    BookmarkFastCell.cellForBookmarkNoTitle(bookmarks(indexPath.section)[indexPath.row], inTableView:tableView)
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)

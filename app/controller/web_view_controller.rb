@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 class WebViewController < HBFav2::UIViewController
   attr_accessor :bookmark, :on_modal
 
@@ -18,7 +17,6 @@ class WebViewController < HBFav2::UIViewController
     @document_title = nil
     self.tracked_view_name = "WebView"
     self.backGestureEnabled = true
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = '#fff'.uicolor
     self.initialize_toolbar
 

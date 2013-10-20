@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-class HotentryCellContentView < UIView
-  def drawRect(rect)
-    self.superview.superview.drawRectContent(rect)
-  end
-end
-
 class HotentryCell < UITableViewCell
   @@blank_image = UIImage.imageNamed('blank')
 
@@ -64,7 +58,7 @@ class HotentryCell < UITableViewCell
 
   def initWithStyle(style, reuseIdentifier:reuseIdentifier)
     if super
-      @contentView = HotentryCellContentView.alloc.initWithFrame(CGRectZero)
+      @contentView = HBFav2::CustomCellContentView.alloc.initWithFrame(CGRectZero)
       @contentView.backgroundColor = UIColor.whiteColor
       @contentView.opaque = true
       self.contentView << @contentView
@@ -138,7 +132,7 @@ class HotentryCell < UITableViewCell
   def drawRectContent(rect)
     attributes = BookmarkLabelAttributes.sharedAttributes.attributes
 
-    if (self.selected? || self.highlighted?)
+    if not UIDevice.currentDevice.ios7? and (self.selected? || self.highlighted?)
       color = {
         :date => '#fff',
         :text => '#fff',

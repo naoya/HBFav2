@@ -11,11 +11,12 @@ Motion::Project::App.setup do |app|
   app.name = 'HBFav'
   app.version = "2.3"
   app.short_version = "2.3"
-  app.sdk_version = '6.1'
+  app.sdk_version = '7.0'
   app.deployment_target = '6.1'
   app.device_family = [:iphone]
   app.identifier = "HBFav"
   app.prerendered_icon = true
+  app.status_bar_style = :light_content
 
   app.my_env.file = './config/environment.yaml'
 
@@ -51,6 +52,8 @@ Motion::Project::App.setup do |app|
       'CFBundleURLSchemes' => ['pocketapp16058']
     }
   ]
+  app.info_plist['UIViewControllerBasedStatusBarAppearance'] = false
+  app.info_plist['UIStatusBarStyle'] = "UIStatusBarStyleLightContent"
 
   app.pods do
     pod 'PocketAPI', :git => 'git@github.com:naoya/Pocket-ObjC-SDK.git', :branch => 'cocoapods-dependency'
@@ -75,6 +78,7 @@ Motion::Project::App.setup do |app|
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']
   app.frameworks += %w(AudioToolbox CFNetwork MobileCoreServices QuartzCore StoreKit SystemConfiguration)
+  app.weak_frameworks += ['MediaAccessibility']
   app.libs += %W(/usr/lib/libz.dylib /usr/lib/libsqlite3.dylib)
 
   app.icons = ["default_app_logo.png", "default_app_logo@2x.png"]
@@ -99,7 +103,7 @@ Motion::Project::App.setup do |app|
 
   ## Parse.com
   app.vendor_project(
-    'vendor/Parse.framework',
+    'vendor/Parse 3.framework',
     :static,
     :products => ['Parse'],
     :headers_dir => 'Headers'

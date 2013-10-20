@@ -7,7 +7,6 @@ class HotentryViewController < HBFav2::UITableViewController
     super
     @bookmarks = []
 
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.view.backgroundColor = UIColor.whiteColor
     self.tracked_view_name = list_type == :hotentry ? "Hotentry" : "Entrylist"
 
@@ -18,17 +17,16 @@ class HotentryViewController < HBFav2::UITableViewController
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
       refresh.update_title("フィード取得中...")
-      refresh.backgroundColor = '#e2e7ed'.uicolor
       refresh.addTarget(self, action:'on_refresh', forControlEvents:UIControlEventValueChanged)
     end
 
-    ## Set RefreshControl background (work around)
-    frame = self.tableView.bounds
-    frame.origin.y = -frame.size.height
-    bgview = UIView.alloc.initWithFrame(frame)
-    bgview.backgroundColor = '#e2e7ed'.uicolor
-    self.tableView.insertSubview(bgview, atIndex: 0)
+    view << @indicator = UIActivityIndicatorView.new.tap do |v|
+      v.style = UIActivityIndicatorViewStyleGray
+      v.startAnimating
+    end
+
     load_hotentry
+
     self.tableView.addGestureRecognizer(
       UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_long_press_row:')
     )
@@ -50,8 +48,6 @@ class HotentryViewController < HBFav2::UITableViewController
   end
 
   def load_hotentry
-    self.refreshControl.beginRefreshing
-
     if self.list_type == :hotentry
       feed_url = 'http://feed.hbfav.com/hotentry'
     else
@@ -76,6 +72,7 @@ class HotentryViewController < HBFav2::UITableViewController
       end
       tableView.reloadData
       self.refreshControl.endRefreshing
+      @indicator.stopAnimating
     end
     @connection = query.connection
   end
@@ -83,6 +80,7 @@ class HotentryViewController < HBFav2::UITableViewController
   def viewWillAppear(animated)
     self.receive_application_switch_notifcation
     self.navigationController.setToolbarHidden(true, animated:animated)
+    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
 
     ## category selector
     label =  CategoryList.sharedCategories.key_to_label(self.category)
@@ -117,10 +115,11 @@ class HotentryViewController < HBFav2::UITableViewController
   def tableView(tableView, heightForRowAtIndexPath:indexPath)
     bookmark = @bookmarks[indexPath.row]
     if bookmark.thumbnail_url.present?
-      HotentryCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+      height = HotentryCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
     else
-      HotentryCell.heightForBookmarkNoThumbnail(@bookmarks[indexPath.row], tableView.frame.size.width)
+      height = HotentryCell.heightForBookmarkNoThumbnail(@bookmarks[indexPath.row], tableView.frame.size.width)
     end
+    return height.ceil
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)

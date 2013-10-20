@@ -9,7 +9,6 @@ class BookmarkViewController < HBFav2::UIViewController
     self.tracked_view_name = "Bookmark"
     self.view.backgroundColor = UIColor.whiteColor
     self.backGestureEnabled = true
-    self.navigationItem.backBarButtonItem = UIBarButtonItem.titled("戻る")
     self.configure_toolbar
 
     self.view << @bookmarkView = HBFav2::BookmarkView.new.tap do |v|
@@ -76,12 +75,6 @@ class BookmarkViewController < HBFav2::UIViewController
 
   def viewWillAppear(animated)
     super
-
-    ## 応急処置
-    # UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
-    # UIApplication.sharedApplication.setStatusBarHidden(false, animated:animated)
-    # self.wantsFullScreenLayout = false
-
     self.navigationController.setToolbarHidden(false, animated:self.on_modal ? false : true)
 
     if self.bookmark.present?
