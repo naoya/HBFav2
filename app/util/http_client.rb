@@ -5,7 +5,7 @@ module HBFav2
     def initialize
       @headers = {}
       @cache_policy = NSURLRequestUseProtocolCachePolicy
-      @timeout = 10.0
+      @timeout = 30.0
     end
 
     def get(url, &block)
