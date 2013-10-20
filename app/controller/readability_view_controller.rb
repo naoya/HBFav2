@@ -3,15 +3,11 @@ class ReadabilityViewControllerDelegated
   def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
     return true
   end
-
-  def dealloc
-    NSLog("dealloc: " + self.class.name)
-    super
-  end
 end
 
 class ReadabilityViewController < HBFav2::UIViewController
   attr_accessor :entry
+  include HBFav2::FullScreenable
 
   def viewDidLoad
     super
@@ -75,22 +71,6 @@ class ReadabilityViewController < HBFav2::UIViewController
       btn.action = 'on_change_font'
       btn.target = self
     end
-
-    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithImage(
-    #   UIImage.imageNamed('font_case_24'),
-    #   style:UIBarButtonItemStylePlain,
-    #   target:self,
-    #   action:'on_change_font'
-    # )
-
-    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithCustomView(
-    #   UIButton.custom.tap do |btn|
-    #     btn.frame = [[0, 0], [24, 24]]
-    #     btn.showsTouchWhenHighlighted = true
-    #     btn.setImage(UIImage.imageNamed('font_case_24'), forState: :normal.uicontrolstate)
-    #     btn.addTarget(self, action:'on_change_font', forControlEvents:UIControlEventTouchUpInside)
-    #   end
-    # )
   end
 
   def viewWillDisappear(animated)
@@ -125,59 +105,6 @@ class ReadabilityViewController < HBFav2::UIViewController
     end
   end
 
-  def prepare_fullscreen
-    @fullscreen = false
-    self.navigationController.setToolbarHidden(true, animated:true)
-    self.navigationController.setNavigationBarHidden(false, animated:false)
-    self.navigationController.navigationBar.translucent = true
-    self.navigationController.toolbar.translucent = true
-    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackTranslucent
-    self.wantsFullScreenLayout = true
-  end
-
-  def cleanup_fullscreen
-    @fullscreen = false
-    self.navigationController.setNavigationBarHidden(false, animated:false)
-    self.navigationController.navigationBar.translucent = false
-    self.navigationController.toolbar.translucent = false
-    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
-    self.wantsFullScreenLayout = false
-  end
-
-  def toggle_fullscreen(recog)
-    if (recog.state == UIGestureRecognizerStateEnded)
-      @fullscreen = !@fullscreen
-      @fullscreen ? begin_fullscreen : end_fullscreen
-    end
-  end
-
-  def begin_fullscreen
-    ## navigationController がある == まだ生き残ってる
-    if navigationController.present?
-      @fullscreen = true
-      UIView.beginAnimations(nil, context:nil)
-      UIView.setAnimationDuration(0.3)
-      UIApplication.sharedApplication.setStatusBarHidden(true, animated:true)
-      navigationController.navigationBar.alpha = 0.0
-      UIView.commitAnimations
-    end
-  end
-
-  def end_fullscreen
-    @fullscreen = false
-    UIView.beginAnimations(nil, context:nil)
-    UIView.setAnimationDuration(0.3)
-    UIApplication.sharedApplication.setStatusBarHidden(false, animated:true)
-    if navigationController.present?
-      navigationController.navigationBar.alpha = 1.0
-    end
-    UIView.commitAnimations
-  end
-
-#  def gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer)
-#    true
-#  end
-
   def on_close
     self.dismissViewControllerAnimated(true, completion:nil)
   end
@@ -191,7 +118,6 @@ EOF
   end
 
   def dealloc
-    NSLog("dealloc: " + self.class.name)
     if @webview
       @webview.stopLoading if @webview.loading?
       @webview.delegate = nil
