@@ -7,7 +7,7 @@ class SectionHeaderView < UILabel
     super
     if self
       # self.backgroundColor = '#efeff4'.uicolor(0.9)
-      self.backgroundColor = '#66abe0'.uicolor(0.5)
+      self.backgroundColor = '#99a0aa'.uicolor(0.6)
       self.textColor = '#fff'.uicolor
       self.font = UIFont.boldSystemFontOfSize(16)
     end
