@@ -69,8 +69,16 @@ class LeftViewCell < UITableViewCell
 
     title.drawInRect([[self.imageView.right + 8, self.imageView.top + 4], size])
 
-    ## shadowed border line
-    if not UIDevice.currentDevice.ios7?
+    if UIDevice.currentDevice.ios7?
+      unless selected?
+        context = UIGraphicsGetCurrentContext()
+        [36, 42, 54].uicolor(1.0).setStroke
+        CGContextSetLineWidth(context, 1)
+        CGContextMoveToPoint(context, 42, 0)
+        CGContextAddLineToPoint(context, self.right, 0)
+        CGContextStrokePath(context)
+      end
+    else
       unless selected?
         context = UIGraphicsGetCurrentContext()
         [62, 69, 84].uicolor(1.0).setStroke

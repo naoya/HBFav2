@@ -11,10 +11,12 @@ class LeftViewController < UITableViewController
 
   def configure_separator_color
     self.view.backgroundColor = [41, 47, 59].uicolor
-    self.view.separatorColor = [36, 42, 54].uicolor
     self.view.backgroundView = nil
+
     if UIDevice.currentDevice.ios7?
-      self.view.separatorInset = UIEdgeInsetsMake(0, 42, 0, 0)
+      self.view.separatorStyle = UITableViewCellSeparatorStyleNone
+    else
+      self.view.separatorColor = [36, 42, 54].uicolor
     end
   end
 
