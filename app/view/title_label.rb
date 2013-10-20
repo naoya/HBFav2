@@ -1,7 +1,7 @@
 class TitleLabel < UILabel
   def initWithFrame(frame)
     if super
-      self.font = ApplicationConfig.sharedConfig.boldApplicationFontOfSize(14)
+      self.font = UIFont.boldSystemFontOfSize(14)
       self.backgroundColor = UIColor.clearColor
       self.textAlignment = UITextAlignmentCenter
       self.textColor = UIColor.whiteColor
