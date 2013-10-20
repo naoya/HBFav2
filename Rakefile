@@ -16,6 +16,7 @@ Motion::Project::App.setup do |app|
   app.device_family = [:iphone]
   app.identifier = "HBFav"
   app.prerendered_icon = true
+  app.status_bar_style = :light_content
 
   app.my_env.file = './config/environment.yaml'
 
@@ -52,6 +53,7 @@ Motion::Project::App.setup do |app|
     }
   ]
   app.info_plist['UIViewControllerBasedStatusBarAppearance'] = false
+  app.info_plist['UIStatusBarStyle'] = "UIStatusBarStyleLightContent"
 
   app.pods do
     pod 'PocketAPI', :git => 'git@github.com:naoya/Pocket-ObjC-SDK.git', :branch => 'cocoapods-dependency'
