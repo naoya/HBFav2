@@ -87,25 +87,21 @@ class BookmarksViewController < HBFav2::UITableViewController
     end
   end
 
-  def tableView(tableView, heightForHeaderInSection:section)
-    if UIDevice.currentDevice.ios7?
+  if UIDevice.currentDevice.ios7?
+    def tableView(tableView, heightForHeaderInSection:section)
       if @bookmarks.has_popular_bookmarks?
         SectionHeaderView.heightForHeader
       else
         0
       end
-    else
-      super
     end
-  end
 
-  def tableView(tableView, viewForHeaderInSection:section)
-    if UIDevice.currentDevice.ios7?
-      SectionHeaderView.new.tap do |label|
-        label.text = section == 0 ? "人気" : "すべて"
+    def tableView(tableView, viewForHeaderInSection:section)
+      if UIDevice.currentDevice.ios7?
+        SectionHeaderView.new.tap do |label|
+          label.text = section == 0 ? "人気" : "すべて"
+        end
       end
-    else
-      super
     end
   end
 
