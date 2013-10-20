@@ -115,10 +115,11 @@ class HotentryViewController < HBFav2::UITableViewController
   def tableView(tableView, heightForRowAtIndexPath:indexPath)
     bookmark = @bookmarks[indexPath.row]
     if bookmark.thumbnail_url.present?
-      HotentryCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
+      height = HotentryCell.heightForBookmark(@bookmarks[indexPath.row], tableView.frame.size.width)
     else
-      HotentryCell.heightForBookmarkNoThumbnail(@bookmarks[indexPath.row], tableView.frame.size.width)
+      height = HotentryCell.heightForBookmarkNoThumbnail(@bookmarks[indexPath.row], tableView.frame.size.width)
     end
+    return height.ceil
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)

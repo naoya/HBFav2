@@ -119,7 +119,8 @@ class BookmarksViewController < HBFav2::UITableViewController
 
 
   def tableView(tableView, heightForRowAtIndexPath:indexPath)
-    BookmarkFastCell.heightForBookmark(bookmarks(indexPath.section)[indexPath.row], tableView.frame.size.width, true)
+    height = BookmarkFastCell.heightForBookmark(bookmarks(indexPath.section)[indexPath.row], tableView.frame.size.width, true)
+    return height.ceil
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
