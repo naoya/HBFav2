@@ -5,11 +5,17 @@ class LeftViewController < UITableViewController
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
     @dataSource = initialize_controllers_for(ApplicationUser.sharedUser.to_bookmark_user)
 
-    # self.view.backgroundColor = [50, 57, 73].uicolor
-    if UIDevice.currentDevice.ios7?
-      self.view.separatorInset = UIEdgeInsetsMake(0, 40, 0, 0)
-    end
+    self.configure_separator_color
     @selected = [0, rowForTimeline].nsindexpath
+  end
+
+  def configure_separator_color
+    self.view.backgroundColor = [41, 47, 59].uicolor
+    self.view.separatorColor = [36, 42, 54].uicolor
+    self.view.backgroundView = nil
+    if UIDevice.currentDevice.ios7?
+      self.view.separatorInset = UIEdgeInsetsMake(0, 42, 0, 0)
+    end
   end
 
   def initialize_controllers_for(user)
@@ -103,9 +109,7 @@ class LeftViewController < UITableViewController
 
   def viewWillAppear(animated)
     super
-    self.view.backgroundColor = [41, 47, 59].uicolor
-    self.view.separatorColor = [36, 42, 54].uicolor
-
+    self.configure_separator_color
     if tableView.indexPathForSelectedRow.nil?
       tableView.selectRowAtIndexPath(@selected, animated:true, scrollPosition:UITableViewScrollPositionNone);
     end
