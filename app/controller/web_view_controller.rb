@@ -266,6 +266,12 @@ class WebViewController < HBFav2::UIViewController
     self.dismissModalViewControllerAnimated(true, completion:nil)
   end
 
+  def didReceiveMemoryWarning
+    super
+    NSURLCache.sharedURLCache.removeAllCachedResponses
+    NSLog("Removed shared cache on NSURLCache")
+  end
+
   def dealloc
     NSLog("dealloc: " + self.class.name)
     if @webview
