@@ -314,8 +314,8 @@ module HBFav2
       @usersButton.frame = [[10, @dateLabel.bottom + 10], [self.frame.size.width - 20, 40]]
 
       if UIDevice.currentDevice.ios7?
-        @usersButtonBorderTop.frame    = [[15, @usersButton.top], [self.frame.size.width, 1]]
-        @usersButtonBorderBottom.frame = [[15, @usersButton.bottom], [self.frame.size.width, 1]]
+        @usersButtonBorderTop.frame    = [[15, @usersButton.top], [self.right - 30, 1]]
+        @usersButtonBorderBottom.frame = [[15, @usersButton.bottom], [self.right - 30, 1]]
       end
 
       @bodyView.contentSize = [self.frame.size.width, @usersButton.bottom + 142]
