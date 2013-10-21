@@ -1,12 +1,12 @@
 class SectionHeaderView < UILabel
   def self.heightForHeader
-    22
+    24
   end
 
   def initWithFrame(frame)
     super
     if self
-      self.backgroundColor = [41, 47, 59].uicolor(0.4)
+      self.backgroundColor = [41, 47, 59].uicolor(0.45)
       self.textColor = '#fff'.uicolor
       self.font = UIFont.systemFontOfSize(16)
     end
