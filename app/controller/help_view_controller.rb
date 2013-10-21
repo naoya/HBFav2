@@ -5,7 +5,6 @@ class HelpViewController < HBFav2::UIViewController
 
     self.title = "開発者より"
     self.tracked_view_name = "Help"
-    self.backGestureEnabled = true
 
     view << @webview = HBFav2::WebView.new.tap do |v|
       v.frame = CGRectZero

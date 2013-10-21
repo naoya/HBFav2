@@ -8,7 +8,6 @@ class BookmarkViewController < HBFav2::UIViewController
     self.navigationItem.title = "ブックマーク"
     self.tracked_view_name = "Bookmark"
     self.view.backgroundColor = UIColor.whiteColor
-    self.backGestureEnabled = true
     self.configure_toolbar
 
     self.view << @bookmarkView = HBFav2::BookmarkView.new.tap do |v|

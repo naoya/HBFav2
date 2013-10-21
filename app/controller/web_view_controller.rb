@@ -16,7 +16,6 @@ class WebViewController < HBFav2::UIViewController
 
     @document_title = nil
     self.tracked_view_name = "WebView"
-    self.backGestureEnabled = true
     self.view.backgroundColor = '#fff'.uicolor
     self.initialize_toolbar
 
