@@ -4,9 +4,7 @@ class ProfileViewController < UIViewController
 
   def viewDidLoad
     super
-
     self.navigationItem.title = @user.name
-    self.backGestureEnabled = true
 
     @dataSource = [
       {

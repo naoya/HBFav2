@@ -33,19 +33,25 @@ class LeftViewController < UITableViewController
     )
 
     @hotentry = HBFav2NavigationController.alloc.initWithRootViewController(
-      HotentryViewController.new.tap { |c| c.list_type = :hotentry }
+      HotentryViewController.new.tap do |c|
+        c.list_type = :hotentry
+        c.as_home   = true
+      end
     )
 
     @entrylist = HBFav2NavigationController.alloc.initWithRootViewController(
-      HotentryViewController.new.tap { |c| c.list_type = :entrylist }
+      HotentryViewController.new.tap do
+        |c| c.list_type = :entrylist
+        c.as_home   = true
+      end
     )
 
     @config = HBFav2NavigationController.alloc.initWithRootViewController(
-      AccountViewController.new
+      AccountViewController.new.tap { |c| c.as_home = true }
     )
 
     @appinfo = HBFav2NavigationController.alloc.initWithRootViewController(
-      AppInfoViewController.new
+      AppInfoViewController.new.tap { |c| c.as_home = true }
     )
 
     src = [

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-class PocketViewController < UITableViewController
+class PocketViewController < HBFav2::UITableViewController
   include HBFav2::MenuTableDelegate
 
   def viewDidLoad
     super
     self.title = "設定"
-    self.backGestureEnabled = true
     self.initialize_data_source
   end
 

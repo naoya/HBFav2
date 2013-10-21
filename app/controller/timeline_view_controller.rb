@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class TimelineViewController < HBFav2::UITableViewController
-  attr_accessor :user, :as_home, :content_type
+  attr_accessor :user, :content_type
   include HBFav2::ApplicationSwitchNotification
 
   DefaultTitle = "HBFav"
@@ -26,7 +26,6 @@ class TimelineViewController < HBFav2::UITableViewController
 
     self.view.backgroundColor = UIColor.whiteColor
     self.initialize_footerview
-    self.backGestureEnabled = true unless home?
     self.tracked_view_name = content_type == :bookmark ? "UserBookmarks" : "Timeline"
 
     ## Pull to Refresh
@@ -239,10 +238,6 @@ class TimelineViewController < HBFav2::UITableViewController
       end
       self.refreshControl.endRefreshing
     end
-  end
-
-  def home?
-    as_home ? true : false
   end
 
   def applicationWillEnterForeground

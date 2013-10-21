@@ -5,7 +5,6 @@ class CreditViewController < HBFav2::UIViewController
 
     self.title = "クレジット"
     self.tracked_view_name = "Credit"
-    self.backGestureEnabled = true
 
     view << @webview = HBFav2::WebView.new.tap do |v|
       v.frame = CGRectZero
