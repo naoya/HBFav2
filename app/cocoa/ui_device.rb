@@ -7,4 +7,8 @@ class UIDevice
     end
     return false
   end
+
+  def ios6?
+    !ios7?
+  end
 end
