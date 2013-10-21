@@ -10,10 +10,6 @@ class HotentryViewController < HBFav2::UITableViewController
     self.view.backgroundColor = UIColor.whiteColor
     self.tracked_view_name = list_type == :hotentry ? "Hotentry" : "Entrylist"
 
-    self.navigationItem.titleView = TitleLabel.new.tap do |label|
-      label.frame = [[0, 0], [view.frame.size.width, 44]]
-    end
-
     ## Pull to Refresh
     self.refreshControl = HBFav2::RefreshControl.new.tap do |refresh|
       refresh.update_title("フィード取得中...")
@@ -90,7 +86,7 @@ class HotentryViewController < HBFav2::UITableViewController
     end
 
     subtitle = CategoryList.sharedCategories.key_to_title(self.category)
-    self.navigationItem.titleView.text = list_type == :hotentry ? "人気エントリー" : "新着エントリー"
+    self.title = list_type == :hotentry ? "人気エントリー" : "新着エントリー"
 
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
