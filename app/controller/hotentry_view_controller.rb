@@ -80,7 +80,7 @@ class HotentryViewController < HBFav2::UITableViewController
   def viewWillAppear(animated)
     self.receive_application_switch_notifcation
     self.navigationController.setToolbarHidden(true, animated:animated)
-    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2 - 42]
+    @indicator.center = [ view.center.x, view.center.y - 42]
 
     ## category selector
     label =  CategoryList.sharedCategories.key_to_label(self.category)

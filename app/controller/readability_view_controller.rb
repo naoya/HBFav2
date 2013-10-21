@@ -59,7 +59,7 @@ class ReadabilityViewController < HBFav2::UIViewController
   def viewWillAppear(animated)
     super
     prepare_fullscreen
-    @indicator.center = [view.frame.size.width / 2, view.frame.size.height / 2]
+    @indicator.center = [ view.center.x, view.center.y + 42 ]
     @webview.frame = self.view.frame
 
     self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|

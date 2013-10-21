@@ -71,7 +71,7 @@ class WebViewController < HBFav2::UIViewController
 
     ## FIXME: Readability から戻ってくると画面の大きさがおかしくなる
     @webview.frame = view.frame
-    @indicator.center = [@webview.bounds.size.width / 2, @webview.bounds.size.height / 2]
+    @indicator.center = [ view.center.x, view.center.y + 42 ]
   end
 
   def viewWillDisappear(animated)
