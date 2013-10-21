@@ -1,12 +1,19 @@
-# 2.4 / _In progress_
+# 2.4 / _In Review_
 
+* iOS SDK 7.0 対応
 * URL scheme : hbfav:/entry/http://example.com/... に対応 (@toshiwo)
+
+## 細かな修正
+
+* ブックマークコメント取得時のタイムアウトを 10sec -> 30sec に
+* レビューを書くリンク切れ修正
+* メモリ不足時に NSURLCache のキャッシュをクリア
 
 ## Thanks to our contributors
 
 * [Toshiwo][toshiwo]
 
-# 2.3 / _In review_
+# 2.3 / 2013-09-17
 
 * 人気コメント
 * コメント画面 (BookmarkView) に description とサムネイルを表示
@@ -14,7 +21,7 @@
 * プッシュ通知の形式を MPNotificationView に再度変更
 * Google Analytics 組み込み
 
-# 2.2 / _In review_
+# 2.2 / 2013-09-17
 
 * プッシュ通知
 * ブックマーク追加をSDKのUIに変更
