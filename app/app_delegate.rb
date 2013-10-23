@@ -111,7 +111,7 @@ class AppDelegate
 
   def configure_navigation_bar
     if UIDevice.currentDevice.ios7?
-      UINavigationBar.appearance.barTintColor = UIColor.colorWithRed(0.000, green:0.450, blue:0.800, alpha:1.000)
+      UINavigationBar.appearance.barTintColor = UIColor.colorWithRed(0.000, green:0.450, blue:0.800, alpha:0.7)
       UINavigationBar.appearance.titleTextAttributes = {
         NSForegroundColorAttributeName => UIColor.whiteColor,
         NSFontAttributeName            => UIFont.boldSystemFontOfSize(18)
