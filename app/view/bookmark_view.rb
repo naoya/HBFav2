@@ -62,13 +62,13 @@ module HBFav2
 
           label.dataDetectorTypes = NSTextCheckingTypeLink
           label.textAlignment = NSTextAlignmentLeft
-          label.lineHeightMultiple = 0.8
+          label.lineHeightMultiple = 0.7
           label.verticalAlignment = TTTAttributedLabelVerticalAlignmentCenter
 
           ## link attributes
           paragraph = NSMutableParagraphStyle.new
           paragraph.lineBreakMode = NSLineBreakByWordWrapping
-          # paragraph.lineHeightMultiple = 0.8
+          paragraph.lineHeightMultiple = 0.7
 
           label.linkAttributes       = {
             KCTForegroundColorAttributeName => '#3B5998'.uicolor,
