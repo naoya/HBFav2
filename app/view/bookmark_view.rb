@@ -62,13 +62,13 @@ module HBFav2
 
           label.dataDetectorTypes = NSTextCheckingTypeLink
           label.textAlignment = NSTextAlignmentLeft
-          label.lineHeightMultiple = 0.7
+          label.lineHeightMultiple = 0.6
           label.verticalAlignment = TTTAttributedLabelVerticalAlignmentCenter
 
           ## link attributes
           paragraph = NSMutableParagraphStyle.new
           paragraph.lineBreakMode = NSLineBreakByWordWrapping
-          paragraph.lineHeightMultiple = 0.7
+          paragraph.lineHeightMultiple = 0.6
 
           label.linkAttributes       = {
             KCTForegroundColorAttributeName => '#3B5998'.uicolor,
@@ -241,8 +241,8 @@ module HBFav2
           nil
         )
 
-        ## workaround: 若干上が見きれるので height +10 する
-        @commentLabel.frame = [[10, @border.bottom + 10], [fitSize.width, fitSize.height + 10] ]
+        ## workaround: 若干上が見きれるので height +12 とかする･･･
+        @commentLabel.frame = [[10, @border.bottom + 10], [fitSize.width, fitSize.height + 12] ]
       end
 
       y = @commentLabel.text.present? ? @commentLabel.bottom : @border.bottom + 5

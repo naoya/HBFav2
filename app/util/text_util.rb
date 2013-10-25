@@ -8,7 +8,7 @@ module HBFav2
           attributes:self.attributesWithFont(font, color:nil, lineBreakMode:lineBreakMode),
           context:nil
         )
-        return frame.size
+        return CGSizeMake(frame.size.width.ceil, frame.size.height.ceil)
       else
         return text.sizeWithFont(font, constrainedToSize:size, lineBreakMode:lineBreakMode)
       end
