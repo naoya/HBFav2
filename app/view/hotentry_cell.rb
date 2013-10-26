@@ -28,8 +28,9 @@ class HotentryCell < UITableViewCell
 
   def self.sizeForTitle(title, width)
     constrain = CGSize.new(width - 10 - (5 + 80 + 10), 1000)
-    title.sizeWithFont(
-      BookmarkLabelAttributes.sharedAttributes.attributes[:hotentry_title][:font],
+    HBFav2::TextUtil.text(
+      title,
+      sizeWithFont:BookmarkLabelAttributes.sharedAttributes.attributes[:hotentry_title][:font],
       constrainedToSize:constrain,
       lineBreakMode:NSLineBreakByWordWrapping
     )
@@ -37,8 +38,9 @@ class HotentryCell < UITableViewCell
 
   def self.sizeForTitleNoThubnail(title, width)
     constrain = CGSize.new(width - 10 - 10, 1000)
-    title.sizeWithFont(
-      BookmarkLabelAttributes.sharedAttributes.attributes[:hotentry_title][:font],
+    HBFav2::TextUtil.text(
+      title,
+      sizeWithFont:BookmarkLabelAttributes.sharedAttributes.attributes[:hotentry_title][:font],
       constrainedToSize:constrain,
       lineBreakMode:NSLineBreakByWordWrapping
     )
