@@ -56,18 +56,22 @@ module HBFav2
           label.frame = CGRectZero
           label.numberOfLines = 0
           label.lineBreakMode = NSLineBreakByWordWrapping
-
-          ## workaround: System Font では ParagraphStyle の日本語とASCIIのline height計算が異なっておかしくなる
-          label.font = UIFont.fontWithName("Helvetica", size:17)
-
           label.dataDetectorTypes = NSTextCheckingTypeLink
           label.textAlignment = NSTextAlignmentLeft
-          label.lineHeightMultiple = 0.6
           label.verticalAlignment = TTTAttributedLabelVerticalAlignmentCenter
 
-          ## link attributes
+          ## TTTAttributedLabel + Helvetica Neue では line height がアルファベット前提で計算されている様子
+          ## lineHeightMultiple = 1.0 だと、日本語で行間が空きすぎる
+          ## 0.8 にするとアルファベットでも日本語でも一応見れるが最適とは言い難い
+          ## 0.6 だと日本語ではいいがアルファベットだと潰れる
+          ## しょうがないので、ここだけ日本語フォントを明示的に指定する
+          label.font = UIFont.fontWithName("HiraKakuProN-W3", size:17)
+          label.lineHeightMultiple = 0.7
+
+          ## for link attributes
           paragraph = NSMutableParagraphStyle.new
           paragraph.lineBreakMode = NSLineBreakByWordWrapping
+          paragraph.lineHeightMultiple = 0.7
 
           label.linkAttributes       = {
             KCTForegroundColorAttributeName => '#3B5998'.uicolor,
@@ -241,7 +245,7 @@ module HBFav2
         )
 
         ## workaround: 若干上が見きれるので height +12 とかする･･･
-        @commentLabel.frame = [[10, @border.bottom + 10], [fitSize.width, fitSize.height + 12] ]
+        @commentLabel.frame = [[10, @border.bottom + 10], [fitSize.width.ceil, fitSize.height.ceil + 10] ]
       end
 
       y = @commentLabel.text.present? ? @commentLabel.bottom : @border.bottom + 5
