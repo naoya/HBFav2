@@ -63,7 +63,7 @@ Motion::Project::App.setup do |app|
     pod 'JASidePanels'
     pod 'ISBackGesture', :git => 'https://github.com/ishkawa/ISBackGesture.git'
     pod 'BugSense'
-    pod 'TTTAttributedLabel'
+    pod 'TTTAttributedLabel', :git => 'git@github.com:mattt/TTTAttributedLabel.git'
     pod 'NJKWebViewProgress'
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'

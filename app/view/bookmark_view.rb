@@ -68,7 +68,6 @@ module HBFav2
           ## link attributes
           paragraph = NSMutableParagraphStyle.new
           paragraph.lineBreakMode = NSLineBreakByWordWrapping
-          paragraph.lineHeightMultiple = 0.6
 
           label.linkAttributes       = {
             KCTForegroundColorAttributeName => '#3B5998'.uicolor,
@@ -252,11 +251,6 @@ module HBFav2
 
       # title
       constrain = CGSize.new(self.frame.size.width - 19 - 20, 1000) # 19 = favicon (16) + margin (3), 20 = margin left,right
-      # size = @titleButton.titleForState(UIControlStateNormal).sizeWithFont(
-      #   ApplicationConfig.sharedConfig.fontOfSize(17),
-      #   constrainedToSize:constrain,
-      #   lineBreakMode:NSLineBreakByWordWrapping
-      # )
       size = HBFav2::TextUtil.text(
         @titleButton.titleForState(UIControlStateNormal),
         sizeWithFont:ApplicationConfig.sharedConfig.systemFontOfSize(17),

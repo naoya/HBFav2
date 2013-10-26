@@ -35,7 +35,7 @@ DEPENDENCIES:
   - NSDate+TimeAgo
   - PocketAPI (from `git@github.com:naoya/Pocket-ObjC-SDK.git`, branch `cocoapods-dependency`)
   - SVProgressHUD
-  - TTTAttributedLabel
+  - TTTAttributedLabel (from `git@github.com:mattt/TTTAttributedLabel.git`)
   - TUSafariActivity
 
 EXTERNAL SOURCES:
@@ -49,6 +49,8 @@ EXTERNAL SOURCES:
   PocketAPI:
     :branch: cocoapods-dependency
     :git: git@github.com:naoya/Pocket-ObjC-SDK.git
+  TTTAttributedLabel:
+    :git: git@github.com:mattt/TTTAttributedLabel.git
 
 SPEC CHECKSUMS:
   AFNetworking: 7f9bcd7c287a75476cd5c61e82fd3380e93e4c54
