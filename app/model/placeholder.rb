@@ -1,12 +1,12 @@
 class Placeholder
-  attr_accessor :datetime, :index
+  attr_accessor :datetime
 
-  def initialize(i, dt)
-    @index    = i
+  def initialize(id, dt)
+    @id_      = id
     @datetime = dt
   end
 
   def id
-    @id ||= "placeholder-#{@index}"
+    @id ||= "placeholder-#{@id_}"
   end
 end

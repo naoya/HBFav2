@@ -68,14 +68,17 @@ class FeedManager
   end
 
   class TimeBased < FeedManager
+    ## url when prepend feed
     def prepend_url
       @url
     end
 
+    ## url when append feed
     def append_url
       append_url_from(@bookmarks.last.datetime)
     end
 
+    ## url when replace placeholder
     def append_url_from(datetime)
       epoch = datetime.timeIntervalSince1970.to_i
       @url + "?until=#{epoch}"
@@ -87,7 +90,6 @@ class FeedManager
 
       if @bookmarks.size > 0 and bookmarks.first.id == @bookmarks.first.id
         # 新着なし
-        NSLog("No news")
       else
         ## test
         # dt = bookmarks[4].datetime
@@ -133,8 +135,9 @@ class FeedManager
 
       # ここで落ちてるかも･･･
       unless self.uniq!
+        id = @bookmarks[boundary - 1].id
         dt = @bookmarks[boundary - 1].datetime
-        @bookmarks.insert(boundary, Placeholder.new(boundary, dt))
+        @bookmarks.insert(boundary, Placeholder.new(id, dt))
       end
     end
 
@@ -151,7 +154,7 @@ class FeedManager
             json = BW::JSON.parse(response.body.to_str)
             bookmarks = json['bookmarks'].collect { |dict| Bookmark.new(dict) }
             self.willChangeValueForKey('bookmarks')
-            self.replace(ph.index, bookmarks)
+            self.replace(@bookmarks.index(ph), bookmarks)
             self.didChangeValueForKey('bookmarks')
           }
         end
