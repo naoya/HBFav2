@@ -1,6 +1,8 @@
 # 2.5 / _In Progress_
 
-# 2.4 / _In Review_
+* URL scheme を hbfav2:// から hbfav:// へ変更 (@toshiwo)
+
+# 2.4 / 2013-11-03
 
 * iOS SDK 7.0 対応
 * URL scheme : hbfav:/entry/http://example.com/... に対応 (@toshiwo)
