@@ -45,7 +45,7 @@ Motion::Project::App.setup do |app|
   app.info_plist['CFBundleURLTypes'] = [
     {
       'CFBundleURLName' => 'net.bloghackers.app',
-      'CFBundleURLSchemes' => ['hbfav2']
+      'CFBundleURLSchemes' => ['hbfav']
     },
     {
       'CFBundleURLName' => 'com.getpocket.sdk',
