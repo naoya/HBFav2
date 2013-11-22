@@ -1,6 +1,8 @@
 HBFav2 - はてなブックマークお気に入りリーダー
 =============================================
 
+https://codeclimate.com/repos/528eb4c013d637200e0188c8/badges
+
 はてなブックマークのお気に入りをTwitterのタイムラインみたいに読みたい。お気に入りは、follow しているユーザーにフォーカスがあたっている方が個人的に好み
 
 [HBFav](https://github.com/naoya/HBFav) の新バージョンです。Titanium Mobile をやめて RubyMotion でイチから作り直して安定性を確保し、各種機能をブラッシュアップしています。
