@@ -1,7 +1,7 @@
 HBFav2 - はてなブックマークお気に入りリーダー
 =============================================
 
-[![Code Climate](https://codeclimate.com/repos/528eb4c013d637200e0188c8/badges/afc802efea72a270f0d2/gpa.png)](https://codeclimate.com/repos/528eb4c013d637200e0188c8/feed)
+[![Code Climate](https://codeclimate.com/github/naoya/HBFav2.png)](https://codeclimate.com/github/naoya/HBFav2)
 
 はてなブックマークのお気に入りをTwitterのタイムラインみたいに読みたい。お気に入りは、follow しているユーザーにフォーカスがあたっている方が個人的に好み
 
