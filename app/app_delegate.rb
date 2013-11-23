@@ -185,7 +185,12 @@ class AppDelegate
     url = pasteboard.URL
     if string = pasteboard.string
       if matches = string.match(%r{(https?://.*)})
-        whenFoundURLInPasteboard(matches[1])
+        user = ApplicationUser.sharedUser
+        if user.last_url_in_pasteboard and user.last_url_in_pasteboard == url
+        else
+          user.last_url_in_pasteboard = url
+          whenFoundURLInPasteboard(matches[1])
+        end
       end
     end
   end
