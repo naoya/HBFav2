@@ -1,3 +1,5 @@
+# 2.6 / _In Progress_
+
 # 2.5 / _In Review_
 
 * コピーしたURLを開く機能追加
