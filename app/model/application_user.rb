@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class ApplicationUser
-  attr_accessor :hatena_id, :use_timeline, :send_bugreport, :webhook_key, :enable_notification_when_state_active
+  attr_accessor :hatena_id, :use_timeline, :send_bugreport, :webhook_key, :enable_notification_when_state_active, :last_url_in_pasteboard
 
   def self.sharedUser
     Dispatch.once { @instance ||= new }
@@ -13,6 +13,7 @@ class ApplicationUser
     App::Persistence['send_bugreport'] = @send_bugreport
     App::Persistence['webhook_key'] = @webhook_key
     App::Persistence['enable_notification_when_state_active'] = @enable_notification_when_state_active
+    App::Persistence['last_url_in_pasteboard'] = @last_url_in_pasteboard
     self
   end
 
@@ -22,6 +23,7 @@ class ApplicationUser
     self.send_bugreport = App::Persistence['send_bugreport']
     self.webhook_key = App::Persistence['webhook_key']
     self.enable_notification_when_state_active = App::Persistence['enable_notification_when_state_active']
+    self.last_url_in_pasteboard = App::Persistence['last_url_in_pasteboard']
     self
   end
 

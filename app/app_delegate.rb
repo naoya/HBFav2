@@ -72,6 +72,8 @@ class AppDelegate
         payload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]
       end
       self.handleNotificationPayload(payload) if payload.present?
+    else
+      watch_pasteboard
     end
     true
   end
@@ -150,6 +152,62 @@ class AppDelegate
   def applicationWillEnterForeground(application)
     notify = NSNotification.notificationWithName("applicationWillEnterForeground", object:self)
     NSNotificationCenter.defaultCenter.postNotification(notify)
+    watch_pasteboard
+  end
+
+  def presentBookmarkViewControllerWithURL(url, user:user)
+    controller = HBFav2NavigationController.alloc.initWithRootViewController(
+      BookmarkViewController.new.tap do |c|
+        c.short_url = url
+        c.user_name = user
+        c.on_modal = true
+      end
+    )
+    @viewController.presentViewController(controller)
+  end
+
+  def presentWebViewControllerWithURL(url)
+    if url.kind_of?(NSURL)
+      url = url.absoluteString
+    end
+
+    controller = HBFav2NavigationController.alloc.initWithRootViewController(
+      WebViewController.new.tap do |c|
+        c.bookmark = Bookmark.new({ :link => url })
+        c.on_modal = true
+      end
+    )
+    @viewController.presentViewController(controller)
+  end
+
+  def watch_pasteboard
+    pasteboard = UIPasteboard.generalPasteboard
+    url = pasteboard.URL
+    if string = pasteboard.string
+      if matches = string.match(%r{(https?://.*)})
+        user = ApplicationUser.sharedUser
+        if user.last_url_in_pasteboard and user.last_url_in_pasteboard == url
+        else
+          user.last_url_in_pasteboard = url
+          whenFoundURLInPasteboard(matches[1])
+        end
+      end
+    end
+  end
+
+  def whenFoundURLInPasteboard(url)
+    @logo ||= UIImage.imageNamed("default_app_logo.png")
+    banner = MPNotificationView.notifyWithText(
+      "コピーしたURLを開く",
+      detail:url,
+      image:@logo,
+      duration:4.0,
+      andTouchBlock:lambda { |notificationView|
+        self.presentWebViewControllerWithURL(url)
+      }
+    )
+    banner.detailTextLabel.font = UIFont.systemFontOfSize(12)
+    banner.detailTextLabel.textColor = "#333333".uicolor
   end
 end
 

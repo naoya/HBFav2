@@ -64,26 +64,5 @@ module HBFav2
         NSLog("didFailToRegisterForRemoteNotificationsWithError: %@", error)
       end
     end
-
-    def presentBookmarkViewControllerWithURL(url, user:user)
-      controller = HBFav2NavigationController.alloc.initWithRootViewController(
-        BookmarkViewController.new.tap do |c|
-          c.short_url = url
-          c.user_name = user
-          c.on_modal = true
-        end
-      )
-      @viewController.presentViewController(controller)
-    end
-
-    def presentWebViewControllerWithURL(url)
-      controller = HBFav2NavigationController.alloc.initWithRootViewController(
-        WebViewController.new.tap do |c|
-          c.bookmark = Bookmark.new({ :link => url })
-          c.on_modal = true
-        end
-      )
-      @viewController.presentViewController(controller)
-    end
   end
 end
