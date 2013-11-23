@@ -209,6 +209,16 @@ class AppDelegate
     banner.detailTextLabel.font = UIFont.systemFontOfSize(12)
     banner.detailTextLabel.textColor = "#333333".uicolor
   end
+
+  def handleNotificationPayload(payload)
+    if payload.present? and payload['u']
+      if payload['id']
+        self.presentBookmarkViewControllerWithURL(payload['u'], user:payload['id'])
+      else
+        self.presentWebViewControllerWithURL(payload['u'])
+      end
+    end
+  end
 end
 
 if RUBYMOTION_ENV == 'release'

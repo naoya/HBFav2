@@ -47,16 +47,6 @@ module HBFav2
       end
     end
 
-    def handleNotificationPayload(payload)
-      if payload.present? and payload['u']
-        if payload['id']
-          self.presentBookmarkViewControllerWithURL(payload['u'], user:payload['id'])
-        else
-          self.presentWebViewControllerWithURL(payload['u'])
-        end
-      end
-    end
-
     def application(application, didFailToRegisterForRemoteNotificationsWithError:error)
       if error.code == 3010
         NSLog("Push notifications don't work in the simulator!")
