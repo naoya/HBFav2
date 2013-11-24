@@ -31,21 +31,6 @@ class BookmarkManager
   end
 
   def data_to_object(entry, bookmark)
-    Bookmark.new(
-      {
-        :eid   => entry['eid'],
-        :title => entry['title'] || '',
-        :link  => entry['url'],
-        :count => entry['count'],
-        :eid   => entry['eid'],
-        :user => {
-          :name => bookmark['user']
-        },
-        :comment    => bookmark['comment'] || '',
-        :created_at => bookmark['timestamp'],
-        # 2005/02/10 20:55:55 => 2005-02-10T20:55:55+09:00
-        :datetime   =>  bookmark['timestamp'].gsub(/\//, '-').gsub(/ /, 'T') + '+09:00'
-      }
-    )
+    Bookmark.new_from_data(entry, bookmark)
   end
 end
