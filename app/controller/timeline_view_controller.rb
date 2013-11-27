@@ -22,6 +22,7 @@ class TimelineViewController < HBFav2::UITableViewController
   def viewDidLoad
     super
 
+    @last_bookmarks_size = 0
     @bookmarks = self.initialize_feed_manager(self.user)
 
     self.view.backgroundColor = UIColor.whiteColor
@@ -132,7 +133,27 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (@bookmarks == object and keyPath == 'bookmarks')
-      view.reloadDataWithKeepingSelectedRowAnimated(true)
+      if @last_bookmarks_size == 0 or @last_bookmarks_size == @bookmarks.size
+        view.reloadDataWithKeepingSelectedRowAnimated(true)
+        @last_bookmarks_size = @bookmarks.size
+      else
+        # 末尾の時のことはとりあえず後で考える -> ひとまず insert は巧くいっているが、ポジション固定はできてない
+        size = @bookmarks.size - @last_bookmarks_size
+        @last_bookmarks_size = @bookmarks.size
+
+        offset = view.contentOffset
+        view.reloadData
+        for i in (0..size - 1) do
+          offset.y += self.tableView(
+            view,
+            heightForRowAtIndexPath:NSIndexPath.indexPathForRow(0, inSection:0)
+          )
+        end
+        if offset.y > view.contentSize.height
+          offset.y = 0
+        end
+        view.setContentOffset(offset)
+      end
     end
 
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
