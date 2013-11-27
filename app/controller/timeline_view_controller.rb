@@ -49,6 +49,7 @@ class TimelineViewController < HBFav2::UITableViewController
     self.tableView.addGestureRecognizer(
       UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_long_press_row:')
     )
+    self.receive_application_switch_notifcation
   end
 
   def on_long_press_row(recog)
@@ -131,7 +132,7 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (@bookmarks == object and keyPath == 'bookmarks')
-      view.reloadData
+      view.reloadDataWithKeepingSelectedRowAnimated(true)
     end
 
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
@@ -159,23 +160,12 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def viewWillAppear(animated)
-    self.receive_application_switch_notifcation
     self.update_title
     self.navigationController.setToolbarHidden(true, animated:true)
-
-    indexPath = tableView.indexPathForSelectedRow
-    tableView.reloadData
-    tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
-    tableView.deselectRowAtIndexPath(indexPath, animated:animated);
-
+    tableView.reloadDataWithDeselectingRowAnimated(animated)
     @indicator.center = [ view.center.x, view.center.y - 42 ]
     @footer_indicator.center = [@footerView.frame.size.width / 2, @footerView.frame.size.height / 2]
 
-    super
-  end
-
-  def viewWillDisappear(animated)
-    self.unreceive_application_switch_notification
     super
   end
 
@@ -241,12 +231,15 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def applicationWillEnterForeground
+    # FIXME: 新ユーザーページの時且つTimelineだけ
+    @bookmarks.update(true)
     ## 相対時刻更新
-    self.tableView.reloadData
+    self.view.reloadDataWithKeepingSelectedRowAnimated(true)
   end
 
   def dealloc
     self.removeObserver
+    self.unreceive_application_switch_notification
     NSLog("dealloc: " + self.class.name)
     super
   end
