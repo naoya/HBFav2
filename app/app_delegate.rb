@@ -18,7 +18,7 @@ class AppDelegate
     app_user   = ApplicationUser.sharedUser.load
 
     ## initialize BugSense
-    if app_user.send_bugreport?
+    if not Device.simulator? and app_user.send_bugreport?
       BugSenseController.sharedControllerWithBugSenseAPIKey(
         app_config.vars['bugsense']['api_key']
       )

@@ -16,6 +16,7 @@ class FeedManager
     @url = nil
     @bookmarks = []
     @updating = nil
+    @last_update_method = nil
   end
 
   def size
@@ -91,9 +92,11 @@ class FeedManager
       if @bookmarks.size > 0 and bookmarks.first.id == @bookmarks.first.id
         # 新着なし
       else
-        ## test
+        ## 以下二行テスト用
         # dt = bookmarks[4].datetime
         # bookmarks.insert(5, Placeholder.new(5, dt))
+
+        @last_update_method = 'prepend'
 
         origin_size = @bookmarks.size
         boundary = bookmarks.size
@@ -110,6 +113,7 @@ class FeedManager
     end
 
     def append(bookmarks)
+      @last_update_method = 'append'
       self << bookmarks
     end
 
@@ -126,6 +130,7 @@ class FeedManager
     end
 
     def replace(i, bookmarks)
+      @last_update_method = 'replace'
       ## 取ってきたフィードそのものに被りがあると上手くいかないので先に uniq
       bookmarks.uniq! { |b| b.id }
 
@@ -162,6 +167,14 @@ class FeedManager
         cb.call(response) if cb
       end
     end
+
+    def prepended?
+      @last_update_method == 'prepend'
+    end
+
+    def timebased?
+      true
+    end
   end
 
   class Offset < FeedManager
@@ -180,6 +193,10 @@ class FeedManager
 
     def append(bookmarks)
       self << bookmarks
+    end
+
+    def timebased?
+      false
     end
   end
 end

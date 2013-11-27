@@ -2,6 +2,7 @@
 class TimelineViewController < HBFav2::UITableViewController
   attr_accessor :user, :content_type
   include HBFav2::ApplicationSwitchNotification
+  include HBFav2::RemotePushNotificationEvent
 
   DefaultTitle = "HBFav"
 
@@ -22,6 +23,7 @@ class TimelineViewController < HBFav2::UITableViewController
   def viewDidLoad
     super
 
+    @last_bookmarks_size = 0
     @bookmarks = self.initialize_feed_manager(self.user)
 
     self.view.backgroundColor = UIColor.whiteColor
@@ -49,6 +51,9 @@ class TimelineViewController < HBFav2::UITableViewController
     self.tableView.addGestureRecognizer(
       UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_long_press_row:')
     )
+    self.receive_application_switch_notifcation
+    self.receive_remote_push_notifcation_event
+    self.start_periodic_update(60.0)
   end
 
   def on_long_press_row(recog)
@@ -83,7 +88,6 @@ class TimelineViewController < HBFav2::UITableViewController
         self.refreshControl.update_title(res.error_message)
       else
         self.refreshControl.update_title
-        # tableView.reloadData ## 要らない模様 (observerで更新される)
         if @bookmarks.size > 0
           @footer_indicator.startAnimating
         else
@@ -131,7 +135,19 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (@bookmarks == object and keyPath == 'bookmarks')
-      view.reloadData
+      if  @bookmarks.timebased? and
+          @bookmarks.prepended? and
+          @last_bookmarks_size != 0 and
+          @last_bookmarks_size != @bookmarks.size
+
+        ## FIXME: 差分の割り出しは本当は change オブジェクトを使うべき
+        size = @bookmarks.size - @last_bookmarks_size
+        @last_bookmarks_size = @bookmarks.size
+        self.tableView(view, reloadDataWithKeepingContentOffset:size)
+      else
+        view.reloadDataWithKeepingSelectedRowAnimated(true)
+        @last_bookmarks_size = @bookmarks.size
+      end
     end
 
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
@@ -141,6 +157,21 @@ class TimelineViewController < HBFav2::UITableViewController
       @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
       initialize_bookmarks
     end
+  end
+
+  def tableView(tableView, reloadDataWithKeepingContentOffset:prependedRowSize)
+    offset = tableView.contentOffset
+    tableView.reloadData
+    for i in (0..prependedRowSize - 1) do
+      offset.y += self.tableView(
+        tableView,
+        heightForRowAtIndexPath:NSIndexPath.indexPathForRow(i, inSection:0)
+      )
+    end
+    if offset.y > tableView.contentSize.height
+      offset.y = 0
+    end
+    tableView.setContentOffset(offset)
   end
 
   ## 末尾付近に来たら次のフィードを読み込む (paging)
@@ -159,23 +190,12 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def viewWillAppear(animated)
-    self.receive_application_switch_notifcation
     self.update_title
     self.navigationController.setToolbarHidden(true, animated:true)
-
-    indexPath = tableView.indexPathForSelectedRow
-    tableView.reloadData
-    tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
-    tableView.deselectRowAtIndexPath(indexPath, animated:animated);
-
+    tableView.reloadDataWithDeselectingRowAnimated(animated)
     @indicator.center = [ view.center.x, view.center.y - 42 ]
     @footer_indicator.center = [@footerView.frame.size.width / 2, @footerView.frame.size.height / 2]
 
-    super
-  end
-
-  def viewWillDisappear(animated)
-    self.unreceive_application_switch_notification
     super
   end
 
@@ -204,6 +224,7 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     bookmark = @bookmarks[indexPath.row]
+
     if bookmark.kind_of? Placeholder
       cell = tableView.cellForRowAtIndexPath(indexPath)
       cell.beginRefreshing
@@ -211,6 +232,7 @@ class TimelineViewController < HBFav2::UITableViewController
       @bookmarks.replace_placeholder(bookmark) do |response|
         self.refreshControl.endRefreshing
         cell.endRefreshing
+        tableView.deselectRowAtIndexPath(indexPath, animated:true)
       end
     else
       controller = BookmarkViewController.new.tap { |c| c.bookmark = @bookmarks[indexPath.row] }
@@ -241,12 +263,32 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def applicationWillEnterForeground
+    if self.home? and @bookmarks.timebased?
+      @bookmarks.update(true)
+    end
     ## 相対時刻更新
-    self.tableView.reloadData
+    self.view.reloadDataWithKeepingSelectedRowAnimated(true)
+  end
+
+  def applicationDidReceiveRemoteNotification(userInfo)
+    if self.home? and @bookmarks.timebased?
+      @bookmarks.update(true)
+    end
+  end
+
+  def start_periodic_update(interval = 60.0)
+    EM.add_periodic_timer interval do
+      if self.home? and @bookmarks.timebased?
+        NSLog("Attempting to update timeline...")
+        @bookmarks.update(true)
+      end
+    end
   end
 
   def dealloc
     self.removeObserver
+    self.unreceive_application_switch_notification
+    self.unreceive_remote_push_notification_event
     NSLog("dealloc: " + self.class.name)
     super
   end

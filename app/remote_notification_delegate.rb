@@ -38,6 +38,12 @@ module HBFav2
             banner.detailTextLabel.font = UIFont.systemFontOfSize(13)
             banner.detailTextLabel.textColor = "#333333".uicolor
           end
+
+          ## 他の画面でローカルpushイベントを採れるように、発火
+          notify = NSNotification.notificationWithName(
+            "applicationDidReceiveRemoteNotification", object:userInfo
+          )
+          NSNotificationCenter.defaultCenter.postNotification(notify)
         end
       when UIApplicationStateInactive then
         PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
