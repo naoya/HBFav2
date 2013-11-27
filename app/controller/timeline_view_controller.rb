@@ -2,6 +2,7 @@
 class TimelineViewController < HBFav2::UITableViewController
   attr_accessor :user, :content_type
   include HBFav2::ApplicationSwitchNotification
+  include HBFav2::RemotePushNotificationEvent
 
   DefaultTitle = "HBFav"
 
@@ -51,6 +52,7 @@ class TimelineViewController < HBFav2::UITableViewController
       UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_long_press_row:')
     )
     self.receive_application_switch_notifcation
+    self.receive_remote_push_notifcation_event
   end
 
   def on_long_press_row(recog)
@@ -265,9 +267,16 @@ class TimelineViewController < HBFav2::UITableViewController
     self.view.reloadDataWithKeepingSelectedRowAnimated(true)
   end
 
+  def applicationDidReceiveRemoteNotification(userInfo)
+    if self.home? and @bookmarks.timebased?
+      @bookmarks.update(true)
+    end
+  end
+
   def dealloc
     self.removeObserver
     self.unreceive_application_switch_notification
+    self.unreceive_remote_push_notification_event
     NSLog("dealloc: " + self.class.name)
     super
   end
