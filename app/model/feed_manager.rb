@@ -92,9 +92,10 @@ class FeedManager
       if @bookmarks.size > 0 and bookmarks.first.id == @bookmarks.first.id
         # 新着なし
       else
-        ## test
+        ## 以下二行テスト用
         # dt = bookmarks[4].datetime
         # bookmarks.insert(5, Placeholder.new(5, dt))
+
         @last_update_method = 'prepend'
 
         origin_size = @bookmarks.size
