@@ -5,6 +5,7 @@ require 'bundler/setup'
 Bundler.require :default
 
 require 'sugarcube-attributedstring'
+require 'bubble-wrap/reactor'
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.

@@ -53,6 +53,7 @@ class TimelineViewController < HBFav2::UITableViewController
     )
     self.receive_application_switch_notifcation
     self.receive_remote_push_notifcation_event
+    self.start_periodic_update(60.0)
   end
 
   def on_long_press_row(recog)
@@ -272,6 +273,15 @@ class TimelineViewController < HBFav2::UITableViewController
   def applicationDidReceiveRemoteNotification(userInfo)
     if self.home? and @bookmarks.timebased?
       @bookmarks.update(true)
+    end
+  end
+
+  def start_periodic_update(interval = 60.0)
+    EM.add_periodic_timer interval do
+      if self.home? and @bookmarks.timebased?
+        NSLog("Attempting to update timeline...")
+        @bookmarks.update(true)
+      end
     end
   end
 
