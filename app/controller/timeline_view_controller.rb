@@ -223,6 +223,7 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     bookmark = @bookmarks[indexPath.row]
+
     if bookmark.kind_of? Placeholder
       cell = tableView.cellForRowAtIndexPath(indexPath)
       cell.beginRefreshing
@@ -230,6 +231,7 @@ class TimelineViewController < HBFav2::UITableViewController
       @bookmarks.replace_placeholder(bookmark) do |response|
         self.refreshControl.endRefreshing
         cell.endRefreshing
+        tableView.deselectRowAtIndexPath(indexPath, animated:true)
       end
     else
       controller = BookmarkViewController.new.tap { |c| c.bookmark = @bookmarks[indexPath.row] }
