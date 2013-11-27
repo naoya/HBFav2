@@ -87,7 +87,6 @@ class TimelineViewController < HBFav2::UITableViewController
         self.refreshControl.update_title(res.error_message)
       else
         self.refreshControl.update_title
-        # tableView.reloadData ## 要らない模様 (observerで更新される)
         if @bookmarks.size > 0
           @footer_indicator.startAnimating
         else
@@ -140,6 +139,7 @@ class TimelineViewController < HBFav2::UITableViewController
           @last_bookmarks_size != 0 and
           @last_bookmarks_size != @bookmarks.size
 
+        ## FIXME: 差分の割り出しは本当は change オブジェクトを使うべき
         size = @bookmarks.size - @last_bookmarks_size
         @last_bookmarks_size = @bookmarks.size
         self.tableView(view, reloadDataWithKeepingContentOffset:size)
@@ -164,7 +164,7 @@ class TimelineViewController < HBFav2::UITableViewController
     for i in (0..prependedRowSize - 1) do
       offset.y += self.tableView(
         tableView,
-        heightForRowAtIndexPath:NSIndexPath.indexPathForRow(0, inSection:0)
+        heightForRowAtIndexPath:NSIndexPath.indexPathForRow(i, inSection:0)
       )
     end
     if offset.y > tableView.contentSize.height
