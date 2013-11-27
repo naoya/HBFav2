@@ -133,26 +133,17 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (@bookmarks == object and keyPath == 'bookmarks')
-      if @last_bookmarks_size == 0 or @last_bookmarks_size == @bookmarks.size
-        view.reloadDataWithKeepingSelectedRowAnimated(true)
-        @last_bookmarks_size = @bookmarks.size
-      else
-        # 末尾の時のことはとりあえず後で考える -> ひとまず insert は巧くいっているが、ポジション固定はできてない
+      if  @bookmarks.timebased? and
+          @bookmarks.prepended? and
+          @last_bookmarks_size != 0 and
+          @last_bookmarks_size != @bookmarks.size
+
         size = @bookmarks.size - @last_bookmarks_size
         @last_bookmarks_size = @bookmarks.size
-
-        offset = view.contentOffset
-        view.reloadData
-        for i in (0..size - 1) do
-          offset.y += self.tableView(
-            view,
-            heightForRowAtIndexPath:NSIndexPath.indexPathForRow(0, inSection:0)
-          )
-        end
-        if offset.y > view.contentSize.height
-          offset.y = 0
-        end
-        view.setContentOffset(offset)
+        self.tableView(view, reloadDataWithKeepingContentOffset:size)
+      else
+        view.reloadDataWithKeepingSelectedRowAnimated(true)
+        @last_bookmarks_size = @bookmarks.size
       end
     end
 
@@ -163,6 +154,21 @@ class TimelineViewController < HBFav2::UITableViewController
       @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
       initialize_bookmarks
     end
+  end
+
+  def tableView(tableView, reloadDataWithKeepingContentOffset:prependedRowSize)
+    offset = tableView.contentOffset
+    tableView.reloadData
+    for i in (0..prependedRowSize - 1) do
+      offset.y += self.tableView(
+        tableView,
+        heightForRowAtIndexPath:NSIndexPath.indexPathForRow(0, inSection:0)
+      )
+    end
+    if offset.y > tableView.contentSize.height
+      offset.y = 0
+    end
+    tableView.setContentOffset(offset)
   end
 
   ## 末尾付近に来たら次のフィードを読み込む (paging)
@@ -252,8 +258,9 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def applicationWillEnterForeground
-    # FIXME: 新ユーザーページの時且つTimelineだけ
-    @bookmarks.update(true)
+    if self.home? and @bookmarks.timebased?
+      @bookmarks.update(true)
+    end
     ## 相対時刻更新
     self.view.reloadDataWithKeepingSelectedRowAnimated(true)
   end
