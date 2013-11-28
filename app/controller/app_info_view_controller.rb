@@ -21,7 +21,7 @@ class AppInfoViewController < HBFav2::UIViewController
             :action => 'open_report'
           },
           {
-            :label  => "レビューを書く",
+            :label  => "レビュー",
             :detail => "App Store",
             :action => 'open_review'
           },
