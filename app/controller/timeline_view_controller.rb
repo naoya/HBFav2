@@ -262,26 +262,30 @@ class TimelineViewController < HBFav2::UITableViewController
     end
   end
 
-  def applicationWillEnterForeground
+  def trigger_auto_update(&block)
     if self.home? and @bookmarks.timebased?
-      @bookmarks.update(true)
+      @bookmarks.update(true) do |res|
+        if res.ok?
+          self.refreshControl.update_title
+        end
+        block.call(res) if block
+      end
     end
+  end
+
+  def applicationWillEnterForeground
+    self.trigger_auto_update
     ## 相対時刻更新
     self.view.reloadDataWithKeepingSelectedRowAnimated(true)
   end
 
   def applicationDidReceiveRemoteNotification(userInfo)
-    if self.home? and @bookmarks.timebased?
-      @bookmarks.update(true)
-    end
+    self.trigger_auto_update
   end
 
   def start_periodic_update(interval = 60.0)
     EM.add_periodic_timer interval do
-      if self.home? and @bookmarks.timebased?
-        NSLog("Attempting to update timeline...")
-        @bookmarks.update(true)
-      end
+      self.trigger_auto_update
     end
   end
 

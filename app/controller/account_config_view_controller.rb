@@ -40,7 +40,7 @@ class AccountConfigViewController < Formotion::FormController
                   value: user.use_timeline?
                 },
               ],
-              footer: "はてな上で新ユーザーページを利用している場合のみ有効にしてください。フィードの読み込み精度が向上します"
+              footer: "はてなブックマーク本体で新ユーザーページを利用している場合のみ有効にしてください。フィードの読み込み精度が向上します (HBFavは新ユーザーページ設定有効での利用が推奨です)"
             }]
       })
       return self.class.alloc.initWithForm(form)
