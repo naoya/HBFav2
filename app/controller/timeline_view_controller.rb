@@ -289,6 +289,18 @@ class TimelineViewController < HBFav2::UITableViewController
     end
   end
 
+  def performBackgroundFetchWithCompletion(completionHandler)
+    NSLog("Background Fetch")
+    self.trigger_auto_update do |res|
+      NSLog("############## Finish Background Fetch ################")
+      if res.ok?
+        completionHandler.call(UIBackgroundFetchResultNewData)
+      else
+        completionHandler.call(UIBackgroundFetchResultFailed)
+      end
+    end
+  end
+
   def dealloc
     self.removeObserver
     self.unreceive_application_switch_notification

@@ -55,6 +55,7 @@ Motion::Project::App.setup do |app|
   ]
   app.info_plist['UIViewControllerBasedStatusBarAppearance'] = false
   app.info_plist['UIStatusBarStyle'] = "UIStatusBarStyleLightContent"
+  app.info_plist['UIBackgroundModes'] = ['fetch', 'remote-notification']
 
   app.pods do
     pod 'PocketAPI', :git => 'git@github.com:naoya/Pocket-ObjC-SDK.git', :branch => 'cocoapods-dependency'

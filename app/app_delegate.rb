@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class AppDelegate
-  attr_accessor :viewController
+  attr_accessor :viewController, :timelineViewController
   include HBFav2::RemoteNotificationDelegate
   include HBFav2::GoogleAnalytics
 
@@ -51,14 +51,16 @@ class AppDelegate
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 
+    @timelineViewController = TimelineViewController.new.tap do |c|
+      c.user     = app_user.to_bookmark_user
+      c.as_home  = true
+    end
+
     @viewController = HBFav2PanelController.sharedController
     @viewController.leftGapPercentage = 0.7
     @viewController.leftPanel = LeftViewController.new
     @viewController.centerPanel = HBFav2NavigationController.alloc.initWithRootViewController(
-      TimelineViewController.new.tap do |c|
-        c.user     = app_user.to_bookmark_user
-        c.as_home  = true
-      end
+      @timelineViewController
     )
     @window.rootViewController = @viewController
     @window.makeKeyAndVisible
@@ -74,6 +76,12 @@ class AppDelegate
       self.handleNotificationPayload(payload) if payload.present?
     else
       watch_pasteboard
+    end
+
+    ## Background Fetch
+    if UIDevice.currentDevice.ios7?
+      NSLog("Background Fetch Enabled")
+      UIApplication.sharedApplication.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
     end
     true
   end
@@ -219,6 +227,10 @@ class AppDelegate
         self.presentWebViewControllerWithURL(payload['u'])
       end
     end
+  end
+
+  def application(application, performFetchWithCompletionHandler:completionHandler)
+    self.timelineViewController.performBackgroundFetchWithCompletion(completionHandler)
   end
 end
 
