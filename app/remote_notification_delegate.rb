@@ -14,7 +14,23 @@ module HBFav2
       end
     end
 
+    ## For iOS 6 (7では呼ばれない)
     def application(application, didReceiveRemoteNotification:userInfo)
+      self.handlePush(application, userInfo:userInfo)
+    end
+
+    ## for iOS 7 (7でしか呼ばれない)
+    def application(application, didReceiveRemoteNotification:userInfo, fetchCompletionHandler:completionHandler)
+      self.timelineViewController.performBackgroundFetchWithCompletion(completionHandler)
+
+      ## FIXME: 自分のブックマークは timebased じゃないので自動更新は無理ぽ･･･
+      # if self.bookmarksViewController.user.name == userInfo['aps']['...']
+      # self.bookmarksViewController.performBackgroundFetchWithCompletion(completionHandler)
+      # end
+      self.handlePush(application, userInfo:userInfo)
+    end
+
+    def handlePush(application, userInfo:userInfo)
       case application.applicationState
       when UIApplicationStateActive then
         if userInfo.present? and userInfo['aps']
@@ -40,10 +56,13 @@ module HBFav2
           end
 
           ## 他の画面でローカルpushイベントを採れるように、発火
-          notify = NSNotification.notificationWithName(
-            "applicationDidReceiveRemoteNotification", object:userInfo
-          )
-          NSNotificationCenter.defaultCenter.postNotification(notify)
+          ## iOS 7 は Background Fetch に任せるので必要ない
+          if UIDevice.currentDevice.ios6?
+            notify = NSNotification.notificationWithName(
+              "applicationDidReceiveRemoteNotification", object:userInfo
+            )
+            NSNotificationCenter.defaultCenter.postNotification(notify)
+          end
         end
       when UIApplicationStateInactive then
         PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)

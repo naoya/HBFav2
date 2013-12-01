@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 class LeftViewController < UITableViewController
+  attr_accessor :controllers
+
   def viewDidLoad
     super
     ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
-    @dataSource = initialize_controllers_for(ApplicationUser.sharedUser.to_bookmark_user)
+    @dataSource = initialize_data_source
 
     self.configure_separator_color
     @selected = [0, rowForTimeline].nsindexpath
@@ -20,69 +22,37 @@ class LeftViewController < UITableViewController
     end
   end
 
-  def initialize_controllers_for(user)
-    ## initialize navigation controllers
-    @timeline = self.sidePanelController.centerPanel
-    @bookmark = HBFav2NavigationController.alloc.initWithRootViewController(
-      TimelineViewController.new.tap do |c|
-        c.user  = user
-        c.content_type = :bookmark
-        c.title = user.name
-        c.as_home  = true
-      end
-    )
-
-    @hotentry = HBFav2NavigationController.alloc.initWithRootViewController(
-      HotentryViewController.new.tap do |c|
-        c.list_type = :hotentry
-        c.as_home   = true
-      end
-    )
-
-    @entrylist = HBFav2NavigationController.alloc.initWithRootViewController(
-      HotentryViewController.new.tap do
-        |c| c.list_type = :entrylist
-        c.as_home   = true
-      end
-    )
-
-    @config = HBFav2NavigationController.alloc.initWithRootViewController(
-      AccountViewController.new.tap { |c| c.as_home = true }
-    )
-
-    @appinfo = HBFav2NavigationController.alloc.initWithRootViewController(
-      AppInfoViewController.new.tap { |c| c.as_home = true }
-    )
-
+  def initialize_data_source
+    user = ApplicationUser.sharedUser.to_bookmark_user
     src = [
       {
         :title      => user.name,
-        :controller => @config,
+        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:account]),
         :image      => profile_image_for(user)
       },
       {
         :title      => 'タイムライン',
-        :controller => @timeline,
+        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:timeline]),
         :image      => UIImage.imageNamed('insignia_star')
       },
       {
         :title      => 'ブックマーク',
-        :controller => @bookmark,
+        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:bookmarks]),
         :image      => UIImage.imageNamed('insignia_tags')
       },
       {
         :title      => '人気エントリー',
-        :controller => @hotentry,
+        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:hotentry]),
         :image      => UIImage.imageNamed('insignia_heart')
       },
       {
         :title      => '新着エントリー',
-        :controller => @entrylist,
+        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:entrylist]),
         :image      => UIImage.imageNamed('insignia_file')
       },
       {
         :title      => "アプリについて",
-        :controller => @appinfo,
+        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:appInfo]),
         :image      => UIImage.imageNamed('default_app_logo')
       }
     ]
@@ -156,7 +126,12 @@ class LeftViewController < UITableViewController
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id')
       ## FIXME: 生データいじりすぎてて微妙
-      row = @dataSource[0]
+      row = if UIDevice.currentDevice.ios7?
+              @dataSource[1]
+            else
+              @dataSource[0]
+            end
+
       user = ApplicationUser.sharedUser.to_bookmark_user
       row[:title] = user.name
       row[:image] = profile_image_for(user)

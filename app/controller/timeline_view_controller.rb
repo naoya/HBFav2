@@ -6,20 +6,6 @@ class TimelineViewController < HBFav2::UITableViewController
 
   DefaultTitle = "HBFav"
 
-  def registerObserver
-    @observed = true
-    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
-    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
-  end
-
-  def removeObserver
-    if @observed
-      @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
-      ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
-      @observed = false
-    end
-  end
-
   def viewDidLoad
     super
 
@@ -41,7 +27,6 @@ class TimelineViewController < HBFav2::UITableViewController
     end
 
     if ApplicationUser.sharedUser.configured?
-      ## Finally, fetch latest timeline feed
       initialize_bookmarks
     else
       open_account_config
@@ -130,6 +115,20 @@ class TimelineViewController < HBFav2::UITableViewController
         end
         @footer_indicator.stopAnimating
       end
+    end
+  end
+
+  def registerObserver
+    @observed = true
+    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
+    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
+  end
+
+  def removeObserver
+    if @observed
+      @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
+      ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
+      @observed = false
     end
   end
 
@@ -263,13 +262,23 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def trigger_auto_update(&block)
-    if self.home? and @bookmarks.timebased?
-      @bookmarks.update(true) do |res|
-        if res.ok?
-          self.refreshControl.update_title
-        end
-        block.call(res) if block
+    case content_type
+    when :timeline then
+      if self.home? and @bookmarks.timebased?
+        _update_bookmarks(block)
       end
+    when :bookmark then
+      ## 自分のブックマークは timebased じゃないので保留
+      # _update_bookmarks(block) if self.home?
+    end
+  end
+
+  def _update_bookmarks(block)
+    @bookmarks.update(true) do |res|
+      if res.ok?
+        self.refreshControl.update_title
+      end
+      block.call(res) if block
     end
   end
 
@@ -286,6 +295,18 @@ class TimelineViewController < HBFav2::UITableViewController
   def start_periodic_update(interval = 60.0)
     EM.add_periodic_timer interval do
       self.trigger_auto_update
+    end
+  end
+
+  def performBackgroundFetchWithCompletion(completionHandler)
+    NSLog("Background Fetch")
+    self.trigger_auto_update do |res|
+      NSLog("############## Finish Background Fetch ################")
+      if res.ok?
+        completionHandler.call(UIBackgroundFetchResultNewData)
+      else
+        completionHandler.call(UIBackgroundFetchResultFailed)
+      end
     end
   end
 

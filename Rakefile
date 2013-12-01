@@ -55,6 +55,7 @@ Motion::Project::App.setup do |app|
   ]
   app.info_plist['UIViewControllerBasedStatusBarAppearance'] = false
   app.info_plist['UIStatusBarStyle'] = "UIStatusBarStyleLightContent"
+  app.info_plist['UIBackgroundModes'] = ['fetch', 'remote-notification']
 
   app.pods do
     pod 'PocketAPI', :git => 'git@github.com:naoya/Pocket-ObjC-SDK.git', :branch => 'cocoapods-dependency'
@@ -69,7 +70,6 @@ Motion::Project::App.setup do |app|
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
-    pod 'iVersion', :git => 'git@github.com:naoya/iVersion.git', :branch => 'fix/japanese'
     pod 'MPNotificationView'
     pod 'GoogleAnalytics-iOS-SDK'
 
