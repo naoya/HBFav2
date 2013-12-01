@@ -27,7 +27,6 @@ class TimelineViewController < HBFav2::UITableViewController
     end
 
     if ApplicationUser.sharedUser.configured?
-      ## Finally, fetch latest timeline feed
       initialize_bookmarks
     else
       open_account_config
