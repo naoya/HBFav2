@@ -32,7 +32,7 @@ class LeftViewController < UITableViewController
       },
       {
         :title      => 'タイムライン',
-        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:timeline]),
+        :controller => self.sidePanelController.centerPanel,
         :image      => UIImage.imageNamed('insignia_star')
       },
       {
