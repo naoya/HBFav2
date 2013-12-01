@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class AppDelegate
-  attr_accessor :viewController, :timelineViewController
+  attr_accessor :viewController, :timelineViewController, :bookmarksViewController
   include HBFav2::RemoteNotificationDelegate
   include HBFav2::GoogleAnalytics
 
@@ -73,6 +73,7 @@ class AppDelegate
 
     @timelineViewController = TimelineViewController.new.tap do |c|
       c.user     = user
+      c.content_type = :timeline
       c.as_home  = true
     end
 
@@ -115,7 +116,7 @@ class AppDelegate
   end
 
   def configure_bugsense_service(app_config)
-    if not Device.simulator? and app_user.send_bugreport?
+    if not Device.simulator? and ApplicationUser.sharedUser.send_bugreport?
       BugSenseController.sharedControllerWithBugSenseAPIKey(
         app_config.vars['bugsense']['api_key']
       )

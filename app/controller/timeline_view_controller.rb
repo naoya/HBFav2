@@ -262,13 +262,22 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def trigger_auto_update(&block)
-    if self.home? and @bookmarks.timebased?
-      @bookmarks.update(true) do |res|
-        if res.ok?
-          self.refreshControl.update_title
-        end
-        block.call(res) if block
+    case content_type
+    when :timeline then
+      if self.home? and @bookmarks.timebased?
+        _update_bookmarks(block)
       end
+    when :bookmark then
+      _update_bookmarks(block) if self.home?
+    end
+  end
+
+  def _update_bookmarks(block)
+    @bookmarks.update(true) do |res|
+      if res.ok?
+        self.refreshControl.update_title
+      end
+      block.call(res) if block
     end
   end
 

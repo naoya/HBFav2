@@ -22,6 +22,11 @@ module HBFav2
     ## for iOS 7 (7でしか呼ばれない)
     def application(application, didReceiveRemoteNotification:userInfo, fetchCompletionHandler:completionHandler)
       self.timelineViewController.performBackgroundFetchWithCompletion(completionHandler)
+
+      ## FIXME: 自分のブックマークは timebased じゃないので自動更新は無理ぽ･･･
+      # if self.bookmarksViewController.user.name == userInfo['aps']['...']
+      # self.bookmarksViewController.performBackgroundFetchWithCompletion(completionHandler)
+      # end
       self.handlePush(application, userInfo:userInfo)
     end
 
