@@ -268,7 +268,8 @@ class TimelineViewController < HBFav2::UITableViewController
         _update_bookmarks(block)
       end
     when :bookmark then
-      _update_bookmarks(block) if self.home?
+      ## 自分のブックマークは timebased じゃないので保留
+      # _update_bookmarks(block) if self.home?
     end
   end
 
