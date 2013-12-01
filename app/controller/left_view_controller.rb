@@ -156,7 +156,12 @@ class LeftViewController < UITableViewController
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id')
       ## FIXME: 生データいじりすぎてて微妙
-      row = @dataSource[0]
+      row = if UIDevice.currentDevice.ios7?
+              @dataSource[1]
+            else
+              @dataSource[0]
+            end
+
       user = ApplicationUser.sharedUser.to_bookmark_user
       row[:title] = user.name
       row[:image] = profile_image_for(user)
