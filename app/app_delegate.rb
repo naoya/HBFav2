@@ -4,13 +4,6 @@ class AppDelegate
   include HBFav2::RemoteNotificationDelegate
   include HBFav2::GoogleAnalytics
 
-  def initialize
-    IVersion.sharedInstance.appStoreID = 477950722
-    IVersion.sharedInstance.remoteVersionsPlistURL = 'https://dl.dropboxusercontent.com/u/2586384/hbfav/versions.plist'
-    ## デバッグ
-    # IVersion.sharedInstance.previewMode = true
-  end
-
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     NSLog("RUBYMOTION_ENV: " + RUBYMOTION_ENV)
 

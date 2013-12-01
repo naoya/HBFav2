@@ -8,7 +8,6 @@ PODS:
     - AFNetworking (~> 1.0)
     - SFHFKeychainUtils
   - ISBackGesture (0.0.5)
-  - iVersion (1.10.6)
   - JASidePanels (1.3.2)
   - MPNotificationView (1.1.0)
   - NJKWebViewProgress (0.1.6)
@@ -28,7 +27,6 @@ DEPENDENCIES:
   - GoogleAnalytics-iOS-SDK
   - HatenaBookmarkSDK (from `git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git`)
   - ISBackGesture (from `https://github.com/ishkawa/ISBackGesture.git`)
-  - iVersion (from `git@github.com:naoya/iVersion.git`, branch `fix/japanese`)
   - JASidePanels
   - MPNotificationView
   - NJKWebViewProgress
@@ -43,9 +41,6 @@ EXTERNAL SOURCES:
     :git: git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git
   ISBackGesture:
     :git: https://github.com/ishkawa/ISBackGesture.git
-  iVersion:
-    :branch: fix/japanese
-    :git: git@github.com:naoya/iVersion.git
   PocketAPI:
     :branch: cocoapods-dependency
     :git: git@github.com:naoya/Pocket-ObjC-SDK.git
@@ -60,7 +55,6 @@ SPEC CHECKSUMS:
   GoogleAnalytics-iOS-SDK: f8d5faf4862b679667be0c270531a189572275d1
   HatenaBookmarkSDK: b98ef6c0a9d01b11e9cbe2f070310fa56512a506
   ISBackGesture: 8d67984a799b5a70abf569e5c184113129c4270d
-  iVersion: 260d17038c6e2c256b17d77c4ca2f74cddd5128a
   JASidePanels: c0e642a7311ec9cc9adfa616fa4a795e4e169f20
   MPNotificationView: 5c71d3776ac594fba2828505c37cb797fcc76866
   NJKWebViewProgress: 5181e8af629e60e8dd48c8b738b39e89eeecb351
