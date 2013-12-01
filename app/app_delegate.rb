@@ -15,55 +15,19 @@ class AppDelegate
     NSLog("RUBYMOTION_ENV: " + RUBYMOTION_ENV)
 
     app_config = ApplicationConfig.sharedConfig
-    app_user   = ApplicationUser.sharedUser.load
 
-    ## initialize BugSense
-    if not Device.simulator? and app_user.send_bugreport?
-      BugSenseController.sharedControllerWithBugSenseAPIKey(
-        app_config.vars['bugsense']['api_key']
-      )
-    end
-
-    ## initialize PocketAPI
-    PocketAPI.sharedAPI.setConsumerKey(
-      app_config.vars["pocket"]["consumer_key"]
-    )
-
-    ## initialize Hatena-Bookmark SDK
-    HTBHatenaBookmarkManager.sharedManager.setConsumerKey(
-      app_config.vars['hatena']['consumer_key'],
-      consumerSecret:app_config.vars['hatena']['consumer_secret']
-    )
-
-    GoogleAPI.sharedAPI.api_key = app_config.vars['google']['api_key']
-
+    self.configure_bugsense_service(app_config)
+    self.configure_pocket_service(app_config)
+    self.configure_hatena_bookmark_service(app_config)
+    self.configure_google_api_service(app_config)
     self.configure_google_analytics(app_config.vars['google_analytics']['tracking_id'])
     self.configure_parse_service(app_config, launchOptions)
+
     self.initialize_audio_session
     self.configure_navigation_bar
     self.configure_bar_button_item
-
-    if UIDevice.currentDevice.ios7?
-      UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleLightContent)
-    else
-      UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
-    end
-
-    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-
-    @timelineViewController = TimelineViewController.new.tap do |c|
-      c.user     = app_user.to_bookmark_user
-      c.as_home  = true
-    end
-
-    @viewController = HBFav2PanelController.sharedController
-    @viewController.leftGapPercentage = 0.7
-    @viewController.leftPanel = LeftViewController.new
-    @viewController.centerPanel = HBFav2NavigationController.alloc.initWithRootViewController(
-      @timelineViewController
-    )
-    @window.rootViewController = @viewController
-    @window.makeKeyAndVisible
+    self.configure_status_bar
+    self.initialize_window
 
     ## Notification Center のプッシュ通知履歴から開いたとき
     if launchOptions.present?
@@ -78,12 +42,35 @@ class AppDelegate
       watch_pasteboard
     end
 
-    ## Background Fetch
-    if UIDevice.currentDevice.ios7?
-      NSLog("Background Fetch Enabled")
-      UIApplication.sharedApplication.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
-    end
+    self.configure_background_fetch
     true
+  end
+
+  def configure_status_bar
+    if UIDevice.currentDevice.ios7?
+      UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleLightContent)
+    else
+      UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
+    end
+  end
+
+  def initialize_window
+    app_user   = ApplicationUser.sharedUser.load
+
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
+    @timelineViewController = TimelineViewController.new.tap do |c|
+      c.user     = app_user.to_bookmark_user
+      c.as_home  = true
+    end
+
+    @viewController = HBFav2PanelController.sharedController
+    @viewController.leftGapPercentage = 0.7
+    @viewController.leftPanel = LeftViewController.new
+    @viewController.centerPanel = HBFav2NavigationController.alloc.initWithRootViewController(
+      @timelineViewController
+    )
+    @window.rootViewController = @viewController
+    @window.makeKeyAndVisible
   end
 
   def development?
@@ -92,6 +79,31 @@ class AppDelegate
 
   def release?
     !development?
+  end
+
+  def configure_bugsense_service(app_config)
+    if not Device.simulator? and app_user.send_bugreport?
+      BugSenseController.sharedControllerWithBugSenseAPIKey(
+        app_config.vars['bugsense']['api_key']
+      )
+    end
+  end
+
+  def configure_pocket_service(app_config)
+    PocketAPI.sharedAPI.setConsumerKey(
+      app_config.vars["pocket"]["consumer_key"]
+    )
+  end
+
+  def configure_hatena_bookmark_service(app_config)
+    HTBHatenaBookmarkManager.sharedManager.setConsumerKey(
+      app_config.vars['hatena']['consumer_key'],
+      consumerSecret:app_config.vars['hatena']['consumer_secret']
+    )
+  end
+
+  def configure_google_api_service(app_config)
+    GoogleAPI.sharedAPI.api_key = app_config.vars['google']['api_key']
   end
 
   def configure_parse_service(app_config, launchOptions)
@@ -138,6 +150,13 @@ class AppDelegate
       background_image = UIImage.imageNamed("UIBarButtonItemBarBackGround.png")
       UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
       UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackButtonBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
+    end
+  end
+
+  def configure_background_fetch
+    if UIDevice.currentDevice.ios7?
+      NSLog("Background Fetch Enabled")
+      UIApplication.sharedApplication.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
     end
   end
 
