@@ -6,20 +6,6 @@ class TimelineViewController < HBFav2::UITableViewController
 
   DefaultTitle = "HBFav"
 
-  def registerObserver
-    @observed = true
-    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
-    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
-  end
-
-  def removeObserver
-    if @observed
-      @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
-      ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
-      @observed = false
-    end
-  end
-
   def viewDidLoad
     super
 
@@ -130,6 +116,20 @@ class TimelineViewController < HBFav2::UITableViewController
         end
         @footer_indicator.stopAnimating
       end
+    end
+  end
+
+  def registerObserver
+    @observed = true
+    ApplicationUser.sharedUser.addObserver(self, forKeyPath:'hatena_id', options:0, context:nil)
+    @bookmarks.addObserver(self, forKeyPath:'bookmarks', options:0, context:nil)
+  end
+
+  def removeObserver
+    if @observed
+      @bookmarks.removeObserver(self, forKeyPath:'bookmarks')
+      ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
+      @observed = false
     end
   end
 
