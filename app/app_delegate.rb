@@ -242,16 +242,19 @@ class AppDelegate
   end
 
   def watch_pasteboard
-    pasteboard = UIPasteboard.generalPasteboard
-    if string = pasteboard.string
-      if matches = string.match(%r{(https?://.*)})
-        url  = matches[1]
-        user = ApplicationUser.sharedUser
-        if user.last_url_in_pasteboard and user.last_url_in_pasteboard == url
-        else
-          user.last_url_in_pasteboard = url
-          user.save
-          whenFoundURLInPasteboard(matches[1])
+    user = ApplicationUser.sharedUser
+    if user.configured?
+      pasteboard = UIPasteboard.generalPasteboard
+      if string = pasteboard.string
+        if matches = string.match(%r{(https?://.*)})
+          url  = matches[1]
+
+          if user.last_url_in_pasteboard and user.last_url_in_pasteboard == url
+          else
+            user.last_url_in_pasteboard = url
+            user.save
+            whenFoundURLInPasteboard(matches[1])
+          end
         end
       end
     end
