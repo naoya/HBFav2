@@ -51,19 +51,59 @@ class AppDelegate
     app_user   = ApplicationUser.sharedUser.load
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    @timelineViewController = TimelineViewController.new.tap do |c|
-      c.user     = app_user.to_bookmark_user
-      c.as_home  = true
-    end
+
+    view_controllers = self.initialize_view_controllers(app_user)
 
     @viewController = HBFav2PanelController.sharedController
     @viewController.leftGapPercentage = 0.7
-    @viewController.leftPanel = LeftViewController.new
+
+    @leftViewController = LeftViewController.new
+    @leftViewController.controllers = view_controllers
+    @viewController.leftPanel = @leftViewController
+
     @viewController.centerPanel = HBFav2NavigationController.alloc.initWithRootViewController(
       @timelineViewController
     )
     @window.rootViewController = @viewController
     @window.makeKeyAndVisible
+  end
+
+  def initialize_view_controllers(app_user)
+    user = app_user.to_bookmark_user
+
+    @timelineViewController = TimelineViewController.new.tap do |c|
+      c.user     = user
+      c.as_home  = true
+    end
+
+    @bookmarksViewController = TimelineViewController.new.tap do |c|
+      c.user  = user
+      c.content_type = :bookmark
+      c.title = user.name
+      c.as_home  = true
+    end
+
+    @hotentryViewController = HotentryViewController.new.tap do |c|
+      c.list_type = :hotentry
+      c.as_home   = true
+    end
+
+    @entrylistViewController = HotentryViewController.new.tap do |c|
+      c.list_type = :entrylist
+      c.as_home   = true
+    end
+
+    @accountViewController = AccountViewController.new.tap { |c| c.as_home = true }
+    @appInfoViewController = AppInfoViewController.new.tap { |c| c.as_home = true }
+
+    return {
+      :timeline  => @timelineViewController,
+      :bookmarks => @bookmarksViewController,
+      :hotentry  => @hotentryViewController,
+      :entrylist => @entrylistViewController,
+      :account   => @accountViewController,
+      :appInfo   => @appInfoViewController,
+    }
   end
 
   def development?
