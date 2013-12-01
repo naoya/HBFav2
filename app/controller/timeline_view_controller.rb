@@ -9,6 +9,10 @@ class TimelineViewController < HBFav2::UITableViewController
   def viewDidLoad
     super
 
+    if self.home? and content_type == :bookmark
+      self.user = ApplicationUser.sharedUser.to_bookmark_user
+    end
+
     @last_bookmarks_size = 0
     @bookmarks = self.initialize_feed_manager(self.user)
 
