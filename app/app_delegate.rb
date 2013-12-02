@@ -189,8 +189,10 @@ class AppDelegate
 
   def configure_background_fetch
     if UIDevice.currentDevice.ios7?
-      NSLog("Background Fetch Enabled")
-      UIApplication.sharedApplication.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+      NSLog("**** Background Fetch Enabled ****")
+      ## FIXME: 定数を使うと iOS6 でクラッシュする
+      # UIApplication.sharedApplication.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+      UIApplication.sharedApplication.setMinimumBackgroundFetchInterval(0.0)
     end
   end
 
