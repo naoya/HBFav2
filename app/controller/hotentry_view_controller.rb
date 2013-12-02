@@ -18,7 +18,6 @@ class HotentryViewController < HBFav2::UITableViewController
 
     view << @indicator = UIActivityIndicatorView.new.tap do |v|
       v.style = UIActivityIndicatorViewStyleGray
-      v.startAnimating
     end
 
     load_hotentry
@@ -26,6 +25,7 @@ class HotentryViewController < HBFav2::UITableViewController
     self.tableView.addGestureRecognizer(
       UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_long_press_row:')
     )
+    self.receive_application_switch_notifcation
   end
 
   def on_long_press_row(recog)
@@ -43,7 +43,8 @@ class HotentryViewController < HBFav2::UITableViewController
     self.tableView.reloadData
   end
 
-  def load_hotentry
+  def load_hotentry(&block)
+    @indicator.startAnimating
     if self.list_type == :hotentry
       feed_url = 'http://feed.hbfav.com/hotentry'
     else
@@ -53,6 +54,8 @@ class HotentryViewController < HBFav2::UITableViewController
     if not self.category.nil?
       feed_url += "?category=#{self.category}"
     end
+
+    NSLog(feed_url)
 
     query = BW::HTTP.get(feed_url) do |response|
       @connection = nil
@@ -69,12 +72,13 @@ class HotentryViewController < HBFav2::UITableViewController
       tableView.reloadData
       self.refreshControl.endRefreshing
       @indicator.stopAnimating
+
+      block.call(response) if block
     end
     @connection = query.connection
   end
 
   def viewWillAppear(animated)
-    self.receive_application_switch_notifcation
     self.navigationController.setToolbarHidden(true, animated:animated)
     @indicator.center = [ view.center.x, view.center.y - 42]
 
@@ -97,7 +101,6 @@ class HotentryViewController < HBFav2::UITableViewController
 
   def viewWillDisappear(animated)
     super
-    self.unreceive_application_switch_notification
     if @connection.present?
       @connection.cancel
       App.shared.networkActivityIndicatorVisible = false
@@ -147,10 +150,23 @@ class HotentryViewController < HBFav2::UITableViewController
   end
 
   def applicationWillEnterForeground
-    self.tableView.reloadData
+    load_hotentry
+    self.view.reloadDataWithKeepingSelectedRowAnimated(true)
   end
 
+  # def performBackgroundFetchWithCompletion(completionHandler)
+  #   NSLog("###### Background Fetch : Update Hotentry ######")
+  #   load_hotentry do |res|
+  #     if res.ok?
+  #       completionHandler.call(UIBackgroundFetchResultNewData)
+  #     else
+  #       completionHandler.call(UIBackgroundFetchResultFailed)
+  #     end
+  #   end
+  # end
+
   def dealloc
+    self.unreceive_application_switch_notification
     NSLog("dealloc: " + self.class.name)
     super
   end

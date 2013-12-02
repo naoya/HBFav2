@@ -5,6 +5,7 @@ module HBFav2
     include HBFav2::GoogleAnalytics
     include HBFav2::HomeCondition
     include HBFav2::BackGesture
+    include HBFav2::BackgroundEvent
 
     def viewDidLoad
       super

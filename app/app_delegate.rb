@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class AppDelegate
-  attr_accessor :viewController, :timelineViewController, :bookmarksViewController
+  attr_accessor :viewController, :timelineViewController, :bookmarksViewController, :hotentryViewController, :entrylistViewController
   include HBFav2::RemoteNotificationDelegate
   include HBFav2::GoogleAnalytics
 
@@ -287,8 +287,15 @@ class AppDelegate
     end
   end
 
+  ## Background Fetch
+  ## Push Notification からの Background Fetch はまた別
   def application(application, performFetchWithCompletionHandler:completionHandler)
+    NSLog("#### application:performFetchWithCompletionHandler: kicked from background fetch ####")
     self.timelineViewController.performBackgroundFetchWithCompletion(completionHandler)
+
+    ## applicationWillEnterForeground で更新するので、Background Fetch は無効にした
+    # self.hotentryViewController.performBackgroundFetchWithCompletion(completionHandler)
+    # self.entrylistViewController.performBackgroundFetchWithCompletion(completionHandler)
   end
 end
 
