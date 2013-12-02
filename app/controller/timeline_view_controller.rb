@@ -42,7 +42,7 @@ class TimelineViewController < HBFav2::UITableViewController
     )
     self.receive_application_switch_notifcation
     self.receive_remote_push_notifcation_event
-    self.start_periodic_update(60.0)
+    self.start_periodic_update(120.0)
   end
 
   def on_long_press_row(recog)
@@ -296,7 +296,7 @@ class TimelineViewController < HBFav2::UITableViewController
     self.trigger_auto_update
   end
 
-  def start_periodic_update(interval = 60.0)
+  def start_periodic_update(interval = 120.0)
     EM.add_periodic_timer interval do
       self.trigger_auto_update
     end
