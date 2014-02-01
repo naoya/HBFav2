@@ -32,6 +32,7 @@ DEPENDENCIES:
   - NJKWebViewProgress
   - NSDate+TimeAgo
   - PocketAPI (from `git@github.com:naoya/Pocket-ObjC-SDK.git`, branch `cocoapods-dependency`)
+  - SFHFKeychainUtils
   - SVProgressHUD
   - TTTAttributedLabel (from `git@github.com:mattt/TTTAttributedLabel.git`)
   - TUSafariActivity
@@ -65,4 +66,4 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: e504133915a9b11de63cb470ffa2790383a3eb23
   TUSafariActivity: bd9da588f5f9136ba445d89f8f86b6dccf4d46ba
 
-COCOAPODS: 0.23.0
+COCOAPODS: 0.29.0
