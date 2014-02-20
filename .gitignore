@@ -10,6 +10,8 @@ config/environment.yaml
 
 vendor/ChromeProgressBar/build-*
 vendor/ChromeProgressBar/*.bridgesupport
+vendor/Parse 3.framework/build-*
+vendor/TestFlightSDK2.0.0/build-*
 
 ### /Users/naoya/.gitignore-boilerplates/ruby.gitignore
 
