@@ -73,9 +73,6 @@ Motion::Project::App.setup do |app|
     pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
     pod 'MPNotificationView'
     pod 'GoogleAnalytics-iOS-SDK'
-
-    ## Parse.com SDK が依存してるけど本来必要ない。現状、解決されてない様子
-    pod 'Facebook-iOS-SDK'
   end
 
   app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']
@@ -109,6 +106,13 @@ Motion::Project::App.setup do |app|
     :static,
     :products => ['Parse'],
     :headers_dir => 'Headers'
+  )
+
+  ## ParseDummy
+  # http://stackoverflow.com/questions/15457136/parse-for-ios-errors-when-trying-to-run-the-app/18626232#18626232
+  app.vendor_project(
+    'vendor/ParseDummy',
+    :static
   )
 
   ## Reveal
