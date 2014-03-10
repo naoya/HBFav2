@@ -13,6 +13,9 @@ vendor/ChromeProgressBar/*.bridgesupport
 vendor/Parse 3.framework/build-*
 vendor/TestFlightSDK2.0.0/build-*
 
+vendor/ParseDummy/build-*
+vendor/ParseDummy/*.bridgesupport
+
 ### /Users/naoya/.gitignore-boilerplates/ruby.gitignore
 
 *.gem
