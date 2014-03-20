@@ -50,18 +50,18 @@ Motion::Project::App.setup do |app|
 
   app.pods do
     pod 'SFHFKeychainUtils'
-    pod 'PocketAPI', :git => 'git@github.com:naoya/Pocket-ObjC-SDK.git', :branch => 'cocoapods-dependency'
+    pod 'PocketAPI', :git => 'https://github.com:naoya/Pocket-ObjC-SDK.git', :branch => 'cocoapods-dependency'
     pod 'NSDate+TimeAgo'
     pod 'TUSafariActivity'
     pod 'SVProgressHUD'
     pod 'JASidePanels'
     pod 'ISBackGesture', :git => 'https://github.com/ishkawa/ISBackGesture.git'
     pod 'BugSense'
-    pod 'TTTAttributedLabel', :git => 'git@github.com:mattt/TTTAttributedLabel.git'
+    pod 'TTTAttributedLabel', :git => 'https://github.com:mattt/TTTAttributedLabel.git'
     pod 'NJKWebViewProgress'
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
-    pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
+    pod 'HatenaBookmarkSDK', :git => 'https://github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
     pod 'MPNotificationView'
     pod 'GoogleAnalytics-iOS-SDK'
   end
