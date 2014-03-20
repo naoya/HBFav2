@@ -1,6 +1,7 @@
 HBFav2 - はてなブックマークお気に入りリーダー
 =============================================
 
+[![Build Status](https://travis-ci.org/naoya/HBFav2.svg?branch=feature/support-travis)](https://travis-ci.org/naoya/HBFav2)
 [![Code Climate](https://codeclimate.com/github/naoya/HBFav2.png)](https://codeclimate.com/github/naoya/HBFav2)
 
 はてなブックマークのお気に入りをTwitterのタイムラインみたいに読みたい。お気に入りは、follow しているユーザーにフォーカスがあたっている方が個人的に好み
