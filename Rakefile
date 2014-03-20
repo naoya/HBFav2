@@ -19,8 +19,6 @@ Motion::Project::App.setup do |app|
   app.prerendered_icon = true
   app.status_bar_style = :light_content
 
-  app.archs['iPhoneOS'] = ['$(ARCHS_STANDARD_32_BIT)']
-
   app.my_env.file = './config/environment.yaml'
 
   ## TestFlight
@@ -116,12 +114,4 @@ Motion::Project::App.setup do |app|
     'vendor/ParseDummy',
     :static
   )
-
-  ## Reveal
-  # app.vendor_project(
-  #   'vendor/Reveal.framework',
-  #   :static,
-  #   :products => %w{Reveal},
-  #   :headers_dir => 'Headers'
-  # )
 end
