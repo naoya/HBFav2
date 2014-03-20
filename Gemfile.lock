@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:Watson1978/motion-my_env.git
+  remote: https://github.com/Watson1978/motion-my_env.git
   revision: c8d0a476d655de1ec958446aa53da7f574fe1769
   specs:
     motion-my_env (0.1)
