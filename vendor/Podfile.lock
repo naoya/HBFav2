@@ -15,7 +15,7 @@ PODS:
     - SFHFKeychainUtils (= 0.0.1)
   - SFHFKeychainUtils (0.0.1)
   - SVProgressHUD (0.9)
-  - TTTAttributedLabel (1.7.1)
+  - TTTAttributedLabel (1.9.1)
   - TUSafariActivity (1.0.0)
 
 DEPENDENCIES:
@@ -60,7 +60,7 @@ SPEC CHECKSUMS:
   PocketAPI: d4b8f31c5a29e20da84b6a19055344bb1ad06099
   SFHFKeychainUtils: e828dbd9eaa509486acf95d8de2ebd414c4b7451
   SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
-  TTTAttributedLabel: e504133915a9b11de63cb470ffa2790383a3eb23
+  TTTAttributedLabel: ee0abf3b1616fa9f90efa56243743babe6cf6b3f
   TUSafariActivity: bd9da588f5f9136ba445d89f8f86b6dccf4d46ba
 
 COCOAPODS: 0.29.0

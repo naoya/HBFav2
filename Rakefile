@@ -12,12 +12,14 @@ Motion::Project::App.setup do |app|
   app.name = 'HBFav'
   app.version = "2.6.1"
   app.short_version = "2.6.1"
-  app.sdk_version = '7.0'
+  app.sdk_version = '7.1'
   app.deployment_target = '6.1'
   app.device_family = [:iphone]
   app.identifier = "HBFav"
   app.prerendered_icon = true
   app.status_bar_style = :light_content
+
+  app.archs['iPhoneOS'] = ['$(ARCHS_STANDARD_32_BIT)']
 
   app.my_env.file = './config/environment.yaml'
 
