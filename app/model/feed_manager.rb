@@ -38,24 +38,22 @@ class FeedManager
 
   def update(prepend = false, &cb)
     @updating = true
-
     url = prepend ? self.prepend_url : self.append_url
 
-    # debug
-    NSLog(url)
-
     BW::HTTP.get(url) do |response|
-      if response.ok?
-        autorelease_pool {
+      Dispatch::Queue.concurrent.async {
+        if response.ok?
           json = BW::JSON.parse(response.body.to_str)
           bookmarks = json['bookmarks'].collect { |dict| Bookmark.new(dict) }
           self.willChangeValueForKey('bookmarks')
           prepend ? self.prepend(bookmarks) : self.append(bookmarks)
           self.didChangeValueForKey('bookmarks')
+        end
+        Dispatch::Queue.main.async {
+          @updating = false
+          cb.call(response) if cb
         }
-      end
-      @updating = false
-      cb.call(response) if cb
+      }
     end
   end
 

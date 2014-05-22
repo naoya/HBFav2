@@ -138,19 +138,21 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def observeValueForKeyPath(keyPath, ofObject:object, change:change, context:context)
     if (@bookmarks == object and keyPath == 'bookmarks')
-      if  @bookmarks.timebased? and
-          @bookmarks.prepended? and
-          @last_bookmarks_size != 0 and
-          @last_bookmarks_size != @bookmarks.size
-
-        ## FIXME: 差分の割り出しは本当は change オブジェクトを使うべき
-        size = @bookmarks.size - @last_bookmarks_size
-        @last_bookmarks_size = @bookmarks.size
-        self.tableView(view, reloadDataWithKeepingContentOffset:size)
-      else
-        view.reloadDataWithKeepingSelectedRowAnimated(true)
-        @last_bookmarks_size = @bookmarks.size
-      end
+      Dispatch::Queue.main.async {
+        if  @bookmarks.timebased? and
+            @bookmarks.prepended? and
+            @last_bookmarks_size != 0 and
+            @last_bookmarks_size != @bookmarks.size
+          
+          ## FIXME: 差分の割り出しは本当は change オブジェクトを使うべき
+          size = @bookmarks.size - @last_bookmarks_size
+          @last_bookmarks_size = @bookmarks.size
+          self.tableView(view, reloadDataWithKeepingContentOffset:size)
+        else
+          view.reloadDataWithKeepingSelectedRowAnimated(true)
+          @last_bookmarks_size = @bookmarks.size
+        end
+      }
     end
 
     if (ApplicationUser.sharedUser == object and keyPath == 'hatena_id' and self.home?)
