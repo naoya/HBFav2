@@ -9,7 +9,6 @@ class AppDelegate
 
     app_config = ApplicationConfig.sharedConfig
 
-    self.configure_bugsense_service(app_config)
     self.configure_pocket_service(app_config)
     self.configure_hatena_bookmark_service(app_config)
     self.configure_google_api_service(app_config)
@@ -115,14 +114,6 @@ class AppDelegate
     !development?
   end
 
-  def configure_bugsense_service(app_config)
-    if not Device.simulator? and ApplicationUser.sharedUser.send_bugreport?
-      BugSenseController.sharedControllerWithBugSenseAPIKey(
-        app_config.vars['bugsense']['api_key']
-      )
-    end
-  end
-
   def configure_pocket_service(app_config)
     PocketAPI.sharedAPI.setConsumerKey(
       app_config.vars["pocket"]["consumer_key"]
@@ -167,7 +158,8 @@ class AppDelegate
 
   def configure_navigation_bar
     if UIDevice.currentDevice.ios7?
-      UINavigationBar.appearance.barTintColor = UIColor.colorWithRed(0.000, green:0.450, blue:0.800, alpha:0.7)
+      # UINavigationBar.appearance.barTintColor = UIColor.colorWithRed(0.000, green:0.549, blue:0.890, alpha:1.0)
+      UINavigationBar.appearance.barTintColor = UIColor.colorWithRed(0.3647, green:0.6431, blue:0.8627, alpha:1.0)
       UINavigationBar.appearance.titleTextAttributes = {
         NSForegroundColorAttributeName => UIColor.whiteColor,
         NSFontAttributeName            => UIFont.boldSystemFontOfSize(18)

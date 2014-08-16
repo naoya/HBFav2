@@ -12,7 +12,7 @@ Motion::Project::App.setup do |app|
   app.name = 'HBFav'
   app.version = "2.7"
   app.short_version = "2.7"
-  app.sdk_version = '7.1'
+  app.sdk_version = '8.0'
   app.deployment_target = '6.1'
   app.device_family = [:iphone]
   app.identifier = "HBFav"
@@ -56,9 +56,7 @@ Motion::Project::App.setup do |app|
     pod 'SVProgressHUD'
     pod 'JASidePanels'
     pod 'ISBackGesture', :git => 'https://github.com/ishkawa/ISBackGesture.git'
-    pod 'BugSense'
     pod 'TTTAttributedLabel', :git => 'git@github.com:mattt/TTTAttributedLabel.git'
-    pod 'NJKWebViewProgress'
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
@@ -66,8 +64,21 @@ Motion::Project::App.setup do |app|
     pod 'GoogleAnalytics-iOS-SDK'
   end
 
-  app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']
-  app.frameworks += %w(AudioToolbox CFNetwork MobileCoreServices QuartzCore StoreKit SystemConfiguration)
+  app.frameworks += [
+    'AdSupport',
+    'AVFoundation',
+    'AudioToolbox',
+    'CFNetwork',
+    'CoreData',
+    'ImageIO',
+    'MapKit',
+    'MobileCoreServices',
+    'QuartzCore',
+    'Security',
+    'StoreKit',
+    'SystemConfiguration',
+  ]
+
   app.weak_frameworks += ['MediaAccessibility']
   app.libs += %W(/usr/lib/libz.dylib /usr/lib/libsqlite3.dylib)
 
@@ -76,20 +87,6 @@ Motion::Project::App.setup do |app|
   app.entitlements['keychain-access-groups'] = [
     app.seed_id + '.' + app.identifier
   ]
-
-  ## BugSense
-  app.vendor_project(
-    'vendor/Pods/BugSense/BugSense-iOS.framework',
-    :static,
-    :products => %w{BugSense-iOS},
-    :headers_dir => 'Headers'
-  )
-
-  ## ChromeProgressBar
-  app.vendor_project(
-    'vendor/ChromeProgressBar',
-    :static
-  )
 
   ## Parse.com
   app.vendor_project(
