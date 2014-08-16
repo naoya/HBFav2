@@ -115,16 +115,6 @@ THE SOFTWARE.</p>
 
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 
-<!-- iVersion -->
-<h2>iVersion</h2>
-<p>Version 1.10.6, May 13th, 2013</p>
-<p>Copyright (C) 2011 Charcoal Design</p>
-<p>This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.</p>
-<pPermission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:></p>
-<p>The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.</p>
-<p>Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.</p>
-<p>This notice may not be removed or altered from any source distribution.</p>
-
 <!-- JASidePanels -->
 <h2>JASidePanels</h2>
 <p>Copyright (c) gotosleep</p>
