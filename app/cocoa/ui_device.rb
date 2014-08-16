@@ -1,12 +1,24 @@
 class UIDevice
-  def ios7?
-    return @is_ios7 unless @is_ios7.nil?
-    version = UIDevice.currentDevice.systemVersion
-    if (version.compare("7.0", options:NSNumericSearch) == NSOrderedSame or
-        version.compare("7.0", options:NSNumericSearch) == NSOrderedDescending)
-      return @is_ios7 = true
+  @@gt = {}
+
+  def gt?(version)
+    return @@gt[version] if not @@gt[version].nil?
+    v = UIDevice.currentDevice.systemVersion
+    if (v.compare(version, options:NSNumericSearch) == NSOrderedSame or
+        v.compare(version, options:NSNumericSearch) == NSOrderedDescending)
+      @@gt[version] = true
+    else
+      @@gt[version] = false
     end
-    return @is_ios7 = false
+    return @@gt[version]
+  end
+
+  def ios8?
+    gt?("8.0")
+  end
+
+  def ios7?
+    gt?("7.0")
   end
 
   def ios6?
