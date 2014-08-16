@@ -25,16 +25,12 @@ class WebViewController < HBFav2::UIViewController
     end
 
     ## WebView
-    @proxy = NJKWebViewProgress.alloc.init
     self.view << @webview = HBFav2::WebView.new.tap do |v|
       v.scalesPageToFit = true
       v.backgroundColor = '#fff'.uicolor
       v.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
       v.delegate = @proxy
     end
-
-    @proxy.webViewProxyDelegate = self
-    @proxy.progressDelegate = self
 
     ## Activity Indicator
     self.view << @indicator = UIActivityIndicatorView.new.tap do |v|
@@ -238,27 +234,6 @@ class WebViewController < HBFav2::UIViewController
     present_modal(
       URLActivityViewController.alloc.initWithDefaultActivities([@bookmark.title, @bookmark.link.nsurl])
     )
-  end
-
-  def webViewProgress(webViewProgress, updateProgress:progress)
-    ## progress (demo)
-    if (progress == 0)
-      unless @progress.nil?
-        @progress.removeFromSuperview
-        @progress = nil
-      end
-
-      self.view <<@progress = ChromeProgressBar.new.tap do |v|
-        v.frame = [self.view.bounds.origin, [self.view.bounds.size.width, 5 ] ]
-      end
-      @progress.progress = 0
-      # UIView.animateWithDuration(0.27, animations:lambda {  @progress.alpha = 1.0 })
-    end
-
-    if (progress == 1.0)
-      UIView.animateWithDuration(0.27, delay:progress - @progress.progress, options:0, animations:lambda { @progress.alpha = 0.0 }, completion:nil)
-    end
-    @progress.setProgress(progress, animated:false)
   end
 
   def on_close

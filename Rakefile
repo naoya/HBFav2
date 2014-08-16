@@ -57,7 +57,6 @@ Motion::Project::App.setup do |app|
     pod 'JASidePanels'
     pod 'BugSense'
     pod 'TTTAttributedLabel', :git => 'git@github.com:mattt/TTTAttributedLabel.git'
-    pod 'NJKWebViewProgress'
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
