@@ -1,7 +1,6 @@
 PODS:
   - AFNetworking (1.3.2)
   - ARChromeActivity (1.0.1)
-  - BugSense (3.4)
   - GoogleAnalytics-iOS-SDK (3.0.3c)
   - HatenaBookmarkSDK (1.1.1):
     - AFNetworking (~> 1.0)
@@ -13,13 +12,12 @@ PODS:
     - SFHFKeychainUtils (= 0.0.1)
   - SFHFKeychainUtils (0.0.1)
   - SVProgressHUD (0.9)
-  - TTTAttributedLabel (1.9.1)
+  - TTTAttributedLabel (1.10.1)
   - TUSafariActivity (1.0.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 1.3)
   - ARChromeActivity
-  - BugSense
   - GoogleAnalytics-iOS-SDK
   - HatenaBookmarkSDK (from `git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git`)
   - JASidePanels
@@ -41,18 +39,17 @@ EXTERNAL SOURCES:
     :git: git@github.com:mattt/TTTAttributedLabel.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 7f9bcd7c287a75476cd5c61e82fd3380e93e4c54
-  ARChromeActivity: eb9770a933cfe2b914b8e4e22b684eb7f43f24df
-  BugSense: 0b0f27d15f29e7b7ff0b56b4f7511ad6999b3cea
-  GoogleAnalytics-iOS-SDK: a1dc8c700de9edf41f57c0abe54a7eb2182a1820
+  AFNetworking: 13fd672bb1f6919946d259d97f31000015680dfa
+  ARChromeActivity: 2349cc1ad719665cf58914dc7a6b0f6636549e80
+  GoogleAnalytics-iOS-SDK: 4377a29aa3e039030df30fd5c6075baeed3c916c
   HatenaBookmarkSDK: 2447855afdf5e36131ca7a4f1c57a5e52983664c
-  JASidePanels: c0e642a7311ec9cc9adfa616fa4a795e4e169f20
-  MPNotificationView: 5c71d3776ac594fba2828505c37cb797fcc76866
-  NSDate+TimeAgo: fe93d3042e83093ae3630bc47ae7d57f782733f6
+  JASidePanels: ca943907d88a0738c80755204c6098969d43e4e9
+  MPNotificationView: 8643128aff9cc0f197a40fd7e6951a1b72649602
+  NSDate+TimeAgo: c01d6ac0b81add41f77f264fa4276d355723fcde
   PocketAPI: d4b8f31c5a29e20da84b6a19055344bb1ad06099
-  SFHFKeychainUtils: e828dbd9eaa509486acf95d8de2ebd414c4b7451
-  SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
-  TTTAttributedLabel: ee0abf3b1616fa9f90efa56243743babe6cf6b3f
-  TUSafariActivity: bd9da588f5f9136ba445d89f8f86b6dccf4d46ba
+  SFHFKeychainUtils: 6fdda05a86d035db406c7662ec1054814b68f0fd
+  SVProgressHUD: adf9def97327df88dee15e9ad8033fde6961f7b4
+  TTTAttributedLabel: 1bcf9fc9247a553ec916b3645dac298a30df9484
+  TUSafariActivity: afff9b1d2eacf7cbace752c5f2bf56db852714de
 
-COCOAPODS: 0.29.0
+COCOAPODS: 0.33.1

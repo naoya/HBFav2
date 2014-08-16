@@ -55,7 +55,6 @@ Motion::Project::App.setup do |app|
     pod 'TUSafariActivity'
     pod 'SVProgressHUD'
     pod 'JASidePanels'
-    pod 'BugSense'
     pod 'TTTAttributedLabel', :git => 'git@github.com:mattt/TTTAttributedLabel.git'
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
@@ -64,8 +63,21 @@ Motion::Project::App.setup do |app|
     pod 'GoogleAnalytics-iOS-SDK'
   end
 
-  app.frameworks += ['ImageIO', 'MapKit', 'Security', 'AVFoundation']
-  app.frameworks += %w(AudioToolbox CFNetwork MobileCoreServices QuartzCore StoreKit SystemConfiguration)
+  app.frameworks += [
+    'AdSupport',
+    'AVFoundation',
+    'AudioToolbox',
+    'CFNetwork',
+    'CoreData',
+    'ImageIO',
+    'MapKit',
+    'MobileCoreServices',
+    'QuartzCore',
+    'Security',
+    'StoreKit',
+    'SystemConfiguration',
+  ]
+
   app.weak_frameworks += ['MediaAccessibility']
   app.libs += %W(/usr/lib/libz.dylib /usr/lib/libsqlite3.dylib)
 
@@ -74,14 +86,6 @@ Motion::Project::App.setup do |app|
   app.entitlements['keychain-access-groups'] = [
     app.seed_id + '.' + app.identifier
   ]
-
-  ## BugSense
-  app.vendor_project(
-    'vendor/Pods/BugSense/BugSense-iOS.framework',
-    :static,
-    :products => %w{BugSense-iOS},
-    :headers_dir => 'Headers'
-  )
 
   ## Parse.com
   app.vendor_project(
