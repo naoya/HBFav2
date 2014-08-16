@@ -83,12 +83,6 @@ Motion::Project::App.setup do |app|
     :headers_dir => 'Headers'
   )
 
-  ## ChromeProgressBar
-  app.vendor_project(
-    'vendor/ChromeProgressBar',
-    :static
-  )
-
   ## Parse.com
   app.vendor_project(
     'vendor/Parse 3.framework',
