@@ -5,6 +5,7 @@ PODS:
   - HatenaBookmarkSDK (1.1.1):
     - AFNetworking (~> 1.0)
     - SFHFKeychainUtils
+  - ISBackGesture (0.0.5)
   - JASidePanels (1.3.2)
   - MPNotificationView (1.1.0)
   - NSDate+TimeAgo (1.0.2)
@@ -20,6 +21,7 @@ DEPENDENCIES:
   - ARChromeActivity
   - GoogleAnalytics-iOS-SDK
   - HatenaBookmarkSDK (from `git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git`)
+  - ISBackGesture (from `https://github.com/ishkawa/ISBackGesture.git`)
   - JASidePanels
   - MPNotificationView
   - NSDate+TimeAgo
@@ -32,6 +34,8 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   HatenaBookmarkSDK:
     :git: git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git
+  ISBackGesture:
+    :git: https://github.com/ishkawa/ISBackGesture.git
   PocketAPI:
     :branch: cocoapods-dependency
     :git: git@github.com:naoya/Pocket-ObjC-SDK.git
@@ -43,6 +47,7 @@ SPEC CHECKSUMS:
   ARChromeActivity: 2349cc1ad719665cf58914dc7a6b0f6636549e80
   GoogleAnalytics-iOS-SDK: 4377a29aa3e039030df30fd5c6075baeed3c916c
   HatenaBookmarkSDK: 2447855afdf5e36131ca7a4f1c57a5e52983664c
+  ISBackGesture: 8d67984a799b5a70abf569e5c184113129c4270d
   JASidePanels: ca943907d88a0738c80755204c6098969d43e4e9
   MPNotificationView: 8643128aff9cc0f197a40fd7e6951a1b72649602
   NSDate+TimeAgo: c01d6ac0b81add41f77f264fa4276d355723fcde
