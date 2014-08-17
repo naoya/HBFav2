@@ -65,7 +65,6 @@ Motion::Project::App.setup do |app|
   end
 
   app.frameworks += [
-    'AdSupport',
     'AVFoundation',
     'AudioToolbox',
     'CFNetwork',
