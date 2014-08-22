@@ -13,15 +13,15 @@ class UIDevice
     return @@gt[version]
   end
 
-  def ios8?
-    gt?("8.0")
-  end
-
-  def ios7?
+  def ios7_or_later?
     gt?("7.0")
   end
 
-  def ios6?
-    !ios7?
+  def ios8_or_later?
+    gt?("8.0")
+  end
+
+  def ios6_or_earlier?
+    !ios7_or_later?
   end
 end

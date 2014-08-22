@@ -3,7 +3,7 @@ module HBFav2
   module FullScreenable
     def prepare_fullscreen
       @fullscreen = false
-      if UIDevice.currentDevice.ios7?
+      if UIDevice.currentDevice.ios7_or_later?
         # self.extendedLayoutIncludesOpaqueBars = false
       else
         self.navigationController.setToolbarHidden(true, animated:true)
@@ -17,7 +17,7 @@ module HBFav2
 
     def cleanup_fullscreen
       @fullscreen = false
-      unless UIDevice.currentDevice.ios7?
+      unless UIDevice.currentDevice.ios7_or_later?
         self.navigationController.setNavigationBarHidden(false, animated:false)
         self.navigationController.navigationBar.translucent = false
         self.navigationController.toolbar.translucent = false
@@ -38,7 +38,7 @@ module HBFav2
       if navigationController.present?
         @fullscreen = true
 
-        if UIDevice.currentDevice.ios7?
+        if UIDevice.currentDevice.ios7_or_later?
           self.navigationController.setNavigationBarHidden(true, animated:true)
           UIApplication.sharedApplication.setStatusBarHidden(true, withAnimation:UIStatusBarAnimationFade)
         else
@@ -53,7 +53,7 @@ module HBFav2
 
     def end_fullscreen
       @fullscreen = false
-      if UIDevice.currentDevice.ios7?
+      if UIDevice.currentDevice.ios7_or_later?
         self.navigationController.setNavigationBarHidden(false, animated:true)
         UIApplication.sharedApplication.setStatusBarHidden(false, withAnimation:UIStatusBarAnimationFade)
       else

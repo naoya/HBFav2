@@ -134,7 +134,7 @@ class HotentryCell < UITableViewCell
   def drawRectContent(rect)
     attributes = BookmarkLabelAttributes.sharedAttributes.attributes
 
-    if not UIDevice.currentDevice.ios7? and (self.selected? || self.highlighted?)
+    if not UIDevice.currentDevice.ios7_or_later? and (self.selected? || self.highlighted?)
       color = {
         :date => '#fff',
         :text => '#fff',

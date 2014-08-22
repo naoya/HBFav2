@@ -57,7 +57,7 @@ module HBFav2
 
           ## 他の画面でローカルpushイベントを採れるように、発火
           ## iOS 7 は Background Fetch に任せるので必要ない
-          if UIDevice.currentDevice.ios6?
+          if UIDevice.currentDevice.ios6_or_earlier?
             notify = NSNotification.notificationWithName(
               "applicationDidReceiveRemoteNotification", object:userInfo
             )

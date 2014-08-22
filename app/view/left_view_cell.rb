@@ -63,13 +63,13 @@ class LeftViewCell < UITableViewCell
     size =  @title.sizeWithFont(ApplicationConfig.sharedConfig.applicationFontOfSize(18))
     title = @title.attrd.foreground_color([196, 204, 217].uicolor).font(ApplicationConfig.sharedConfig.applicationFontOfSize(18))
 
-    if not UIDevice.currentDevice.ios7?
+    if not UIDevice.currentDevice.ios7_or_later?
       title = title.shadow(@titleShadow)
     end
 
     title.drawInRect([[self.imageView.right + 8, self.imageView.top + 4], size])
 
-    if UIDevice.currentDevice.ios7?
+    if UIDevice.currentDevice.ios7_or_later?
       unless selected?
         context = UIGraphicsGetCurrentContext()
         [36, 42, 54].uicolor(1.0).setStroke

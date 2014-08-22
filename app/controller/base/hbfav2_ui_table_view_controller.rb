@@ -11,7 +11,7 @@ module HBFav2
       configure_back_gesture
       self.navigationItem.backBarButtonItem = NavigationBackButton.create
 
-      if UIDevice.currentDevice.ios7?
+      if UIDevice.currentDevice.ios7_or_later?
         self.tableView.separatorInset = UIEdgeInsetsMake(0, 20, 0, 0)
         self.tableView.separatorColor = '#ddd'.uicolor
       end
