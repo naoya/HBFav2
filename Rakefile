@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-$:.unshift("/Library/RubyMotion/lib")
+$:.unshift("/Library/RubyMotion2.30/lib")
 require 'motion/project/template/ios'
 require 'bundler/setup'
 Bundler.require :default
