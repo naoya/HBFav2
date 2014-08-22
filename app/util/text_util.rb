@@ -1,7 +1,7 @@
 module HBFav2
   class TextUtil
     def self.text(text, sizeWithFont:font, constrainedToSize:size, lineBreakMode:lineBreakMode)
-      if UIDevice.currentDevice.ios7?
+      if UIDevice.currentDevice.ios7_or_later?
         frame = text.boundingRectWithSize(
           size,
           options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading,
@@ -15,7 +15,7 @@ module HBFav2
     end
 
     def self.text(text, drawInRect:rect, withFont:font, color:color, lineBreakMode:lineBreakMode)
-      if UIDevice.currentDevice.ios7?
+      if UIDevice.currentDevice.ios7_or_later?
         context = NSStringDrawingContext.alloc.init
         text.drawWithRect(
           rect,

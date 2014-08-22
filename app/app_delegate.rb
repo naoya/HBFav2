@@ -39,7 +39,7 @@ class AppDelegate
   end
 
   def configure_status_bar
-    if UIDevice.currentDevice.ios7?
+    if UIDevice.currentDevice.ios7_or_later?
       UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleLightContent)
     else
       UIApplication.sharedApplication.setStatusBarStyle(UIStatusBarStyleBlackOpaque)
@@ -157,7 +157,7 @@ class AppDelegate
   end
 
   def configure_navigation_bar
-    if UIDevice.currentDevice.ios7?
+    if UIDevice.currentDevice.ios7_or_later?
       UINavigationBar.appearance.barTintColor = UIColor.colorWithRed(0.3647, green:0.6431, blue:0.8627, alpha:1.0)
       UINavigationBar.appearance.titleTextAttributes = {
         NSForegroundColorAttributeName => UIColor.whiteColor,
@@ -171,7 +171,7 @@ class AppDelegate
   end
 
   def configure_bar_button_item
-    unless UIDevice.currentDevice.ios7?
+    unless UIDevice.currentDevice.ios7_or_later?
       background_image = UIImage.imageNamed("UIBarButtonItemBarBackGround.png")
       UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
       UIBarButtonItem.appearanceWhenContainedIn(UINavigationBar, nil).setBackButtonBackgroundImage(background_image, forState:UIControlStateNormal, barMetrics:UIBarMetricsDefault)
@@ -179,7 +179,7 @@ class AppDelegate
   end
 
   def configure_background_fetch
-    if UIDevice.currentDevice.ios7?
+    if UIDevice.currentDevice.ios7_or_later?
       NSLog("**** Background Fetch Enabled ****")
       ## FIXME: 定数を使うと iOS6 でクラッシュする
       # UIApplication.sharedApplication.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)

@@ -4,7 +4,7 @@ module HBFav2
     def init
       super
       if self
-        if UIDevice.currentDevice.ios7?
+        if UIDevice.currentDevice.ios7_or_later?
           self.backgroundColor = '#e2e7ed'.uicolor
         end
       end
@@ -12,7 +12,7 @@ module HBFav2
     end
 
     def update_title(msg = nil)
-      unless UIDevice.currentDevice.ios7?
+      unless UIDevice.currentDevice.ios7_or_later?
         color = "#678"
         shadow = NSShadow.new
         shadow.shadowOffset = [0, 1]

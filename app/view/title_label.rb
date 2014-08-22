@@ -6,7 +6,7 @@ class TitleLabel < UILabel
       self.textAlignment = UITextAlignmentCenter
       self.textColor = UIColor.whiteColor
 
-      unless UIDevice.currentDevice.ios7?
+      unless UIDevice.currentDevice.ios7_or_later?
         self.shadowColor = UIColor.colorWithWhite(0.0, alpha: 0.5)
       end
     end
