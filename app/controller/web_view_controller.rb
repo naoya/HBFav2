@@ -29,7 +29,7 @@ class WebViewController < HBFav2::UIViewController
       v.scalesPageToFit = true
       v.backgroundColor = '#fff'.uicolor
       v.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
-      v.delegate = @proxy
+      v.delegate = self
     end
 
     ## Activity Indicator
