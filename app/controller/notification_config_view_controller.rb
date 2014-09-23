@@ -73,9 +73,18 @@ class NotificationConfigViewController < Formotion::FormController
       user.enable_notification_when_state_active = data['notify_when_state_active']
       user.save
 
-      UIApplication.sharedApplication.registerForRemoteNotificationTypes(
-        UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound
-      )
+      if UIDevice.currentDevice.ios8_or_later?
+        settings = UIUserNotificationSettings.settingsForTypes(
+          UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound,
+          categories:nil
+        )
+        UIApplication.sharedApplication.registerUserNotificationSettings(settings)
+        UIApplication.sharedApplication.registerForRemoteNotifications()
+      else
+        UIApplication.sharedApplication.registerForRemoteNotificationTypes(
+          UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound
+        )
+      end
 
       self.dismissModalViewControllerAnimated(true, completion:nil)
     end
