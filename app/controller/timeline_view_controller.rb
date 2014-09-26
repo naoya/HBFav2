@@ -305,9 +305,7 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def performBackgroundFetchWithCompletion(completionHandler)
-    NSLog("Background Fetch")
     self.trigger_auto_update do |res|
-      NSLog("############## Finish Background Fetch ################")
       if res.ok?
         completionHandler.call(UIBackgroundFetchResultNewData)
       else
@@ -320,7 +318,6 @@ class TimelineViewController < HBFav2::UITableViewController
     self.removeObserver
     self.unreceive_application_switch_notification
     self.unreceive_remote_push_notification_event
-    NSLog("dealloc: " + self.class.name)
     super
   end
 end

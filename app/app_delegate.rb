@@ -281,7 +281,6 @@ class AppDelegate
   ## Background Fetch
   ## Push Notification からの Background Fetch はまた別
   def application(application, performFetchWithCompletionHandler:completionHandler)
-    NSLog("#### application:performFetchWithCompletionHandler: kicked from background fetch ####")
     self.timelineViewController.performBackgroundFetchWithCompletion(completionHandler)
 
     ## applicationWillEnterForeground で更新するので、Background Fetch は無効にした
