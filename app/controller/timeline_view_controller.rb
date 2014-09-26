@@ -10,7 +10,6 @@ class TimelineViewController < HBFav2::UITableViewController
     super
     self.prepare_to_load_bookmarks
     self.view.backgroundColor = UIColor.whiteColor
-    self.initialize_footerview
     self.tracked_view_name = content_type == :bookmark ? "UserBookmarks" : "Timeline"
 
     ## Pull to Refresh
@@ -57,6 +56,7 @@ class TimelineViewController < HBFav2::UITableViewController
 
     @last_bookmarks_size = 0
     @bookmarks = self.initialize_feed_manager(self.user)
+    self.initialize_footerview
   end
 
   def initialize_feed_manager(user)
