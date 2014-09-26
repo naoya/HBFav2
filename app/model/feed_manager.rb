@@ -49,9 +49,10 @@ class FeedManager
           prepend ? self.prepend(bookmarks) : self.append(bookmarks)
           self.didChangeValueForKey('bookmarks')
         else
-          Dispatch::Queue.main.async {
-            App.alert(response.error_message)
-          }
+          ## 触っててウザいので出さない
+          # Dispatch::Queue.main.async {
+          #   App.alert(response.error_message)
+          # }
         end
         Dispatch::Queue.main.async {
           @updating = false
