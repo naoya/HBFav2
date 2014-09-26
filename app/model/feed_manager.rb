@@ -40,7 +40,7 @@ class FeedManager
     @updating = true
     url = prepend ? self.prepend_url : self.append_url
 
-    BW::HTTP.get(url) do |response|
+    BW::HTTP.get(url, {timeout: 25.0}) do |response|
       Dispatch::Queue.concurrent.async {
         if response.ok?
           json = BW::JSON.parse(response.body.to_str)
@@ -48,6 +48,10 @@ class FeedManager
           self.willChangeValueForKey('bookmarks')
           prepend ? self.prepend(bookmarks) : self.append(bookmarks)
           self.didChangeValueForKey('bookmarks')
+        else
+          Dispatch::Queue.main.async {
+            App.alert(response.error_message)
+          }
         end
         Dispatch::Queue.main.async {
           @updating = false
