@@ -8,14 +8,7 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def viewDidLoad
     super
-
-    if self.home? and content_type == :bookmark
-      self.user = ApplicationUser.sharedUser.to_bookmark_user
-    end
-
-    @last_bookmarks_size = 0
-    @bookmarks = self.initialize_feed_manager(self.user)
-
+    self.prepare_to_load_bookmarks
     self.view.backgroundColor = UIColor.whiteColor
     self.initialize_footerview
     self.tracked_view_name = content_type == :bookmark ? "UserBookmarks" : "Timeline"
@@ -55,6 +48,15 @@ class TimelineViewController < HBFav2::UITableViewController
         self.navigationController.pushViewController(controller, animated:true)
       end
     end
+  end
+
+  def prepare_to_load_bookmarks
+    if self.home? and content_type == :bookmark
+      self.user = ApplicationUser.sharedUser.to_bookmark_user
+    end
+
+    @last_bookmarks_size = 0
+    @bookmarks = self.initialize_feed_manager(self.user)
   end
 
   def initialize_feed_manager(user)
@@ -268,6 +270,7 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def trigger_auto_update(&block)
+    self.prepare_to_load_bookmarks if @bookmarks.nil?
     case content_type
     when :timeline then
       if self.home? and @bookmarks.timebased?
