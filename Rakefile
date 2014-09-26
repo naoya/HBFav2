@@ -34,6 +34,29 @@ Motion::Project::App.setup do |app|
 
   app.interface_orientations = [:portrait]
 
+  app.info_plist["UILaunchImages"] = [
+    # for iPhone 6 Plus
+    {
+      "UILaunchImageMinimumOSVersion" => "8.0",
+      "UILaunchImageName" => "Default-736h@3x",
+      "UILaunchImageOrientation" => "Portrait",
+      "UILaunchImageSize" => "{414, 736}"
+    },
+    # for iPhone 6
+    {
+      "UILaunchImageMinimumOSVersion" => "8.0",
+      "UILaunchImageName" => "Default-667h@2x",
+      "UILaunchImageOrientation" => "Portrait",
+      "UILaunchImageSize" => "{375, 667}"
+    },
+    # for iPhone 5, iPhone 5s 
+    {
+      "UILaunchImageMinimumOSVersion" => "6.1",
+      "UILaunchImageName" => "Default-568h@2x",
+      "UILaunchImageOrientation" => "Portrait",
+      "UILaunchImageSize" => "{320, 568}"
+    }
+  ]
   app.info_plist['CFBundleURLTypes'] = [
     {
       'CFBundleURLName' => 'net.bloghackers.app',
