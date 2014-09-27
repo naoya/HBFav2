@@ -30,10 +30,5 @@ module HBFav2
     def url=(url)
       self.set_url(url)
     end
-
-    def dealloc
-      NSLog("dealloc: " + self.class.name)
-      super
-    end
   end
 end

@@ -214,9 +214,4 @@ class BookmarkFastCell < UITableViewCell
       )
     end
   end
-
-  def dealloc
-    NSLog("dealloc: " + self.class.name)
-    super
-  end
 end
