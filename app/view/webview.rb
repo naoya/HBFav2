@@ -10,8 +10,6 @@ module HBFav2
         self.stopLoading
       end
       self.delegate = nil
-
-      NSLog("dealloc: " + self.class.name)
       super
     end
   end
