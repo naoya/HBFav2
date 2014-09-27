@@ -76,6 +76,7 @@ Motion::Project::App.setup do |app|
     'Security',
     'StoreKit',
     'SystemConfiguration',
+    'WebKit'
   ]
 
   app.weak_frameworks += ['MediaAccessibility']
