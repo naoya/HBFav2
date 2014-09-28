@@ -259,10 +259,6 @@ class WebViewController < HBFav2::UIViewController
     self.webViewDidFinishLoad(webView)
   end
 
-  def webView(webView, didCommitNavigation:navigation)
-  end
-
-  ## FIXME: 以下のコードでは現状動かない
   def webView(webView, decidePolicyForNavigationAction:navigationAction, decisionHandler:decisionHandler)
     if navigationAction.navigationType == WKNavigationTypeLinkActivated
       @link_clicked = true
