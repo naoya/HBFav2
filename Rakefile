@@ -13,7 +13,6 @@ Motion::Project::App.setup do |app|
   app.version = "2.7.3"
   app.short_version = "2.7.3"
   app.sdk_version = '8.0'
-  app.deployment_target = '6.1'
   app.device_family = [:iphone]
   app.identifier = "HBFav"
   app.prerendered_icon = true
@@ -44,6 +43,7 @@ Motion::Project::App.setup do |app|
       'CFBundleURLSchemes' => ['pocketapp16058']
     }
   ]
+  app.info_plist['MinimumOSVersion'] = '6.1'
   app.info_plist['UIViewControllerBasedStatusBarAppearance'] = false
   app.info_plist['UIStatusBarStyle'] = "UIStatusBarStyleLightContent"
   app.info_plist['UIBackgroundModes'] = ['fetch', 'remote-notification']
@@ -76,10 +76,13 @@ Motion::Project::App.setup do |app|
     'Security',
     'StoreKit',
     'SystemConfiguration',
+  ]
+
+  app.weak_frameworks += [
+    'MediaAccessibility',
     'WebKit'
   ]
 
-  app.weak_frameworks += ['MediaAccessibility']
   app.libs += %W(/usr/lib/libz.dylib /usr/lib/libsqlite3.dylib)
 
   app.icons = ["default_app_logo.png", "default_app_logo@2x.png"]

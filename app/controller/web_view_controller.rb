@@ -268,7 +268,7 @@ class WebViewController < HBFav2::UIViewController
     if navigationAction.navigationType == WKNavigationTypeLinkActivated
       @link_clicked = true
     end
-    decisionHandler(WKNavigationActionPolicyAllow)
+    decisionHandler.call(WKNavigationActionPolicyAllow)
   end
 
   def didReceiveMemoryWarning
