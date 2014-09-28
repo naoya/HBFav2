@@ -19,6 +19,10 @@ Motion::Project::App.setup do |app|
   app.status_bar_style = :light_content
   app.my_env.file = './config/environment.yaml'
 
+  ## Very experimental
+  app.archs['iPhoneOS'] << 'arm64'
+  app.archs['iPhoneSimulator'] << 'x86_64'
+
   app.development do
     app.provisioning_profile = '/Users/naoya/Dropbox/HBFav/HBFav_with_Push_Notification.mobileprovision'
     app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
