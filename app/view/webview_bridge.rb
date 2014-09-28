@@ -42,5 +42,18 @@ module HBFav2
         super.scalesPageToFit(bool)
       end
     end
+
+    def stopLoading
+      super
+      App.shared.networkActivityIndicatorVisible = false
+    end
+
+    def dealloc
+      if self.loading?
+        self.stopLoading
+      end
+      self.delegate = nil
+      super
+    end
   end
 end
