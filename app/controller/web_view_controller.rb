@@ -24,16 +24,10 @@ class WebViewController < HBFav2::UIViewController
       label.text = @bookmark.title
     end
 
-    ## WebView
-    if UIDevice.currentDevice.ios8_or_later?
-      self.view << @webview = WKWebView.alloc.initWithFrame(self.view.bounds, configration:nil)
-      @webview.navigationDelegate = self
-    else
-      self.view << @webview = HBFav2::WebView.new.tap do |v|
-        v.scalesPageToFit = true
-        v.backgroundColor = '#fff'.uicolor
-        v.delegate = self
-      end
+    self.view << @webview = HBFav2::WebViewBridge.factory(self.view.bounds).tap do |v|
+      v.backgroundColor = '#fff'.uicolor
+      v.scalesPageToFit = true
+      v.delegate = self
     end
 
     self.view << @indicator = UIActivityIndicatorView.new.tap do |v|
@@ -89,12 +83,7 @@ class WebViewController < HBFav2::UIViewController
   end
 
   def update_bookmark
-    url = if @webview.kind_of?(WKWebView)
-            @webview.URL.absoluteString
-          else 
-            @webview.request.URL.absoluteString
-          end
-
+    url = @webview.URL.absoluteString
     @bookmark_requested[url] ||= {}
 
     if @bookmark_requested[url][:http_requested]
@@ -114,7 +103,7 @@ class WebViewController < HBFav2::UIViewController
             @bookmark_requested[url][:bookmark] = bookmark = Bookmark.new(
               {
                 :eid   => data['eid'] || nil,
-                :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
+                :title => data['title'] || @webview.title,
                 :link  => url,
                 :count => data['count'] || 0,
               }
@@ -275,11 +264,7 @@ class WebViewController < HBFav2::UIViewController
   def dealloc
     if @webview
       @webview.stopLoading if @webview.loading?
-      if @webview.kind_of?(WKWebView)
-        @webview.navigationDelegate = nil
-      else
-        @webview.delegate = nil
-      end
+      @webview.delegate = nil
     end
     super
   end
