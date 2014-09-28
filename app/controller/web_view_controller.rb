@@ -32,7 +32,6 @@ class WebViewController < HBFav2::UIViewController
       self.view << @webview = HBFav2::WebView.new.tap do |v|
         v.scalesPageToFit = true
         v.backgroundColor = '#fff'.uicolor
-        v.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
         v.delegate = self
       end
     end
