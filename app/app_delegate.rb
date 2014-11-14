@@ -3,6 +3,7 @@ class AppDelegate
   attr_accessor :viewController, :timelineViewController, :bookmarksViewController, :hotentryViewController, :entrylistViewController
   include HBFav2::RemoteNotificationDelegate
   include HBFav2::GoogleAnalytics
+  include HBFav2::HatenaBookmarkSDK
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     NSLog("RUBYMOTION_ENV: " + RUBYMOTION_ENV)
@@ -10,7 +11,7 @@ class AppDelegate
     app_config = ApplicationConfig.sharedConfig
 
     self.configure_pocket_service(app_config)
-    self.configure_hatena_bookmark_service(app_config)
+    self.configure_hatena_bookmark_service
     self.configure_google_api_service(app_config)
     self.configure_google_analytics(app_config.vars['google_analytics']['tracking_id'])
     self.configure_parse_service(app_config, launchOptions)
@@ -117,13 +118,6 @@ class AppDelegate
   def configure_pocket_service(app_config)
     PocketAPI.sharedAPI.setConsumerKey(
       app_config.vars["pocket"]["consumer_key"]
-    )
-  end
-
-  def configure_hatena_bookmark_service(app_config)
-    HTBHatenaBookmarkManager.sharedManager.setConsumerKey(
-      app_config.vars['hatena']['consumer_key'],
-      consumerSecret:app_config.vars['hatena']['consumer_secret']
     )
   end
 

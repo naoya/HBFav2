@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 class BookmarkViewController < HBFav2::UIViewController
+  include HBFav2::HatenaBookmarkSDK
+
   attr_accessor :bookmark, :url, :short_url, :user_name, :on_modal
 
   def viewDidLoad
@@ -136,6 +138,7 @@ class BookmarkViewController < HBFav2::UIViewController
   end
 
   def open_hatena_bookmark_view
+    configure_hatena_bookmark_service
     controller = HTBHatenaBookmarkViewController.alloc.init
     controller.URL = @bookmark.link.nsurl
     self.presentViewController(controller, animated:true, completion:nil)
