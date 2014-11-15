@@ -6,11 +6,9 @@ class AppDelegate
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     NSLog("RUBYMOTION_ENV: " + RUBYMOTION_ENV)
-
     app_config = ApplicationConfig.sharedConfig
 
     self.configure_pocket_service(app_config)
-    self.configure_hatena_bookmark_service(app_config)
     self.configure_google_api_service(app_config)
     self.configure_google_analytics(app_config.vars['google_analytics']['tracking_id'])
     self.configure_parse_service(app_config, launchOptions)
@@ -196,6 +194,11 @@ class AppDelegate
       end
     end
     return true
+  end
+
+  def applicationDidBecomeActive(application)
+    ## BackgroundFetch 時に KeyChain が取れない問題 (#112) があるので SDK の初期化はここで
+    self.configure_hatena_bookmark_service(ApplicationConfig.sharedConfig)
   end
 
   def applicationDidEnterBackground(application)
