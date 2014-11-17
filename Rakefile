@@ -61,7 +61,6 @@ Motion::Project::App.setup do |app|
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
     pod 'MPNotificationView'
-    pod 'GoogleAnalytics-iOS-SDK'
   end
 
   app.frameworks += [
