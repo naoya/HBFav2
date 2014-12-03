@@ -8,6 +8,14 @@ class BookmarksManager
     @responses = []
   end
 
+  def all
+    if ApplicationUser.sharedUser.hide_nocomment_bookmarks?
+      @all.select { |bookmark| bookmark.comment.length > 0 }
+    else
+      @all
+    end
+  end
+
   def has_popular_bookmarks?
     @popular.size > 0
   end
