@@ -43,6 +43,7 @@ class AccountViewController < HBFav2::UIViewController
           },
           {
             :label  => 'ブックマーク表示',
+            :detail => ApplicationUser.sharedUser.hide_nocomment_bookmarks? ? "オン" : "オフ",
             :action => 'open_bookmark_config',
           },
         ],
