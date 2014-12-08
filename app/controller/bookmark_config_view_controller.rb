@@ -7,7 +7,7 @@ class BookmarkConfigViewController < Formotion::FormController
         {
           sections: [
             {
-              title: "ブックマーク",
+              title: "コメントなし非表示",
               rows: [
                 {
                   title: "コメントなしを非表示",

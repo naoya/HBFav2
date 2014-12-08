@@ -42,7 +42,7 @@ class AccountViewController < HBFav2::UIViewController
             :action => 'open_bugreport_config',
           },
           {
-            :label  => 'ブックマーク表示',
+            :label  => 'コメントなし非表示',
             :detail => ApplicationUser.sharedUser.hide_nocomment_bookmarks? ? "オン" : "オフ",
             :action => 'open_bookmark_config',
           },
