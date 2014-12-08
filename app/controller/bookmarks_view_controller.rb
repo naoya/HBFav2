@@ -30,6 +30,11 @@ class BookmarksViewController < HBFav2::UITableViewController
           App.alert("ブックマークが全てプライベートモード、もしくはコメント非表示設定のエントリーです")
         end
 
+        if ApplicationUser.sharedUser.hide_nocomment_bookmarks?
+          self.navigationItem.title = entry.count.to_s + " / " +
+            Count.new(@bookmarks.comments.size).to_s("comment")
+        end
+
         view.reloadData
         @indicator.stopAnimating
 
