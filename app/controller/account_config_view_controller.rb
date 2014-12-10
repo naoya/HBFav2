@@ -34,6 +34,12 @@ class AccountConfigViewController < Formotion::FormController
               title: "オプション",
               rows: [
                 {
+                  title: "コメントなしブックマークを非表示",
+                  key: 'hide_nocomment_bookmarks',
+                  type: 'switch',
+                  value: user.hide_nocomment_bookmarks?
+                },
+                {
                   title: "新ユーザーページ",
                   key: 'use_timeline',
                   type: 'switch',
@@ -93,6 +99,7 @@ class AccountConfigViewController < Formotion::FormController
           previous_id = user.hatena_id
 
           user.use_timeline = data["use_timeline"]
+          user.hide_nocomment_bookmarks = data["hide_nocomment_bookmarks"]
           user.hatena_id = data["hatena_id"]
           user.save
 

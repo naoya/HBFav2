@@ -41,6 +41,11 @@ class AccountViewController < HBFav2::UIViewController
             :detail => ApplicationUser.sharedUser.send_bugreport? ? "オン" : "オフ",
             :action => 'open_bugreport_config',
           },
+          {
+            :label  => 'コメントなし非表示',
+            :detail => ApplicationUser.sharedUser.hide_nocomment_bookmarks? ? "オン" : "オフ",
+            :action => 'open_bookmark_config',
+          },
         ],
       },
       {
@@ -106,6 +111,14 @@ class AccountViewController < HBFav2::UIViewController
   def open_notification_config
     self.presentViewController(
       UINavigationController.alloc.initWithRootViewController(NotificationConfigViewController.new),
+      animated:true,
+      completion:nil
+    )
+  end
+
+  def open_bookmark_config
+    self.presentViewController(
+      UINavigationController.alloc.initWithRootViewController(BookmarkConfigViewController.new),
       animated:true,
       completion:nil
     )

@@ -6,7 +6,7 @@ class BookmarksViewController < HBFav2::UITableViewController
   def viewDidLoad
     super
 
-    @bookmarks = BookmarksManager.new(entry.link)
+    @bookmarks = BookmarksManager.new(entry.link, {:hide_nocomment => ApplicationUser.sharedUser.hide_nocomment_bookmarks?})
 
     self.navigationItem.title = entry.count.to_s
     self.tracked_view_name = "EntryBookmarks"
@@ -24,8 +24,15 @@ class BookmarksViewController < HBFav2::UITableViewController
       Dispatch::Queue.main.sync do
         if not response.ok?
           App.alert(response.message)
+        elsif ApplicationUser.sharedUser.hide_nocomment_bookmarks? && @bookmarks.comments.size == 0
+          App.alert("コメントがありません")
         elsif @bookmarks.all.size == 0
           App.alert("ブックマークが全てプライベートモード、もしくはコメント非表示設定のエントリーです")
+        end
+
+        if ApplicationUser.sharedUser.hide_nocomment_bookmarks?
+          self.navigationItem.title = entry.count.to_s + " / " +
+            Count.new(@bookmarks.comments.size).to_s("comment")
         end
 
         view.reloadData
@@ -75,7 +82,7 @@ class BookmarksViewController < HBFav2::UITableViewController
     if @bookmarks.has_popular_bookmarks? and section == 0
       @bookmarks.popular
     else
-      @bookmarks.all
+      @bookmarks.items
     end
   end
 
@@ -83,7 +90,7 @@ class BookmarksViewController < HBFav2::UITableViewController
     if @bookmarks.has_popular_bookmarks? and section == 0
       return @bookmarks.popular.size
     else
-      return @bookmarks.all.size
+      return @bookmarks.items.size
     end
   end
 

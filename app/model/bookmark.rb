@@ -71,22 +71,6 @@ class Bookmark
     end
   end
 
-  class Count
-    attr_reader :count
-
-    def initialize(n)
-      @count = n
-    end
-
-    def to_i
-      @count
-    end
-
-    def to_s
-      @count == 1 ? "#{@count} user" : "#{@count} users"
-    end
-  end
-
   def favicon_url
     return "http://favicon.st-hatena.com/?url=#{@link}"
   end
