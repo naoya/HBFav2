@@ -124,11 +124,4 @@ Motion::Project::App.setup do |app|
     :products => ['Parse'],
     :headers_dir => 'Headers'
   )
-
-  ## ParseDummy
-  # http://stackoverflow.com/questions/15457136/parse-for-ios-errors-when-trying-to-run-the-app/18626232#18626232
-  app.vendor_project(
-    'vendor/ParseDummy',
-    :static
-  )
 end
