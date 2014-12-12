@@ -87,6 +87,7 @@ Motion::Project::App.setup do |app|
   end
 
   app.frameworks += [
+    'Accounts',
     'AVFoundation',
     'AudioToolbox',
     'CFNetwork',
@@ -96,6 +97,7 @@ Motion::Project::App.setup do |app|
     'MobileCoreServices',
     'QuartzCore',
     'Security',
+    'Social',
     'StoreKit',
     'SystemConfiguration',
   ]
@@ -111,7 +113,13 @@ Motion::Project::App.setup do |app|
 
   ## Parse.com
   app.vendor_project(
-    'vendor/Parse 3.framework',
+    'vendor/Bolts.framework',
+    :static,
+    :products => ['Bolts'],
+    :headers_dir => 'Headers'
+  )
+  app.vendor_project(
+    'vendor/Parse.framework',
     :static,
     :products => ['Parse'],
     :headers_dir => 'Headers'
