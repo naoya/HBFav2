@@ -34,12 +34,6 @@ class AccountConfigViewController < Formotion::FormController
               title: "オプション",
               rows: [
                 {
-                  title: "コメントなしブックマークを非表示",
-                  key: 'hide_nocomment_bookmarks',
-                  type: 'switch',
-                  value: user.hide_nocomment_bookmarks?
-                },
-                {
                   title: "新ユーザーページ",
                   key: 'use_timeline',
                   type: 'switch',
