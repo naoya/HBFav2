@@ -10,9 +10,10 @@ require 'bubble-wrap/reactor'
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'HBFav'
-  app.version = "2.7.3"
-  app.short_version = "2.7.3"
-  app.sdk_version = '8.0'
+  app.version = "2.8.1"
+  app.short_version = "2.8.1"
+  app.sdk_version = '8.1'
+  app.deployment_target = '7.0'
   app.device_family = [:iphone]
   app.identifier = "HBFav"
   app.prerendered_icon = true
@@ -37,6 +38,29 @@ Motion::Project::App.setup do |app|
 
   app.interface_orientations = [:portrait]
 
+  app.info_plist["UILaunchImages"] = [
+    # for iPhone 6 Plus
+    {
+      "UILaunchImageMinimumOSVersion" => "8.0",
+      "UILaunchImageName" => "Default-736h@3x",
+      "UILaunchImageOrientation" => "Portrait",
+      "UILaunchImageSize" => "{414, 736}"
+    },
+    # for iPhone 6
+    {
+      "UILaunchImageMinimumOSVersion" => "8.0",
+      "UILaunchImageName" => "Default-667h@2x",
+      "UILaunchImageOrientation" => "Portrait",
+      "UILaunchImageSize" => "{375, 667}"
+    },
+    # for iPhone 5, iPhone 5s 
+    {
+      "UILaunchImageMinimumOSVersion" => "6.1",
+      "UILaunchImageName" => "Default-568h@2x",
+      "UILaunchImageOrientation" => "Portrait",
+      "UILaunchImageSize" => "{320, 568}"
+    }
+  ]
   app.info_plist['CFBundleURLTypes'] = [
     {
       'CFBundleURLName' => 'net.bloghackers.app',
@@ -65,10 +89,10 @@ Motion::Project::App.setup do |app|
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
     pod 'MPNotificationView'
-    pod 'GoogleAnalytics-iOS-SDK'
   end
 
   app.frameworks += [
+    'Accounts',
     'AVFoundation',
     'AudioToolbox',
     'CFNetwork',
@@ -78,6 +102,7 @@ Motion::Project::App.setup do |app|
     'MobileCoreServices',
     'QuartzCore',
     'Security',
+    'Social',
     'StoreKit',
     'SystemConfiguration',
   ]
@@ -97,16 +122,15 @@ Motion::Project::App.setup do |app|
 
   ## Parse.com
   app.vendor_project(
-    'vendor/Parse 3.framework',
+    'vendor/Bolts.framework',
+    :static,
+    :products => ['Bolts'],
+    :headers_dir => 'Headers'
+  )
+  app.vendor_project(
+    'vendor/Parse.framework',
     :static,
     :products => ['Parse'],
     :headers_dir => 'Headers'
-  )
-
-  ## ParseDummy
-  # http://stackoverflow.com/questions/15457136/parse-for-ios-errors-when-trying-to-run-the-app/18626232#18626232
-  app.vendor_project(
-    'vendor/ParseDummy',
-    :static
   )
 end

@@ -1,7 +1,7 @@
 module HBFav2
   class HatenaStarView < UIImageView
     @@blank_image = UIImage.imageNamed('blank')
-    @@is_retina   = UIScreen.mainScreen.scale == 2.0
+    @@is_retina   = UIScreen.mainScreen.scale >= 2.0
 
     def initWithFrame(frame)
       if super

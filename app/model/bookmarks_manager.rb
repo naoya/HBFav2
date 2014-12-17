@@ -1,11 +1,28 @@
 class BookmarksManager
   attr_accessor :popular, :all
 
-  def initialize(url)
+  def initialize(url, options = {})
     @url = url
+    @options = options
     @popular = []
     @all     = []
     @responses = []
+  end
+
+  def items
+    if @options[:hide_nocomment]
+      self.comments
+    else
+      self.all
+    end
+  end
+
+  def comments
+    if @all.size > 0
+      @comments ||= @all.select { |bookmark| bookmark.comment.length > 0 }
+    else
+      @all
+    end
   end
 
   def has_popular_bookmarks?

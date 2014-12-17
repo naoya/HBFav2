@@ -93,6 +93,7 @@ class AccountConfigViewController < Formotion::FormController
           previous_id = user.hatena_id
 
           user.use_timeline = data["use_timeline"]
+          user.hide_nocomment_bookmarks = data["hide_nocomment_bookmarks"]
           user.hatena_id = data["hatena_id"]
           user.save
 
