@@ -13,7 +13,7 @@ Motion::Project::App.setup do |app|
   app.version = "2.8.1"
   app.short_version = "2.8.1"
   app.sdk_version = '8.1'
-  app.deployment_target = '6.1'
+  app.deployment_target = '7.0'
   app.device_family = [:iphone]
   app.identifier = "HBFav"
   app.prerendered_icon = true
@@ -87,6 +87,7 @@ Motion::Project::App.setup do |app|
   end
 
   app.frameworks += [
+    'Accounts',
     'AVFoundation',
     'AudioToolbox',
     'CFNetwork',
@@ -96,6 +97,7 @@ Motion::Project::App.setup do |app|
     'MobileCoreServices',
     'QuartzCore',
     'Security',
+    'Social',
     'StoreKit',
     'SystemConfiguration',
   ]
@@ -111,16 +113,15 @@ Motion::Project::App.setup do |app|
 
   ## Parse.com
   app.vendor_project(
-    'vendor/Parse 3.framework',
+    'vendor/Bolts.framework',
+    :static,
+    :products => ['Bolts'],
+    :headers_dir => 'Headers'
+  )
+  app.vendor_project(
+    'vendor/Parse.framework',
     :static,
     :products => ['Parse'],
     :headers_dir => 'Headers'
-  )
-
-  ## ParseDummy
-  # http://stackoverflow.com/questions/15457136/parse-for-ios-errors-when-trying-to-run-the-app/18626232#18626232
-  app.vendor_project(
-    'vendor/ParseDummy',
-    :static
   )
 end
