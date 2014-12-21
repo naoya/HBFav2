@@ -1,4 +1,4 @@
-# -*- coding: undecided -*-
+# -*- coding: utf-8 -*-
 module HBFav2
   class UIViewController < UIViewController
     attr_accessor :tracked_view_name
