@@ -1,4 +1,4 @@
-# -*- coding: undecided -*-
+# -*- coding: utf-8 -*-
 class NSString
   def truncate(truncate_at, options = {})
     return dup unless length > truncate_at
