@@ -44,6 +44,8 @@ class BookmarkFastCell < UITableViewCell
     end
 
     [68, 10 + name_size.height + 4 + comment_height + margin + title_height + 10].max
+  rescue
+    68
   end
 
   def self.heightForComment(comment, width)
