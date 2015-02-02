@@ -255,6 +255,15 @@ class WebViewController < HBFav2::UIViewController
     decisionHandler.call(WKNavigationActionPolicyAllow)
   end
 
+  def webView(webView, createWebViewWithConfiguration:configuration, forNavigationAction:navigationAction, windowFeatures:windowFeatures)
+    url = navigationAction.request.URL.absoluteString
+    controller = WebViewController.new.tap do |c|
+      c.bookmark = Bookmark.new({ :link => url })
+    end
+    self.navigationController.pushViewController(controller, animated:true)
+    return nil
+  end
+
   def didReceiveMemoryWarning
     super
     NSURLCache.sharedURLCache.removeAllCachedResponses

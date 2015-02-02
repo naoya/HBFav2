@@ -32,6 +32,7 @@ module HBFav2
     def delegate=(object)
       if kind_of?(WKWebView)
         self.navigationDelegate = object
+        self.UIDelegate = object
       else
         super(object)
       end
