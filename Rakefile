@@ -20,6 +20,10 @@ Motion::Project::App.setup do |app|
   app.status_bar_style = :light_content
   app.my_env.file = './config/environment.yaml'
 
+  ## Very experimental
+  app.archs['iPhoneOS'] << 'arm64'
+  app.archs['iPhoneSimulator'] << 'x86_64'
+
   app.development do
     app.provisioning_profile = '/Users/naoya/Dropbox/HBFav/HBFav_with_Push_Notification.mobileprovision'
     app.codesign_certificate='iPhone Developer: Naoya Ito (DCUZR42N2P)'
@@ -67,6 +71,7 @@ Motion::Project::App.setup do |app|
       'CFBundleURLSchemes' => ['pocketapp16058']
     }
   ]
+  app.info_plist['MinimumOSVersion'] = '6.1'
   app.info_plist['UIViewControllerBasedStatusBarAppearance'] = false
   app.info_plist['UIStatusBarStyle'] = "UIStatusBarStyleLightContent"
   app.info_plist['UIBackgroundModes'] = ['fetch', 'remote-notification']
@@ -102,7 +107,11 @@ Motion::Project::App.setup do |app|
     'SystemConfiguration',
   ]
 
-  app.weak_frameworks += ['MediaAccessibility']
+  app.weak_frameworks += [
+    'MediaAccessibility',
+    'WebKit'
+  ]
+
   app.libs += %W(/usr/lib/libz.dylib /usr/lib/libsqlite3.dylib)
 
   app.icons = ["default_app_logo.png", "default_app_logo@2x.png"]

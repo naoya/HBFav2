@@ -24,15 +24,12 @@ class WebViewController < HBFav2::UIViewController
       label.text = @bookmark.title
     end
 
-    ## WebView
-    self.view << @webview = HBFav2::WebView.new.tap do |v|
-      v.scalesPageToFit = true
+    self.view << @webview = HBFav2::WebViewBridge.factory(self.view.bounds).tap do |v|
       v.backgroundColor = '#fff'.uicolor
-      v.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
+      v.scalesPageToFit = true
       v.delegate = self
     end
 
-    ## Activity Indicator
     self.view << @indicator = UIActivityIndicatorView.new.tap do |v|
       v.style = UIActivityIndicatorViewStyleGray
       v.startAnimating
@@ -52,16 +49,12 @@ class WebViewController < HBFav2::UIViewController
         action:'on_close'
       )
     end
+
+    @webview.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
   end
 
   def viewWillAppear(animated)
     super
-
-    ## 応急処置
-    # UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleBlackOpaque
-    # UIApplication.sharedApplication.setStatusBarHidden(false, animated:false)
-    # self.wantsFullScreenLayout = false
-
     self.navigationController.toolbar.translucent = false
     self.navigationController.setToolbarHidden(false, animated:animated)
 
@@ -89,29 +82,8 @@ class WebViewController < HBFav2::UIViewController
     end
   end
 
-  def webViewDidStartLoad (webView)
-    App.shared.networkActivityIndicatorVisible = true
-  end
-
-  def webViewDidFinishLoad (webView)
-    update_bookmark
-
-    if @backButton.present?
-      @backButton.enabled    = webView.canGoBack
-    end
-    App.shared.networkActivityIndicatorVisible = false
-    @indicator.stopAnimating
-  end
-
-  def webView(webView, shouldStartLoadWithRequest:request, navigationType:navigationType)
-    if (navigationType == UIWebViewNavigationTypeLinkClicked)
-      @link_clicked = true
-    end
-    true
-  end
-
   def update_bookmark
-    url = @webview.request.URL.absoluteString
+    url = @webview.URL.absoluteString
     @bookmark_requested[url] ||= {}
 
     if @bookmark_requested[url][:http_requested]
@@ -122,8 +94,6 @@ class WebViewController < HBFav2::UIViewController
     @bookmark_requested[url][:http_requested] = true
 
     query = BW::HTTP.get("http://b.hatena.ne.jp/entry/jsonlite/", {payload: {url: url}}) do |response|
-      NSLog("DEBUG: done HTTP request")
-
       if response.ok?
         ## まだ画面遷移が一度も発生してない場合はオブジェクトの更新は必要ない (リダイレクト対策)
         ## ただし、その場合でもブックマークコメントの先読みのためにリクエストはしておく
@@ -133,7 +103,7 @@ class WebViewController < HBFav2::UIViewController
             @bookmark_requested[url][:bookmark] = bookmark = Bookmark.new(
               {
                 :eid   => data['eid'] || nil,
-                :title => data['title'] || @webview.stringByEvaluatingJavaScriptFromString("document.title"),
+                :title => data['title'] || @webview.title,
                 :link  => url,
                 :count => data['count'] || 0,
               }
@@ -163,18 +133,9 @@ class WebViewController < HBFav2::UIViewController
     @bookmarkButton.enabled = bookmark.count.to_i > 0
   end
 
-  def on_back
-    @webview.goBack
-  end
-
-  def on_forward
-    @webview.goForward
-  end
-
-  def on_refresh
-    @webview.reload
-  end
-
+  #
+  # Toolbar
+  #
   def initialize_toolbar
     self.navigationController.setToolbarHidden(false, animated:false)
     self.navigationController.toolbar.translucent = false
@@ -194,6 +155,18 @@ class WebViewController < HBFav2::UIViewController
       end,
     ]
     self.update_bookmark_count(@bookmark)
+  end
+
+  def on_back
+    @webview.goBack
+  end
+
+  def on_forward
+    @webview.goForward
+  end
+
+  def on_refresh
+    @webview.reload
   end
 
   def present_modal (controller)
@@ -240,6 +213,57 @@ class WebViewController < HBFav2::UIViewController
     self.dismissModalViewControllerAnimated(true, completion:nil)
   end
 
+  #
+  # UIWebView delegate
+  #
+  def webViewDidStartLoad (webView)
+    App.shared.networkActivityIndicatorVisible = true
+  end
+
+  def webViewDidFinishLoad (webView)
+    update_bookmark
+
+    if @backButton.present?
+      @backButton.enabled = webView.canGoBack
+    end
+    App.shared.networkActivityIndicatorVisible = false
+    @indicator.stopAnimating
+  end
+
+  def webView(webView, shouldStartLoadWithRequest:request, navigationType:navigationType)
+    if (navigationType == UIWebViewNavigationTypeLinkClicked)
+      @link_clicked = true
+    end
+    true
+  end
+
+  #
+  # WKWebView delegate
+  #
+  def webView(webView, didStartProvisionalNavigation:navigation)
+    self.webViewDidStartLoad(webView)
+  end
+
+  def webView(webView, didFinishNavigation:navigation)
+    self.webViewDidFinishLoad(webView)
+  end
+
+  def webView(webView, decidePolicyForNavigationAction:navigationAction, decisionHandler:decisionHandler)
+    if navigationAction.navigationType == WKNavigationTypeLinkActivated
+      @link_clicked = true
+    end
+    decisionHandler.call(WKNavigationActionPolicyAllow)
+  end
+
+  def webView(webView, createWebViewWithConfiguration:configuration, forNavigationAction:navigationAction, windowFeatures:windowFeatures)
+    url = navigationAction.request.URL.absoluteString
+    controller = WebViewController.new.tap do |c|
+      c.bookmark = Bookmark.new({ :link => url })
+    end
+    self.navigationController.pushViewController(controller, animated:true)
+    return nil
+  end
+
   def didReceiveMemoryWarning
     super
     NSURLCache.sharedURLCache.removeAllCachedResponses
@@ -247,7 +271,6 @@ class WebViewController < HBFav2::UIViewController
   end
 
   def dealloc
-    NSLog("dealloc: " + self.class.name)
     if @webview
       @webview.stopLoading if @webview.loading?
       @webview.delegate = nil
