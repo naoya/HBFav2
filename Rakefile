@@ -114,7 +114,7 @@ Motion::Project::App.setup do |app|
 
   app.libs += %W(/usr/lib/libz.dylib /usr/lib/libsqlite3.dylib)
 
-  app.icons = ["default_app_logo.png", "default_app_logo@2x.png"]
+  app.icons = ["Icon-60@2x.png", "Icon-60@3x.png"]
 
   app.entitlements['keychain-access-groups'] = [
     app.seed_id + '.' + app.identifier
