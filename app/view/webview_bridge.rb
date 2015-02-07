@@ -6,41 +6,41 @@ module HBFav2
                         end
 
     def self.factory(frame)
-      if kind_of?(WKWebView)
-        self.alloc.initWithFrame(frame, configration:nil)
-      else
+      if kind_of?(UIWebView)
         self.alloc.initWithFrame(frame)
+      else
+        self.alloc.initWithFrame(frame, configration:nil)
       end
     end
 
     def title
-      if kind_of?(WKWebView)
-        super
+      if kind_of?(UIWebView)
+        stringByEvaluatingJavaScriptFromString("document.title")        
       else
-        stringByEvaluatingJavaScriptFromString("document.title")
+        super
       end
     end
 
     def URL
-      if kind_of?(WKWebView)
-        super
-      else
+      if kind_of?(UIWebView)
         self.request.URL
+      else
+        super        
       end
     end
 
     def delegate=(object)
-      if kind_of?(WKWebView)
+      if kind_of?(UIWebView)
+        super(object)
+      else
         self.navigationDelegate = object
         self.UIDelegate = object
-      else
-        super(object)
       end
     end
 
     def scalesPageToFit=(bool)
-      unless kind_of?(WKWebView)
-        super.scalesPageToFit(bool)
+      if kind_of?(UIWebView)
+        super.setScalesPageToFit(bool)
       end
     end
 
