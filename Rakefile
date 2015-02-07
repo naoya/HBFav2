@@ -71,7 +71,7 @@ Motion::Project::App.setup do |app|
       'CFBundleURLSchemes' => ['pocketapp16058']
     }
   ]
-  app.info_plist['MinimumOSVersion'] = '6.1'
+  app.info_plist['MinimumOSVersion'] = '7.0'
   app.info_plist['UIViewControllerBasedStatusBarAppearance'] = false
   app.info_plist['UIStatusBarStyle'] = "UIStatusBarStyleLightContent"
   app.info_plist['UIBackgroundModes'] = ['fetch', 'remote-notification']
