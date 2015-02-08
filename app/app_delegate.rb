@@ -45,21 +45,37 @@ class AppDelegate
   def initialize_window
     app_user   = ApplicationUser.sharedUser.load
 
+#    @viewController = HBFav2PanelController.sharedController
+#    @viewController.leftGapPercentage = 0.7
+#
+#    @leftViewController = LeftViewController.new
+#    @leftViewController.controllers = self.initialize_view_controllers(app_user)
+#    @viewController.leftPanel = @leftViewController
+#
+#    @viewController.centerPanel = HBFav2NavigationController.alloc.initWithRootViewController(
+#      @timelineViewController
+#    )
+
+    @tabBarController = UITabBarController.alloc.init
+    @tabBarController.viewControllers = self.initialize_view_controllers(app_user)
+
+    tabBar = @tabBarController.tabBar
+    tabBar.setTranslucent(false)
+
+    tabBar.items[0].title = "タイムライン"
+    tabBar.items[0].image = UIImage.imageNamed('insignia_star')
+
+    tabBar.items[1].title = "ブックマーク"
+    tabBar.items[1].image = UIImage.imageNamed('insignia_tags')
+
+    tabBar.items[2].title = "人気"
+    tabBar.items[2].image = UIImage.imageNamed('insignia_heart')
+    
+    tabBar.items[3].title = "新着"
+    tabBar.items[3].image = UIImage.imageNamed('insignia_file')
+
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-
-    view_controllers = self.initialize_view_controllers(app_user)
-
-    @viewController = HBFav2PanelController.sharedController
-    @viewController.leftGapPercentage = 0.7
-
-    @leftViewController = LeftViewController.new
-    @leftViewController.controllers = view_controllers
-    @viewController.leftPanel = @leftViewController
-
-    @viewController.centerPanel = HBFav2NavigationController.alloc.initWithRootViewController(
-      @timelineViewController
-    )
-    @window.rootViewController = @viewController
+    @window.rootViewController = @tabBarController
     @window.makeKeyAndVisible
   end
 
@@ -89,17 +105,18 @@ class AppDelegate
       c.as_home   = true
     end
 
-    @accountViewController = AccountViewController.new.tap { |c| c.as_home = true }
-    @appInfoViewController = AppInfoViewController.new.tap { |c| c.as_home = true }
+#    @accountViewController = AccountViewController.new.tap { |c| c.as_home = true }
+#    @appInfoViewController = AppInfoViewController.new.tap { |c| c.as_home = true }
 
-    return {
-      :timeline  => @timelineViewController,
-      :bookmarks => @bookmarksViewController,
-      :hotentry  => @hotentryViewController,
-      :entrylist => @entrylistViewController,
-      :account   => @accountViewController,
-      :appInfo   => @appInfoViewController,
-    }
+    return NSArray.arrayWithObjects(
+      HBFav2NavigationController.alloc.initWithRootViewController(@timelineViewController),
+      HBFav2NavigationController.alloc.initWithRootViewController(@bookmarksViewController),
+      HBFav2NavigationController.alloc.initWithRootViewController(@hotentryViewController),
+      HBFav2NavigationController.alloc.initWithRootViewController(@entrylistViewController),
+#      :account   => @accountViewController,
+#      :appInfo   => @appInfoViewController,
+      nil
+    )
   end
 
   def development?
