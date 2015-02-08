@@ -55,11 +55,6 @@ class WebViewController < HBFav2::UIViewController
 
   def viewWillAppear(animated)
     super
-    self.navigationController.toolbar.translucent = false
-    self.navigationController.setToolbarHidden(false, animated:animated)
-
-    ## FIXME: Readability から戻ってくると画面の大きさがおかしくなる
-    @webview.frame = view.frame
     @indicator.center = [ view.center.x, view.center.y + 42 ]
   end
 

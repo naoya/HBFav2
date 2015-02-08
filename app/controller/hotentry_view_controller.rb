@@ -34,6 +34,7 @@ class HotentryViewController < HBFav2::UITableViewController
       bookmark = @bookmarks[indexPath.row]
       controller = WebViewController.new
       controller.bookmark = bookmark
+      controller.hidesBottomBarWhenPushed = true
       self.navigationController.pushViewController(controller, animated:true)
     end
   end
@@ -128,6 +129,7 @@ class HotentryViewController < HBFav2::UITableViewController
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     WebViewController.new.tap do |c|
       c.bookmark = @bookmarks[indexPath.row]
+      c.hidesBottomBarWhenPushed = true
       self.navigationController.pushViewController(c, animated:true)
     end
   end
