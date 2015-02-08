@@ -56,7 +56,7 @@ class AppDelegate
 #      @timelineViewController
 #    )
 
-    @tabBarController = UITabBarController.alloc.init
+    @tabBarController = HBFav2::UITabBarController.alloc.init
     @tabBarController.viewControllers = self.initialize_view_controllers(app_user)
 
     tabBar = @tabBarController.tabBar
