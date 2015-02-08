@@ -44,6 +44,7 @@ class TimelineViewController < HBFav2::UITableViewController
       unless bookmark.kind_of? Placeholder
         controller = WebViewController.new
         controller.bookmark = bookmark
+        controller.hidesBottomBarWhenPushed = true
         self.navigationController.pushViewController(controller, animated:true)
       end
     end
