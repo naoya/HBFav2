@@ -200,7 +200,7 @@ class TimelineViewController < HBFav2::UITableViewController
   def viewWillAppear(animated)
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("設定").tap do |btn|
       btn.target = self
-      btn.action = 'open_account_config_with_allow_cancellation'
+      btn.action = 'open_account_view'
     end
     
     self.update_title
@@ -263,8 +263,12 @@ class TimelineViewController < HBFav2::UITableViewController
     )
   end
 
-  def open_account_config_with_allow_cancellation
-    open_account_config(true)
+  def open_account_view
+    controller = AccountViewController.new
+    self.presentModalViewController(
+      UINavigationController.alloc.initWithRootViewController(controller),
+      animated:true
+    )    
   end
 
   def on_refresh

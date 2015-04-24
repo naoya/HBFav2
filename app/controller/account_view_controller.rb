@@ -70,6 +70,12 @@ class AccountViewController < HBFav2::UIViewController
 
   def viewWillAppear(animated)
     super
+    
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
+      btn.action = 'on_close'
+      btn.target = self
+    end
+    
     self.navigationController.setToolbarHidden(true, animated:animated)
     self.initialize_data_source
 
@@ -182,6 +188,10 @@ class AccountViewController < HBFav2::UIViewController
     viewController = HTBLoginWebViewController.alloc.initWithAuthorizationRequest(req)
     navigationController.viewControllers = [viewController]
     self.presentViewController(navigationController, animated:true, completion:nil)
+  end
+
+  def on_close
+    self.dismissViewControllerAnimated(true, completion:nil)
   end
 
   def dealloc
