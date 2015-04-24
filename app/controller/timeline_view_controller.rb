@@ -198,6 +198,11 @@ class TimelineViewController < HBFav2::UITableViewController
   end
 
   def viewWillAppear(animated)
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled("設定").tap do |btn|
+      btn.target = self
+      btn.action = 'open_account_config_with_allow_cancellation'
+    end
+    
     self.update_title
     self.navigationController.setToolbarHidden(true, animated:true)
     tableView.reloadDataWithDeselectingRowAnimated(animated)
@@ -248,12 +253,18 @@ class TimelineViewController < HBFav2::UITableViewController
     end
   end
 
-  def open_account_config
-    controller = AccountConfigViewController.new.tap { |c| c.allow_cancellation = false }
+  def open_account_config(allow_cancellation = false)
+    controller = AccountConfigViewController.new.tap { 
+      |c| c.allow_cancellation = allow_cancellation 
+    }
     self.presentModalViewController(
       UINavigationController.alloc.initWithRootViewController(controller),
       animated:true
     )
+  end
+
+  def open_account_config_with_allow_cancellation
+    open_account_config(true)
   end
 
   def on_refresh
