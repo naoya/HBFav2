@@ -38,6 +38,9 @@ Motion::Project::App.setup do |app|
 
   app.interface_orientations = [:portrait]
 
+  app.info_plist['NSAppTransportSecurity'] = {
+    'NSAllowsArbitraryLoads' => true
+  }
   app.info_plist["UILaunchImages"] = [
     # for iPhone 6 Plus
     {
