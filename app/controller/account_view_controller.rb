@@ -64,12 +64,28 @@ class AccountViewController < HBFav2::UIViewController
             :accessoryType => PocketAPI.sharedAPI.loggedIn? ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone
           },
         ]
+      },
+      {
+        :title => "インフォメーション",
+        :rows => [
+          {
+            :label  => "アプリについて",
+            :action => 'open_app_info',
+            :accessoryType => UITableViewCellAccessoryDisclosureIndicator
+          },
+        ]
       }
     ]
   end
 
   def viewWillAppear(animated)
     super
+    
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.stop.tap do |btn|
+      btn.action = 'on_close'
+      btn.target = self
+    end
+    
     self.navigationController.setToolbarHidden(true, animated:animated)
     self.initialize_data_source
 
@@ -124,25 +140,6 @@ class AccountViewController < HBFav2::UIViewController
     )
   end
 
-  def open_website
-    bookmark = Bookmark.new({
-      :title => 'HBFav2',
-      :link  => 'http://hbfav.bloghackers.net/',
-      :count => nil
-    })
-    controller = WebViewController.new
-    controller.bookmark = bookmark
-    self.navigationController.pushViewController(controller, animated:true)
-  end
-
-  def open_review
-    "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=477950722&pageNumber=0&sortOrdering=1&type=Purple+Software&mt=8".nsurl.open
-  end
-
-  def open_report
-    "https://github.com/naoya/HBFav2/issues?state=open".nsurl.open
-  end
-
   def open_hatena
     if HTBHatenaBookmarkManager.sharedManager.authorized
       self.navigationController.pushViewController(HatenaConfigViewController.alloc.initWithStyle(UITableViewStyleGrouped), animated:true)
@@ -175,6 +172,11 @@ class AccountViewController < HBFav2::UIViewController
     end
   end
 
+  def open_app_info
+    controller = AppInfoViewController.new
+    self.navigationController.pushViewController(controller, animated:true)
+  end
+
   def showOAuthLoginView(notification)
     NSNotificationCenter.defaultCenter.removeObserver(self, name:KHTBLoginStartNotification, object:nil)
     req = notification.object
@@ -182,6 +184,10 @@ class AccountViewController < HBFav2::UIViewController
     viewController = HTBLoginWebViewController.alloc.initWithAuthorizationRequest(req)
     navigationController.viewControllers = [viewController]
     self.presentViewController(navigationController, animated:true, completion:nil)
+  end
+
+  def on_close
+    self.dismissViewControllerAnimated(true, completion:nil)
   end
 
   def dealloc

@@ -8,7 +8,6 @@ class BookmarkViewController < HBFav2::UIViewController
     self.navigationItem.title = "ブックマーク"
     self.tracked_view_name = "Bookmark"
     self.view.backgroundColor = UIColor.whiteColor
-    self.configure_toolbar
 
     self.view << @bookmarkView = HBFav2::BookmarkView.new.tap do |v|
       v.frame = self.view.bounds
@@ -22,9 +21,6 @@ class BookmarkViewController < HBFav2::UIViewController
     end
 
     self.view << @indicator = UIActivityIndicatorView.gray
-
-    ## clickable URL に悪影響を与えるので中止
-    # self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'toggle_toolbar'))
 
     if self.on_modal == true
       UIBarButtonItem.stop.tap do |btn|
@@ -64,6 +60,7 @@ class BookmarkViewController < HBFav2::UIViewController
   def open_webview
     controller = WebViewController.new
     controller.bookmark = @bookmark
+    controller.hidesBottomBarWhenPushed = true
     self.navigationController.pushViewController(controller, animated: true)
   end
 
@@ -74,7 +71,7 @@ class BookmarkViewController < HBFav2::UIViewController
 
   def viewWillAppear(animated)
     super
-    self.navigationController.setToolbarHidden(false, animated:self.on_modal ? false : true)
+    self.navigationController.setToolbarHidden(true, animated:animated)
 
     if self.bookmark.present?
       @bookmarkView.bookmark = self.bookmark
@@ -104,32 +101,21 @@ class BookmarkViewController < HBFav2::UIViewController
     end
   end
 
-  def toggle_toolbar
-    if @toolbar_visible
-      @toolbar_visible = false
-      self.navigationController.setToolbarHidden(true, animated:true)
-    else
-      @toolbar_visible = true
-      self.navigationController.setToolbarHidden(false, animated:true)
-    end
-  end
-
   def viewWillDisappear(animated)
     super
-    self.navigationController.toolbar.translucent = false
   end
 
-  def configure_toolbar
-    spacer = UIBarButtonItem.fixedspace
-    spacer.width = self.view.size.width - 110
-    self.toolbarItems = [
-      spacer,
-      UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemCompose, target:self, action: 'on_bookmark'),
-      UIBarButtonItem.flexiblespace,
-      # BookmarkBarButtonItem.alloc.initWithTarget(self, action:'on_bookmark'),
-      UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAction, target:self, action:'on_action'),
-    ]
-  end
+  # def configure_toolbar
+  #   spacer = UIBarButtonItem.fixedspace
+  #   spacer.width = self.view.size.width - 110
+  #   self.toolbarItems = [
+  #     spacer,
+  #     UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemCompose, target:self, action: 'on_bookmark'),
+  #     UIBarButtonItem.flexiblespace,
+  #     # BookmarkBarButtonItem.alloc.initWithTarget(self, action:'on_bookmark'),
+  #     UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAction, target:self, action:'on_action'),
+  #   ]
+  # end
 
   def on_bookmark
     open_hatena_bookmark_view
@@ -175,15 +161,11 @@ class BookmarkViewController < HBFav2::UIViewController
     )
     controller = WebViewController.new
     controller.bookmark = bookmark
+    controller.hidesBottomBarWhenPushed = true
     self.navigationController.pushViewController(controller, animated:true)
   end
 
   def on_close
     self.dismissModalViewControllerAnimated(true, completion:nil)
-  end
-
-  def dealloc
-    NSLog("dealloc: " + self.class.name)
-    super
   end
 end
