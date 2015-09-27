@@ -204,9 +204,12 @@ class WebViewController < HBFav2::UIViewController
   end
 
   def on_action
-    present_modal(
-      URLActivityViewController.alloc.initWithDefaultActivities([@bookmark.title, @bookmark.link.nsurl])
-    )
+    controller = URLActivityViewController.alloc.initWithDefaultActivities([@bookmark.title, @bookmark.link.nsurl])
+    if controller.popoverPresentationController
+      controller.popoverPresentationController.sourceView = self.view
+    end
+
+    present_modal(controller)
   end
 
   def on_close

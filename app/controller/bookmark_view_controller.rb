@@ -143,6 +143,9 @@ class BookmarkViewController < HBFav2::UIViewController
 
   def on_action
     controller = URLActivityViewController.alloc.initWithDefaultActivities([ @bookmark.title, @bookmark.link.nsurl ])
+    if controller.popoverPresentationController
+      controller.popoverPresentationController.sourceView = self.view
+    end
     self.presentViewController(controller, animated:true, completion:nil)
   end
 
