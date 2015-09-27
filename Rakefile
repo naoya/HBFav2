@@ -14,7 +14,7 @@ Motion::Project::App.setup do |app|
   app.short_version = "2.8.2"
   app.sdk_version = '8.1'
   app.deployment_target = '7.0'
-  app.device_family = [:iphone]
+  app.device_family = [:iphone, :ipad]
   app.identifier = "HBFav"
   app.prerendered_icon = true
   app.status_bar_style = :light_content
