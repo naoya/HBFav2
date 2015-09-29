@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rake'
+gem 'rake-hooks'
 gem 'motion-cocoapods'
 gem 'sugarcube'
 gem "bubble-wrap"
