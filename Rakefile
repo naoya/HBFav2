@@ -43,6 +43,7 @@ Motion::Project::App.setup do |app|
     'UIInterfaceOrientationLandscapeLeft',
     'UIInterfaceOrientationLandscapeRight'
   ]
+  app.info_plist['UILaunchStoryboardName'] = 'LaunchScreen'
 
   app.info_plist['NSAppTransportSecurity'] = {
     'NSAllowsArbitraryLoads' => true
