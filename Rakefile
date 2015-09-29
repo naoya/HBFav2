@@ -37,6 +37,12 @@ Motion::Project::App.setup do |app|
   end
 
   app.interface_orientations = [:portrait]
+  app.info_plist['UISupportedInterfaceOrientations~ipad'] = [
+    'UIInterfaceOrientationPortrait',
+    'UIInterfaceOrientationPortraitUpsideDown',
+    'UIInterfaceOrientationLandscapeLeft',
+    'UIInterfaceOrientationLandscapeRight'
+  ]
 
   app.info_plist['NSAppTransportSecurity'] = {
     'NSAllowsArbitraryLoads' => true
