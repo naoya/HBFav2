@@ -145,6 +145,9 @@ class BookmarkViewController < HBFav2::UIViewController
     controller = URLActivityViewController.alloc.initWithDefaultActivities([ @bookmark.title, @bookmark.link.nsurl ])
     if controller.popoverPresentationController
       controller.popoverPresentationController.sourceView = self.view
+      frame = self.view.frame
+      new_frame = CGRectMake(frame.size.width - 350, UIScreen.mainScreen.bounds.size.height - 40, frame.size.width, frame.size.height)
+      controller.popoverPresentationController.sourceRect = new_frame
     end
     self.presentViewController(controller, animated:true, completion:nil)
   end
