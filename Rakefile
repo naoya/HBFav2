@@ -86,7 +86,6 @@ Motion::Project::App.setup do |app|
     pod 'TUSafariActivity'
     pod 'SVProgressHUD'
     pod 'JASidePanels'
-    pod 'ISBackGesture', :git => 'https://github.com/ishkawa/ISBackGesture.git'
     pod 'TTTAttributedLabel', :git => 'git@github.com:mattt/TTTAttributedLabel.git'
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
