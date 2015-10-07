@@ -36,6 +36,8 @@ Motion::Project::App.setup do |app|
     app.entitlements['aps-environment'] = 'production'
   end
 
+  app.target 'extensions/HBFavAction', :extension
+
   app.interface_orientations = [:portrait]
 
   app.info_plist['NSAppTransportSecurity'] = {
