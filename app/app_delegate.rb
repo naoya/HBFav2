@@ -256,17 +256,21 @@ class AppDelegate
 
   def whenFoundURLInPasteboard(url)
     @logo ||= UIImage.imageNamed("default_app_logo.png")
-    banner = MPNotificationView.notifyWithText(
-      "コピーしたURLを開く",
-      detail:url,
+    TSMessage.showNotificationInViewController(
+      self.viewController,
+      title:"コピーしたURLを開く",
+      subtitle:url,
       image:@logo,
+      type:TSMessageNotificationTypeMessage,
       duration:4.0,
-      andTouchBlock:lambda { |notificationView|
+      callback: proc {
         self.presentWebViewControllerWithURL(url)
-      }
+      },
+      buttonTitle:nil,
+      buttonCallback:nil,
+      atPosition:TSMessageNotificationPositionTop,
+      canBeDismissedByUser:true
     )
-    banner.detailTextLabel.font = UIFont.systemFontOfSize(12)
-    banner.detailTextLabel.textColor = "#333333".uicolor
   end
 
   def handleNotificationPayload(payload)
