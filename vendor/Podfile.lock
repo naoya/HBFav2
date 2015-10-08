@@ -1,9 +1,7 @@
 PODS:
   - AFNetworking (1.3.2)
   - ARChromeActivity (1.0.1)
-  - GoogleAnalytics-iOS-SDK (3.0.3c)
-  - HatenaBookmarkSDK (1.1.1):
-    - AFNetworking (~> 1.0)
+  - HatenaBookmarkSDK (1.2):
     - SFHFKeychainUtils
   - JASidePanels (1.3.2)
   - MPNotificationView (1.1.0)
@@ -12,13 +10,12 @@ PODS:
     - SFHFKeychainUtils (= 0.0.1)
   - SFHFKeychainUtils (0.0.1)
   - SVProgressHUD (0.9)
-  - TTTAttributedLabel (1.10.1)
+  - TTTAttributedLabel (2.0.0)
   - TUSafariActivity (1.0.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 1.3)
   - ARChromeActivity
-  - GoogleAnalytics-iOS-SDK
   - HatenaBookmarkSDK (from `git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git`)
   - JASidePanels
   - MPNotificationView
@@ -26,7 +23,7 @@ DEPENDENCIES:
   - PocketAPI (from `git@github.com:naoya/Pocket-ObjC-SDK.git`, branch `cocoapods-dependency`)
   - SFHFKeychainUtils
   - SVProgressHUD
-  - TTTAttributedLabel (from `git@github.com:mattt/TTTAttributedLabel.git`)
+  - TTTAttributedLabel (from `git@github.com:TTTAttributedLabel/TTTAttributedLabel.git`)
   - TUSafariActivity
 
 EXTERNAL SOURCES:
@@ -36,20 +33,30 @@ EXTERNAL SOURCES:
     :branch: cocoapods-dependency
     :git: git@github.com:naoya/Pocket-ObjC-SDK.git
   TTTAttributedLabel:
-    :git: git@github.com:mattt/TTTAttributedLabel.git
+    :git: git@github.com:TTTAttributedLabel/TTTAttributedLabel.git
+
+CHECKOUT OPTIONS:
+  HatenaBookmarkSDK:
+    :commit: 9f6af4ea96f63f0d08b757c1fdf58c432e3f6168
+    :git: git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git
+  PocketAPI:
+    :commit: 2924afe59348f67dbc1a83c01bcd44c502b9222b
+    :git: git@github.com:naoya/Pocket-ObjC-SDK.git
+  TTTAttributedLabel:
+    :commit: 636de1ef38bce6656a3f9989426ef5eee7a5a42d
+    :git: git@github.com:TTTAttributedLabel/TTTAttributedLabel.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 13fd672bb1f6919946d259d97f31000015680dfa
-  ARChromeActivity: 2349cc1ad719665cf58914dc7a6b0f6636549e80
-  GoogleAnalytics-iOS-SDK: 4377a29aa3e039030df30fd5c6075baeed3c916c
-  HatenaBookmarkSDK: 2447855afdf5e36131ca7a4f1c57a5e52983664c
-  JASidePanels: ca943907d88a0738c80755204c6098969d43e4e9
-  MPNotificationView: 8643128aff9cc0f197a40fd7e6951a1b72649602
-  NSDate+TimeAgo: c01d6ac0b81add41f77f264fa4276d355723fcde
+  AFNetworking: 9168af1ebe62092499df4398ecb5e7b885e6a250
+  ARChromeActivity: e77c0414584bb6d244fe6da7176465a75e981fba
+  HatenaBookmarkSDK: 16f3cf6d23d3daa2e9e123da1a724abdd5a04b4b
+  JASidePanels: c8f5b130e18d51ee3de988d1c1fad2f88e0b0d21
+  MPNotificationView: 3db0b82119b4249414f9f08d66a83d7770cc5ef2
+  NSDate+TimeAgo: 7aa9c53dd3d7c55b5a41c1819a11638344adfbc8
   PocketAPI: d4b8f31c5a29e20da84b6a19055344bb1ad06099
-  SFHFKeychainUtils: 6fdda05a86d035db406c7662ec1054814b68f0fd
-  SVProgressHUD: adf9def97327df88dee15e9ad8033fde6961f7b4
-  TTTAttributedLabel: 1bcf9fc9247a553ec916b3645dac298a30df9484
-  TUSafariActivity: afff9b1d2eacf7cbace752c5f2bf56db852714de
+  SFHFKeychainUtils: 9576b411a79a058f4d5381ace6f3242b9a62e664
+  SVProgressHUD: 7038ae9d6a0bd2c87560d2699eba642eef82d41e
+  TTTAttributedLabel: 4d752a2ff9832229c4f0081f44ef27e4f00cce2b
+  TUSafariActivity: dd346df54a8f1cbb4fd05d504c76d47225fac99e
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.38.2
