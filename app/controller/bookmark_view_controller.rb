@@ -136,9 +136,9 @@ class BookmarkViewController < HBFav2::UIViewController
   end
 
   def open_hatena_bookmark_view
-    controller = HTBHatenaBookmarkViewController.alloc.init
-    controller.URL = @bookmark.link.nsurl
-    self.presentViewController(controller, animated:true, completion:nil)
+    @controller = HTBHatenaBookmarkViewController.alloc.init
+    @controller.URL = @bookmark.link.nsurl
+    self.presentViewController(@controller, animated:true, completion:nil)
   end
 
   def on_action
