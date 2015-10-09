@@ -5,17 +5,15 @@ PODS:
   - HatenaBookmarkSDK (1.1.1):
     - AFNetworking (~> 1.0)
     - SFHFKeychainUtils
-  - HexColors (2.2.1)
   - ISBackGesture (0.0.5)
   - JASidePanels (1.3.2)
+  - MPNotificationView (1.1.0)
   - NSDate+TimeAgo (1.0.2)
   - PocketAPI (1.0.2):
     - SFHFKeychainUtils (= 0.0.1)
   - SFHFKeychainUtils (0.0.1)
   - SVProgressHUD (0.9)
   - TTTAttributedLabel (1.10.1)
-  - TSMessages (0.9.12):
-    - HexColors (~> 2.2.0)
   - TUSafariActivity (1.0.0)
 
 DEPENDENCIES:
@@ -25,12 +23,12 @@ DEPENDENCIES:
   - HatenaBookmarkSDK (from `git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git`)
   - ISBackGesture (from `https://github.com/ishkawa/ISBackGesture.git`)
   - JASidePanels
+  - MPNotificationView
   - NSDate+TimeAgo
   - PocketAPI (from `git@github.com:naoya/Pocket-ObjC-SDK.git`, branch `cocoapods-dependency`)
   - SFHFKeychainUtils
   - SVProgressHUD
   - TTTAttributedLabel (from `git@github.com:mattt/TTTAttributedLabel.git`)
-  - TSMessages
   - TUSafariActivity
 
 EXTERNAL SOURCES:
@@ -49,15 +47,14 @@ SPEC CHECKSUMS:
   ARChromeActivity: 2349cc1ad719665cf58914dc7a6b0f6636549e80
   GoogleAnalytics-iOS-SDK: 4377a29aa3e039030df30fd5c6075baeed3c916c
   HatenaBookmarkSDK: 2447855afdf5e36131ca7a4f1c57a5e52983664c
-  HexColors: abfd172e329dab59888614ccba6f216cec59289d
   ISBackGesture: 8d67984a799b5a70abf569e5c184113129c4270d
   JASidePanels: ca943907d88a0738c80755204c6098969d43e4e9
+  MPNotificationView: 8643128aff9cc0f197a40fd7e6951a1b72649602
   NSDate+TimeAgo: c01d6ac0b81add41f77f264fa4276d355723fcde
   PocketAPI: d4b8f31c5a29e20da84b6a19055344bb1ad06099
   SFHFKeychainUtils: 6fdda05a86d035db406c7662ec1054814b68f0fd
   SVProgressHUD: adf9def97327df88dee15e9ad8033fde6961f7b4
   TTTAttributedLabel: 1bcf9fc9247a553ec916b3645dac298a30df9484
   TUSafariActivity: afff9b1d2eacf7cbace752c5f2bf56db852714de
-  TSMessages: c8cc7b80f2a833af533872cd02010cac061532cc
 
 COCOAPODS: 0.33.1
