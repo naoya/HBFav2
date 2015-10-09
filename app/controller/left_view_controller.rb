@@ -139,6 +139,14 @@ class LeftViewController < UITableViewController
     end
   end
 
+  def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
+    self.view.reloadData
+  end
+
+  def viewWillTransitionToSize(size, withTransitionCoordinator:coordinator)
+    self.view.reloadData
+  end
+
   def dealloc
     ApplicationUser.sharedUser.removeObserver(self, forKeyPath:'hatena_id')
     super

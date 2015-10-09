@@ -204,9 +204,15 @@ class WebViewController < HBFav2::UIViewController
   end
 
   def on_action
-    present_modal(
-      URLActivityViewController.alloc.initWithDefaultActivities([@bookmark.title, @bookmark.link.nsurl])
-    )
+    controller = URLActivityViewController.alloc.initWithDefaultActivities([@bookmark.title, @bookmark.link.nsurl])
+    if controller.popoverPresentationController
+      controller.popoverPresentationController.sourceView = self.view
+      frame = self.view.frame
+      new_frame = CGRectMake(frame.size.width/5, UIScreen.mainScreen.bounds.size.height - 40, frame.size.width, frame.size.height)
+      controller.popoverPresentationController.sourceRect = new_frame
+    end
+
+    present_modal(controller)
   end
 
   def on_close
