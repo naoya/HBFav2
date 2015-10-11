@@ -2,12 +2,10 @@ module HBFav2
   class UITableViewController < UITableViewController
     attr_accessor :tracked_view_name
     include HBFav2::HomeCondition
-    include HBFav2::BackGesture
     include HBFav2::BackgroundEvent
 
     def viewDidLoad
       super
-      configure_back_gesture
       self.navigationItem.backBarButtonItem = NavigationBackButton.create
 
       if UIDevice.currentDevice.ios7_or_later?

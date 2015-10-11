@@ -198,9 +198,9 @@ class WebViewController < HBFav2::UIViewController
   end
 
   def open_hatena_bookmark_view
-    controller = HTBHatenaBookmarkViewController.alloc.init
-    controller.URL = @bookmark.link.nsurl
-    self.presentViewController(controller, animated:true, completion:nil)
+    @controller = HTBHatenaBookmarkViewController.alloc.init
+    @controller.URL = @bookmark.link.nsurl
+    self.presentViewController(@controller, animated:true, completion:nil)
   end
 
   def on_action
@@ -237,6 +237,11 @@ class WebViewController < HBFav2::UIViewController
   end
 
   def webView(webView, shouldStartLoadWithRequest:request, navigationType:navigationType)
+    url = request.URL
+    if url.absoluteString =~ %r{https?://itunes.apple.com}
+      UIApplication.sharedApplication.openURL(url)
+    end
+
     if (navigationType == UIWebViewNavigationTypeLinkClicked)
       @link_clicked = true
     end
@@ -255,6 +260,13 @@ class WebViewController < HBFav2::UIViewController
   end
 
   def webView(webView, decidePolicyForNavigationAction:navigationAction, decisionHandler:decisionHandler)
+    url = navigationAction.request.URL
+    if url.absoluteString =~ %r{https?://itunes.apple.com}
+      UIApplication.sharedApplication.openURL(url)
+      decisionHandler.call(WKNavigationActionPolicyCancel)
+      return
+    end
+
     if navigationAction.navigationType == WKNavigationTypeLinkActivated
       @link_clicked = true
     end
