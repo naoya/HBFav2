@@ -56,14 +56,14 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AFNetworking: 9168af1ebe62092499df4398ecb5e7b885e6a250
   ARChromeActivity: e77c0414584bb6d244fe6da7176465a75e981fba
-  HatenaBookmarkSDK: 16f3cf6d23d3daa2e9e123da1a724abdd5a04b4b
+  HatenaBookmarkSDK: 832cad8358ab6cf246ca1aa3e3ca6e6df7e78eb4
   JASidePanels: c8f5b130e18d51ee3de988d1c1fad2f88e0b0d21
-  MPNotificationView: 7bd700d93b57e3e6023371baf1ecded8cb63999a
+  MPNotificationView: 0f342a4a5211f75ba9b395552af6c121b4730249
   NSDate+TimeAgo: 7aa9c53dd3d7c55b5a41c1819a11638344adfbc8
-  PocketAPI: d4b8f31c5a29e20da84b6a19055344bb1ad06099
+  PocketAPI: 9b5ce77a041a37c57a7253dca7a2ea5cc2a80f83
   SFHFKeychainUtils: 9576b411a79a058f4d5381ace6f3242b9a62e664
   SVProgressHUD: 7038ae9d6a0bd2c87560d2699eba642eef82d41e
-  TTTAttributedLabel: 4d752a2ff9832229c4f0081f44ef27e4f00cce2b
+  TTTAttributedLabel: 92aaa37822677380b7ec0baff50bd8010eef08f8
   TUSafariActivity: dd346df54a8f1cbb4fd05d504c76d47225fac99e
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0
