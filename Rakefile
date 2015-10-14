@@ -14,7 +14,7 @@ Motion::Project::App.setup do |app|
   app.short_version = "2.8.2"
   app.sdk_version = '9.0'
   app.deployment_target = '7.0'
-  app.device_family = [:iphone]
+  app.device_family = [:iphone, :ipad]
   app.identifier = "HBFav"
   app.prerendered_icon = true
   app.status_bar_style = :light_content
@@ -37,6 +37,13 @@ Motion::Project::App.setup do |app|
   end
 
   app.interface_orientations = [:portrait]
+  app.info_plist['UISupportedInterfaceOrientations~ipad'] = [
+    'UIInterfaceOrientationPortrait',
+    'UIInterfaceOrientationPortraitUpsideDown',
+    'UIInterfaceOrientationLandscapeLeft',
+    'UIInterfaceOrientationLandscapeRight'
+  ]
+  app.info_plist['UILaunchStoryboardName'] = 'LaunchScreen'
 
   app.info_plist['NSAppTransportSecurity'] = {
     'NSAllowsArbitraryLoads' => true
@@ -90,7 +97,7 @@ Motion::Project::App.setup do |app|
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
-    pod 'MPNotificationView'
+    pod 'MPNotificationView', :git => 'https://github.com/Watson1978/MPNotificationView.git', :branch => 'HBFav'
   end
 
   app.frameworks += [

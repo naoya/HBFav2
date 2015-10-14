@@ -13,5 +13,13 @@ module HBFav2
         self.tableView.separatorColor = '#ddd'.uicolor
       end
     end
+
+    def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
+      self.view.reloadData
+    end
+
+    def viewWillTransitionToSize(size, withTransitionCoordinator:coordinator)
+      self.view.reloadData
+    end
   end
 end

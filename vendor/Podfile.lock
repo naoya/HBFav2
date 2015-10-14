@@ -4,7 +4,7 @@ PODS:
   - HatenaBookmarkSDK (1.2):
     - SFHFKeychainUtils
   - JASidePanels (1.3.2)
-  - MPNotificationView (1.1.0)
+  - MPNotificationView (1.1.1)
   - NSDate+TimeAgo (1.0.2)
   - PocketAPI (1.0.2):
     - SFHFKeychainUtils (= 0.0.1)
@@ -18,7 +18,8 @@ DEPENDENCIES:
   - ARChromeActivity
   - HatenaBookmarkSDK (from `git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git`)
   - JASidePanels
-  - MPNotificationView
+  - MPNotificationView (from `https://github.com/Watson1978/MPNotificationView.git`,
+    branch `HBFav`)
   - NSDate+TimeAgo
   - PocketAPI (from `git@github.com:naoya/Pocket-ObjC-SDK.git`, branch `cocoapods-dependency`)
   - SFHFKeychainUtils
@@ -29,6 +30,9 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   HatenaBookmarkSDK:
     :git: git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git
+  MPNotificationView:
+    :branch: HBFav
+    :git: https://github.com/Watson1978/MPNotificationView.git
   PocketAPI:
     :branch: cocoapods-dependency
     :git: git@github.com:naoya/Pocket-ObjC-SDK.git
@@ -39,6 +43,9 @@ CHECKOUT OPTIONS:
   HatenaBookmarkSDK:
     :commit: 9f6af4ea96f63f0d08b757c1fdf58c432e3f6168
     :git: git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git
+  MPNotificationView:
+    :commit: 7bd700d93b57e3e6023371baf1ecded8cb63999a
+    :git: https://github.com/Watson1978/MPNotificationView.git
   PocketAPI:
     :commit: 2924afe59348f67dbc1a83c01bcd44c502b9222b
     :git: git@github.com:naoya/Pocket-ObjC-SDK.git
@@ -51,7 +58,7 @@ SPEC CHECKSUMS:
   ARChromeActivity: e77c0414584bb6d244fe6da7176465a75e981fba
   HatenaBookmarkSDK: 16f3cf6d23d3daa2e9e123da1a724abdd5a04b4b
   JASidePanels: c8f5b130e18d51ee3de988d1c1fad2f88e0b0d21
-  MPNotificationView: 3db0b82119b4249414f9f08d66a83d7770cc5ef2
+  MPNotificationView: 7bd700d93b57e3e6023371baf1ecded8cb63999a
   NSDate+TimeAgo: 7aa9c53dd3d7c55b5a41c1819a11638344adfbc8
   PocketAPI: d4b8f31c5a29e20da84b6a19055344bb1ad06099
   SFHFKeychainUtils: 9576b411a79a058f4d5381ace6f3242b9a62e664
