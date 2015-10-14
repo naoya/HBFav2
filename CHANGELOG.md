@@ -1,4 +1,18 @@
-# 2.7 / _In Progress_
+# 2.9 / _In_Review_
+
+* iPad 対応 (Watson)
+* iOS9 起因の不具合修正 (Watson)
+
+## Thanks to our contributors
+
+* [Watson][Watson1978]
+
+# 2.8 / 2014-11-22
+
+* iPhone 6 解像度対応
+* 認証再要求問題の修正
+
+# 2.7 / ?
 
 * はてなブックマーク iOS SDK の最新化
     * Formotion 起因のバグを解消
