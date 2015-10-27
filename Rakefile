@@ -97,7 +97,7 @@ Motion::Project::App.setup do |app|
     pod 'AFNetworking', '~> 1.3'
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
-    pod 'MPNotificationView', :git => 'https://github.com/Watson1978/MPNotificationView.git', :branch => 'HBFav'
+    pod 'MPNotificationView', :git => 'https://github.com/naoya/MPNotificationView.git', :branch => 'HBFav'
   end
 
   app.frameworks += [
