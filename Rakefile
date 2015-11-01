@@ -98,6 +98,7 @@ Motion::Project::App.setup do |app|
     pod 'ARChromeActivity'
     pod 'HatenaBookmarkSDK', :git => 'git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git'
     pod 'MPNotificationView', :git => 'https://github.com/naoya/MPNotificationView.git', :branch => 'HBFav'
+    pod 'ForceTouchGestureRecognizer'
   end
 
   app.frameworks += [

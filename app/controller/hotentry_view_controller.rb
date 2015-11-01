@@ -25,17 +25,29 @@ class HotentryViewController < HBFav2::UITableViewController
     self.tableView.addGestureRecognizer(
       UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_long_press_row:')
     )
+    self.tableView.addGestureRecognizer(
+      ForceTouchGestureRecognizer.alloc.initWithTarget(self, action:'on_force_touched_row:')
+    )
     self.receive_application_switch_notifcation
   end
 
-  def on_long_press_row(recog)
-    if recog.state == UIGestureRecognizerStateBegan and
-        indexPath = tableView.indexPathForRowAtPoint(recog.locationInView(tableView))
+  def open_webview_with_gesture(recog)
+    if indexPath = tableView.indexPathForRowAtPoint(recog.locationInView(tableView))
       bookmark = @bookmarks[indexPath.row]
       controller = WebViewController.new
       controller.bookmark = bookmark
       self.navigationController.pushViewController(controller, animated:true)
     end
+  end
+
+  def on_long_press_row(recog)
+    if recog.state == UIGestureRecognizerStateBegan
+      open_webview_with_gesture(recog)
+    end
+  end
+
+  def on_force_touched_row(recog)
+    open_webview_with_gesture(recog)
   end
 
   def clear_entries

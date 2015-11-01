@@ -1,6 +1,7 @@
 PODS:
   - AFNetworking (1.3.2)
   - ARChromeActivity (1.0.1)
+  - ForceTouchGestureRecognizer (0.0.3)
   - HatenaBookmarkSDK (1.2):
     - SFHFKeychainUtils
   - JASidePanels (1.3.2)
@@ -16,6 +17,7 @@ PODS:
 DEPENDENCIES:
   - AFNetworking (~> 1.3)
   - ARChromeActivity
+  - ForceTouchGestureRecognizer
   - HatenaBookmarkSDK (from `git@github.com:hatena/Hatena-Bookmark-iOS-SDK.git`)
   - JASidePanels
   - MPNotificationView (from `https://github.com/naoya/MPNotificationView.git`, branch
@@ -56,6 +58,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AFNetworking: 9168af1ebe62092499df4398ecb5e7b885e6a250
   ARChromeActivity: e77c0414584bb6d244fe6da7176465a75e981fba
+  ForceTouchGestureRecognizer: ece9963fa55899245e139c3e170d5f1c9c8cd039
   HatenaBookmarkSDK: 832cad8358ab6cf246ca1aa3e3ca6e6df7e78eb4
   JASidePanels: c8f5b130e18d51ee3de988d1c1fad2f88e0b0d21
   MPNotificationView: 0f342a4a5211f75ba9b395552af6c121b4730249
