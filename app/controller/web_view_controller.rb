@@ -50,6 +50,7 @@ class WebViewController < HBFav2::UIViewController
       )
     end
 
+    @webview.becomeFirstResponder
     @webview.loadRequest(NSURLRequest.requestWithURL(@bookmark.link.nsurl))
   end
 
