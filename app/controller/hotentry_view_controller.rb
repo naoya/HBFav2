@@ -82,15 +82,11 @@ class HotentryViewController < HBFav2::UITableViewController
     self.navigationController.setToolbarHidden(true, animated:animated)
     @indicator.center = [ view.center.x, view.center.y - 42]
 
-    ## category selector
-    label =  CategoryList.sharedCategories.key_to_label(self.category)
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled(label).tap do |btn|
-      btn.target = self
-      btn.action = 'open_category'
-    end
-
-    subtitle = CategoryList.sharedCategories.key_to_title(self.category)
-    self.title = list_type == :hotentry ? "人気エントリー" : "新着エントリー"
+    self.title = if self.category
+                   CategoryList.sharedCategories.key_to_title(self.category)
+                 else
+                   list_type == :hotentry ? "人気エントリー" : "新着エントリー"
+                 end
 
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
@@ -136,38 +132,26 @@ class HotentryViewController < HBFav2::UITableViewController
     load_hotentry
   end
 
-  def open_category
-    controller = CategoryViewController.alloc.initWithStyle(UITableViewStyleGrouped)
-    controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
-    controller.current_category = self.category
-    controller.hotentry_controller = self
+  # def open_category
+  #   controller = CategoryViewController.alloc.initWithStyle(UITableViewStyleGrouped)
+  #   controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
+  #   controller.current_category = self.category
+  #   controller.hotentry_controller = self
 
-    self.presentViewController(
-      UINavigationController.alloc.initWithRootViewController(controller),
-      animated:true,
-      completion:nil
-    )
-  end
+  #   self.presentViewController(
+  #     UINavigationController.alloc.initWithRootViewController(controller),
+  #     animated:true,
+  #     completion:nil
+  #   )
+  # end
 
   def applicationWillEnterForeground
     load_hotentry
     self.view.reloadDataWithKeepingSelectedRowAnimated(true)
   end
 
-  # def performBackgroundFetchWithCompletion(completionHandler)
-  #   NSLog("###### Background Fetch : Update Hotentry ######")
-  #   load_hotentry do |res|
-  #     if res.ok?
-  #       completionHandler.call(UIBackgroundFetchResultNewData)
-  #     else
-  #       completionHandler.call(UIBackgroundFetchResultFailed)
-  #     end
-  #   end
-  # end
-
   def dealloc
     self.unreceive_application_switch_notification
-    NSLog("dealloc: " + self.class.name)
     super
   end
 end

@@ -1,19 +1,11 @@
 # -*- coding: utf-8 -*-
 class CategoryViewController < HBFav2::UITableViewController
-  attr_accessor :current_category, :hotentry_controller
+  attr_accessor :current_category
   def viewDidLoad
     super
     self.title = "カテゴリ"
     self.tracked_view_name = "Category"
     @dataSource = CategoryList.sharedCategories.to_datasource
-  end
-
-  def viewWillAppear(animated)
-    super
-    self.navigationItem.leftBarButtonItem  = UIBarButtonItem.titled("戻る").tap do |btn|
-      btn.action = 'on_close'
-      btn.target = self
-    end
   end
 
   def tableView(tableView, numberOfRowsInSection:indexPath)
@@ -23,16 +15,9 @@ class CategoryViewController < HBFav2::UITableViewController
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     id = "category-cell"
     row = @dataSource[indexPath.row]
-
     cell = tableView.dequeueReusableCellWithIdentifier(id) ||
       UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:id)
     cell.textLabel.text = row[:title]
-
-    if self.current_category == row[:key]
-      cell.accessoryType = UITableViewCellAccessoryCheckmark
-    else
-      cell.accessoryType = UITableViewCellAccessoryNone
-    end
     cell
   end
 
@@ -47,22 +32,11 @@ class CategoryViewController < HBFav2::UITableViewController
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     row = @dataSource[indexPath.row]
     self.current_category = row[:key]
-
-    ## ここでシステムのカテゴリ切り替え
-    # Observer の方がいいかな
-    self.hotentry_controller.category = self.current_category
-    self.hotentry_controller.clear_entries
-    self.dismissViewControllerAnimated(true, completion:lambda do
-      self.hotentry_controller.load_hotentry
-    end)
-  end
-
-  def on_close
-    self.dismissViewControllerAnimated(true, completion:nil)
-  end
-
-  def dealloc
-    NSLog("dealloc: " + self.class.name)
-    super
+    controller = HotentryViewController.new.tap do |c|
+      c.list_type = :hotentry
+      c.as_home   = false
+      c.category  = self.current_category
+    end
+    self.navigationController.pushViewController(controller, animated:true)
   end
 end
