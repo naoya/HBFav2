@@ -1,10 +1,11 @@
 class BookmarksManager
-  attr_accessor :popular, :all
+  attr_accessor :popular, :followers, :all
 
   def initialize(url, options = {})
     @url = url
     @options = options
     @popular = []
+    @followers = []
     @all     = []
     @responses = []
   end
@@ -29,10 +30,14 @@ class BookmarksManager
     @popular.size > 0
   end
 
+  def has_followers_bookmarks?
+    @followers.size > 0
+  end
+
   def sync!
     group = Dispatch::Group.new
     Dispatch::Queue.concurrent.async(group) do
-      @popular = get_bookmarks("http://b.hatena.ne.jp/api/viewer.popular_bookmarks?url=#{@url.escape_url}")
+      @popular = get_bookmarks("http://b.hatena.ne.jp/api/viewer.popular_bookmarks?url=#{@url.escape_url}")      
     end
 
     Dispatch::Queue.concurrent.async(group) do
@@ -43,6 +48,12 @@ class BookmarksManager
           :cache_policy => NSURLRequestReloadIgnoringLocalCacheData
         }
       )
+
+      ## 本当はこれも並列化したいが entry 情報が必要なので...
+      if @all.size > 0
+        ## all.first を渡すのは Bookmark オブジェクトにエントリ情報入ってるから
+        @followers = get_followers_bookmarks('naoya', @all.first)
+      end
     end
 
     App.shared.networkActivityIndicatorVisible = true
@@ -67,6 +78,43 @@ class BookmarksManager
         }
       end
       @responses.push(response)
+    end
+    bookmarks
+  end
+
+  def get_followers_bookmarks(user, entry)
+    bookmarks = []
+    http = HBFav2::HTTPClient.new
+    http.get("http://comments.hbfav.com/#{user}?eid=#{entry.eid}") do |response|
+      if response.ok?
+        autorelease_pool {
+          data = BW::JSON.parse(response.content)
+          if data and data['comments'].present?
+            data['comments'].each { |rec|
+              # FIXME: Bookmark クラスへ
+              bookmark = Bookmark.new(
+                {
+                  :eid   => entry.eid,
+                  :title => entry.title,
+                  :link  => entry.link,
+                  :count => entry.count,
+                  :user => {
+                    :name => rec['user']
+                  },
+                  :comment => rec['comment'],
+
+                  # 2015/11/08 11:51:41
+                  :created_at => rec['timestamp'],
+
+                  # 2005-02-10T20:55:55+09:00
+                  :datetime => Bookmark.timestamp2dt(rec['timestamp'])
+                }
+              )
+              bookmarks.push(bookmark)
+            }
+          end
+        }
+      end
     end
     bookmarks
   end
