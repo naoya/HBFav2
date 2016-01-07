@@ -52,7 +52,7 @@ class BookmarksManager
       ## 本当はこれも並列化したいが entry 情報が必要なので...
       if @all.size > 0
         ## all.first を渡すのは Bookmark オブジェクトにエントリ情報入ってるから
-        @followers = get_followers_bookmarks('naoya', @all.first)
+        @followers = get_followers_bookmarks(ApplicationUser.sharedUser.hatena_id, @all.first)
       end
     end
 
