@@ -1,10 +1,11 @@
 class BookmarksManager
-  attr_accessor :popular, :all
+  attr_accessor :popular, :followers, :all
 
   def initialize(url, options = {})
     @url = url
     @options = options
     @popular = []
+    @followers = []
     @all     = []
     @responses = []
   end
@@ -29,17 +30,20 @@ class BookmarksManager
     @popular.size > 0
   end
 
+  def has_followers_bookmarks?
+    @followers.size > 0
+  end
+
   def sync!
     group = Dispatch::Group.new
     Dispatch::Queue.concurrent.async(group) do
-      @popular = get_bookmarks("http://b.hatena.ne.jp/api/viewer.popular_bookmarks?url=#{@url.escape_url}")
+      @popular, _x = get_bookmarks("http://b.hatena.ne.jp/api/viewer.popular_bookmarks?url=#{@url.escape_url}")      
     end
 
     Dispatch::Queue.concurrent.async(group) do
-      @all = get_bookmarks(
-        "http://b.hatena.ne.jp/entry/jsonlite/?url=#{@url.escape_url}",
+      @all, @followers = get_bookmarks(
+        "http://comments.hbfav.com/#{ApplicationUser.sharedUser.hatena_id}?url=#{@url.escape_url}",
         {
-          :headers      => { "Cache-Control" => "no-cache" },
           :cache_policy => NSURLRequestReloadIgnoringLocalCacheData
         }
       )
@@ -54,6 +58,7 @@ class BookmarksManager
 
   def get_bookmarks(url, options = {})
     bookmarks = []
+    followers = []
     http = HBFav2::HTTPClient.new
     http.headers      = options[:headers] if options[:headers]
     http.cache_policy = options[:cache_policy] if options[:cache_policy]
@@ -64,11 +69,14 @@ class BookmarksManager
           if entry and entry['bookmarks'].present?
             entry['bookmarks'].each { |bookmark| bookmarks.push(Bookmark.new_from_data(entry, bookmark)) }
           end
+          if entry and entry['followers'].present?
+            entry['followers'].each{|follower| followers.push(Bookmark.new_from_data(entry, follower)) }
+          end
         }
       end
       @responses.push(response)
     end
-    bookmarks
+    return bookmarks, followers
   end
 
   class Response

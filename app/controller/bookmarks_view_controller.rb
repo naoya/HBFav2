@@ -71,32 +71,76 @@ class BookmarksViewController < HBFav2::UITableViewController
   end
 
   def numberOfSectionsInTableView(tableView)
-    if @bookmarks.has_popular_bookmarks?
-      2
-    else
-      1
+    if @bookmarks.has_popular_bookmarks? and @bookmarks.has_followers_bookmarks?
+      return 3
     end
+
+    if @bookmarks.has_popular_bookmarks? or @bookmarks.has_followers_bookmarks? 
+      return 2
+    end
+
+    return 1
   end
 
   def bookmarks (section)
-    if @bookmarks.has_popular_bookmarks? and section == 0
-      @bookmarks.popular
-    else
-      @bookmarks.items
+    if @bookmarks.has_popular_bookmarks? and @bookmarks.has_followers_bookmarks?
+      return case section 
+             when 0 then @bookmarks.popular
+             when 1 then @bookmarks.followers
+             when 2 then @bookmarks.items
+             end
     end
+
+    if @bookmarks.has_popular_bookmarks? then
+      return case section
+             when 0 then @bookmarks.popular
+             when 1 then @bookmarks.items
+             end
+    end
+
+    if @bookmarks.has_followers_bookmarks? then
+      return case section
+             when 0 then @bookmarks.followers
+             when 1 then @bookmarks.items
+             end
+    end
+    
+    @bookmarks.items
+  end
+
+  def headerLabel(section)
+    if @bookmarks.has_popular_bookmarks? and @bookmarks.has_followers_bookmarks?
+      return case section 
+             when 0 then "人気"
+             when 1 then "フォロワー"
+             when 2 then "すべて"
+             end
+    end
+
+    if @bookmarks.has_popular_bookmarks? then
+      return case section
+             when 0 then "人気"
+             when 1 then "すべて"
+             end
+    end
+
+    if @bookmarks.has_followers_bookmarks? then
+      return case section
+             when 0 then "フォロワー"
+             when 1 then "すべて"
+             end
+    end
+    
+    "すべて"
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    if @bookmarks.has_popular_bookmarks? and section == 0
-      return @bookmarks.popular.size
-    else
-      return @bookmarks.items.size
-    end
+    bookmarks(section).size
   end
 
   if UIDevice.currentDevice.ios7_or_later?
     def tableView(tableView, heightForHeaderInSection:section)
-      if @bookmarks.has_popular_bookmarks?
+      if @bookmarks.has_popular_bookmarks? or @bookmarks.has_followers_bookmarks?
         SectionHeaderView.heightForHeader
       else
         0
@@ -106,7 +150,7 @@ class BookmarksViewController < HBFav2::UITableViewController
     def tableView(tableView, viewForHeaderInSection:section)
       if UIDevice.currentDevice.ios7_or_later?
         SectionHeaderView.new.tap do |label|
-          label.text = section == 0 ? "人気" : "すべて"
+          label.text = headerLabel(section)
         end
       end
     end
@@ -114,12 +158,11 @@ class BookmarksViewController < HBFav2::UITableViewController
 
   def tableView(tableView, titleForHeaderInSection:section)
     if @bookmarks.has_popular_bookmarks?
-      section == 0 ? "人気" : "すべて"
+      headerLabel(section)
     else
       nil
     end
   end
-
 
   def tableView(tableView, heightForRowAtIndexPath:indexPath)
     height = BookmarkFastCell.heightForBookmark(bookmarks(indexPath.section)[indexPath.row], tableView.frame.size.width, true)
@@ -152,10 +195,5 @@ class BookmarksViewController < HBFav2::UITableViewController
 
   def applicationWillEnterForeground
     self.tableView.reloadData
-  end
-
-  def dealloc
-    NSLog("dealloc: " + self.class.name)
-    super
   end
 end
