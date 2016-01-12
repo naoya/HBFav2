@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class HotentryViewController < HBFav2::UITableViewController
-  attr_accessor :category, :list_type
+  attr_accessor :category, :list_type, :show_category_button
   include HBFav2::ApplicationSwitchNotification
 
   def viewDidLoad
@@ -82,6 +82,15 @@ class HotentryViewController < HBFav2::UITableViewController
     self.navigationController.setToolbarHidden(true, animated:animated)
     @indicator.center = [ view.center.x, view.center.y - 42]
 
+    ## category selector
+    if show_category_button
+      label =  CategoryList.sharedCategories.key_to_label(self.category)
+      self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled(label).tap do |btn|
+        btn.target = self
+        btn.action = 'open_category'
+      end
+    end
+
     self.title = if self.category
                    CategoryList.sharedCategories.key_to_title(self.category)
                  else
@@ -132,18 +141,12 @@ class HotentryViewController < HBFav2::UITableViewController
     load_hotentry
   end
 
-  # def open_category
-  #   controller = CategoryViewController.alloc.initWithStyle(UITableViewStyleGrouped)
-  #   controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
-  #   controller.current_category = self.category
-  #   controller.hotentry_controller = self
-
-  #   self.presentViewController(
-  #     UINavigationController.alloc.initWithRootViewController(controller),
-  #     animated:true,
-  #     completion:nil
-  #   )
-  # end
+  def open_category
+    controller = CategoryViewController.alloc.initWithStyle(UITableViewStyleGrouped)
+    controller.list_type = list_type
+    controller.current_category = self.category
+    self.navigationController.pushViewController(controller, animated:true)
+  end
 
   def applicationWillEnterForeground
     load_hotentry

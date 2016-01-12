@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 class CategoryViewController < HBFav2::UITableViewController
-  attr_accessor :current_category
+  attr_accessor :current_category, :list_type
   def viewDidLoad
     super
-    self.title = "カテゴリ"
+    self.title = list_type == :hotentry ? "人気エントリー" : "新着エントリー"
     self.tracked_view_name = "Category"
     @dataSource = CategoryList.sharedCategories.to_datasource
   end
@@ -33,7 +33,7 @@ class CategoryViewController < HBFav2::UITableViewController
     row = @dataSource[indexPath.row]
     self.current_category = row[:key]
     controller = HotentryViewController.new.tap do |c|
-      c.list_type = :hotentry
+      c.list_type = list_type
       c.as_home   = false
       c.category  = self.current_category
     end

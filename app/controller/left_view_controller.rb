@@ -46,15 +46,10 @@ class LeftViewController < UITableViewController
         :image      => UIImage.imageNamed('insignia_heart')
       },
       {
-        :title      => 'カテゴリ',
-        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:category]),
+        :title      => '新着エントリー',
+        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:entrylist]),
         :image      => UIImage.imageNamed('insignia_file')
-      },      
-#      {
-#        :title      => '新着エントリー',
-#        :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:entrylist]),
-#        :image      => UIImage.imageNamed('insignia_file')
-#      },
+      },
       {
         :title      => "アプリについて",
         :controller => HBFav2NavigationController.alloc.initWithRootViewController(controllers[:appInfo]),

@@ -81,13 +81,13 @@ class AppDelegate
 
     @hotentryViewController = HotentryViewController.new.tap do |c|
       c.list_type = :hotentry
+      c.show_category_button = true
       c.as_home   = true
     end
 
-    @categoryViewController = CategoryViewController.alloc.initWithStyle(UITableViewStyleGrouped)
-
     @entrylistViewController = HotentryViewController.new.tap do |c|
       c.list_type = :entrylist
+      c.show_category_button = true
       c.as_home   = true
     end
 
@@ -98,7 +98,6 @@ class AppDelegate
       :timeline  => @timelineViewController,
       :bookmarks => @bookmarksViewController,
       :hotentry  => @hotentryViewController,
-      :category  => @categoryViewController,
       :entrylist => @entrylistViewController,
       :account   => @accountViewController,
       :appInfo   => @appInfoViewController,
