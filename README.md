@@ -1,13 +1,12 @@
 HBFav2 - はてなブックマークお気に入りリーダー
 =============================================
 
-[![Code Climate](https://codeclimate.com/github/naoya/HBFav2.png)](https://codeclimate.com/github/naoya/HBFav2)
-
 はてなブックマークのお気に入りをTwitterのタイムラインみたいに読みたい。お気に入りは、follow しているユーザーにフォーカスがあたっている方が個人的に好み
 
 [HBFav](https://github.com/naoya/HBFav) の新バージョンです。Titanium Mobile をやめて RubyMotion でイチから作り直して安定性を確保し、各種機能をブラッシュアップしています。
 
 - ウェブサイト: [http://hbfav.bloghackers.net/](http://hbfav.bloghackers.net/)
+- App Store: [https://itunes.apple.com/jp/app/hbfav/id477950722](https://itunes.apple.com/jp/app/hbfav/id477950722)
 
 コンセプト
 --------------------
