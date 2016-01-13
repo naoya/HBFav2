@@ -81,11 +81,13 @@ class AppDelegate
 
     @hotentryViewController = HotentryViewController.new.tap do |c|
       c.list_type = :hotentry
+      c.show_category_button = true
       c.as_home   = true
     end
 
     @entrylistViewController = HotentryViewController.new.tap do |c|
       c.list_type = :entrylist
+      c.show_category_button = true
       c.as_home   = true
     end
 
