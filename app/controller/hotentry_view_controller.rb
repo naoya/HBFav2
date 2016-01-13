@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class HotentryViewController < HBFav2::UITableViewController
-  attr_accessor :category, :list_type
+  attr_accessor :category, :list_type, :show_category_button
   include HBFav2::ApplicationSwitchNotification
 
   def viewDidLoad
@@ -83,28 +83,25 @@ class HotentryViewController < HBFav2::UITableViewController
     @indicator.center = [ view.center.x, view.center.y - 42]
 
     ## category selector
-    label =  CategoryList.sharedCategories.key_to_label(self.category)
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled(label).tap do |btn|
-      btn.target = self
-      btn.action = 'open_category'
+    if show_category_button
+      label =  CategoryList.sharedCategories.key_to_label(self.category)
+      self.navigationItem.rightBarButtonItem = UIBarButtonItem.titled(label).tap do |btn|
+        btn.target = self
+        btn.action = 'open_category'
+      end
     end
 
-    subtitle = CategoryList.sharedCategories.key_to_title(self.category)
-    self.title = list_type == :hotentry ? "人気エントリー" : "新着エントリー"
+    self.title = if self.category
+                   CategoryList.sharedCategories.key_to_title(self.category)
+                 else
+                   list_type == :hotentry ? "人気エントリー" : "新着エントリー"
+                 end
 
     indexPath = tableView.indexPathForSelectedRow
     tableView.reloadData
     tableView.selectRowAtIndexPath(indexPath, animated:animated, scrollPosition:UITableViewScrollPositionNone);
     tableView.deselectRowAtIndexPath(indexPath, animated:animated);
     super
-  end
-
-  def viewWillDisappear(animated)
-    super
-    if @connection.present?
-      @connection.cancel
-      App.shared.networkActivityIndicatorVisible = false
-    end
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
@@ -138,15 +135,9 @@ class HotentryViewController < HBFav2::UITableViewController
 
   def open_category
     controller = CategoryViewController.alloc.initWithStyle(UITableViewStyleGrouped)
-    controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
+    controller.list_type = list_type
     controller.current_category = self.category
-    controller.hotentry_controller = self
-
-    self.presentViewController(
-      UINavigationController.alloc.initWithRootViewController(controller),
-      animated:true,
-      completion:nil
-    )
+    self.navigationController.pushViewController(controller, animated:true)
   end
 
   def applicationWillEnterForeground
@@ -154,20 +145,12 @@ class HotentryViewController < HBFav2::UITableViewController
     self.view.reloadDataWithKeepingSelectedRowAnimated(true)
   end
 
-  # def performBackgroundFetchWithCompletion(completionHandler)
-  #   NSLog("###### Background Fetch : Update Hotentry ######")
-  #   load_hotentry do |res|
-  #     if res.ok?
-  #       completionHandler.call(UIBackgroundFetchResultNewData)
-  #     else
-  #       completionHandler.call(UIBackgroundFetchResultFailed)
-  #     end
-  #   end
-  # end
-
   def dealloc
+    if @connection.present?
+      @connection.cancel
+      App.shared.networkActivityIndicatorVisible = false
+    end    
     self.unreceive_application_switch_notification
-    NSLog("dealloc: " + self.class.name)
     super
   end
 end
