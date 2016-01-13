@@ -104,14 +104,6 @@ class HotentryViewController < HBFav2::UITableViewController
     super
   end
 
-  def viewWillDisappear(animated)
-    super
-    if @connection.present?
-      @connection.cancel
-      App.shared.networkActivityIndicatorVisible = false
-    end
-  end
-
   def tableView(tableView, numberOfRowsInSection:section)
     return @bookmarks.size
   end
@@ -154,6 +146,10 @@ class HotentryViewController < HBFav2::UITableViewController
   end
 
   def dealloc
+    if @connection.present?
+      @connection.cancel
+      App.shared.networkActivityIndicatorVisible = false
+    end    
     self.unreceive_application_switch_notification
     super
   end
