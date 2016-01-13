@@ -32,6 +32,6 @@ class CategoryList
   end
 
   def to_datasource
-    @categories
+    @categories.select {|item| item[:key].present? }
   end
 end
