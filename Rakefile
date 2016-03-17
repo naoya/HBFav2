@@ -7,6 +7,8 @@ Bundler.require :default
 require 'sugarcube-attributedstring'
 require 'bubble-wrap/reactor'
 
+ENV['args'] ||= "-AppleLanguages '(ja)'"
+
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'HBFav'
