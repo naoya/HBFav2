@@ -17,6 +17,8 @@ class BookmarkViewController < HBFav2::UIViewController
       v.starView.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'open_stars'))
       v.titleButton.addTarget(self, action:'open_webview', forControlEvents:UIControlEventTouchUpInside)
       v.titleButton.addGestureRecognizer(UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_action'))
+      v.bookmarkItemView.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action:'open_webview'))
+      v.bookmarkItemView.addGestureRecognizer(UILongPressGestureRecognizer.alloc.initWithTarget(self, action:'on_action'))
       v.usersButton.addTarget(self, action:'open_bookmarks', forControlEvents:UIControlEventTouchUpInside)
       v.delegate = self
     end

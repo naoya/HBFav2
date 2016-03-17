@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 module HBFav2
   class BookmarkView < UIView
-    attr_accessor :headerView, :usersButton, :starView, :titleButton
+    attr_accessor :headerView, :usersButton, :starView, :titleButton, :bookmarkItemView
 
     def self.sizeForThumbnail(image)
       if image.nil?
@@ -83,9 +83,12 @@ module HBFav2
           }
         end
 
-        @bodyView << @faviconView = UIImageView.new.tap {|v| v.frame = CGRectZero }
+        @bookmarkItemView = UIView.new.tap {|v| v.frame = CGRectZero}
+        @bodyView << @bookmarkItemView
 
-        @bodyView << @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
+        @bookmarkItemView << @faviconView = UIImageView.new.tap {|v| v.frame = CGRectZero }
+
+        @bookmarkItemView << @titleButton = UIButton.buttonWithType(UIButtonTypeCustom).tap do |btn|
           btn.titleLabel.font = ApplicationConfig.sharedConfig.systemFontOfSize(17)
           btn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping
           btn.titleLabel.numberOfLines = 0
@@ -96,11 +99,11 @@ module HBFav2
           btn.setTitle("", forState:UIControlStateNormal)
         end
 
-        @bodyView << @thumbnailImageView = UIImageView.new.tap do |v|
+        @bookmarkItemView << @thumbnailImageView = UIImageView.new.tap do |v|
           v.frame = CGRectZero
         end
 
-        @bodyView << @descriptionLabel = UILabel.new.tap do |v|
+        @bookmarkItemView << @descriptionLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
           v.font = ApplicationConfig.sharedConfig.systemFontOfSize(13)
@@ -108,7 +111,7 @@ module HBFav2
           v.lineBreakMode = NSLineBreakByWordWrapping|NSLineBreakByTruncatingTail
         end
 
-        @bodyView << @urlLabel = UILabel.new.tap do |v|
+        @bookmarkItemView << @urlLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.numberOfLines = 0
           v.font = ApplicationConfig.sharedConfig.systemFontOfSize(13)
@@ -117,13 +120,13 @@ module HBFav2
           v.text = ""
         end
 
-        @bodyView << @dateLabel = UILabel.new.tap do |v|
+        @bookmarkItemView << @dateLabel = UILabel.new.tap do |v|
           v.frame = CGRectZero
           v.font = UIFont.systemFontOfSize(13)
           v.textColor = '#999'.uicolor
         end
 
-        @bodyView << @starView = HBFav2::HatenaStarView.new
+        @bookmarkItemView << @starView = HBFav2::HatenaStarView.new
 
         @bodyView << @usersButton = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |button|
           button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft
@@ -249,6 +252,8 @@ module HBFav2
       end
 
       y = @commentLabel.text.present? ? @commentLabel.bottom : @border.bottom + 5
+      @bookmarkItemView.frame = [[0, y], @bookmarkItemView.frame.size]
+      y = 0
 
       # favicon
       @faviconView.frame = [[10, y + 6], [16, 16]]
@@ -309,8 +314,11 @@ module HBFav2
       origin = @dateLabel.frame.origin
       @starView.origin = [origin.x + @dateLabel.frame.size.width + 3, origin.y + 3.5]
 
+      # calculate bookmarkItemView size
+      @bookmarkItemView.resizeToFitWithSubviews
+
       # button
-      @usersButton.frame = [[10, @dateLabel.bottom + 10], [self.frame.size.width - 20, 40]]
+      @usersButton.frame = [[10, @bookmarkItemView.bottom + 10], [self.frame.size.width - 20, 40]]
 
       if UIDevice.currentDevice.ios7_or_later?
         @usersButtonBorderTop.frame    = [[15, @usersButton.top], [self.right - 30, 1]]
