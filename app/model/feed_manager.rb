@@ -202,4 +202,19 @@ class FeedManager
       false
     end
   end
+
+  class TimeBasedOffset < TimeBased
+    def append_url
+      @url + "?of=#{self.size}"
+    end
+
+    def append(bookmarks)
+      @last_update_method = 'append'
+      self << bookmarks
+
+      # FIXME
+      # prepend で取ってきたフィード件数分だけ重複してしまうため
+      @bookmarks.uniq! { |b| b.id }
+    end
+  end
 end
