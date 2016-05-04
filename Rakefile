@@ -12,8 +12,8 @@ ENV['args'] ||= "-AppleLanguages '(ja)'"
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'HBFav'
-  app.version = "2.9.2"
-  app.short_version = "2.9.2"
+  app.version = "2.9.3"
+  app.short_version = "2.9.3"
   app.sdk_version = '9.3'
   app.deployment_target = '7.0'
   app.device_family = [:iphone, :ipad]
