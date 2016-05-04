@@ -61,7 +61,7 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def initialize_feed_manager(user)
     if (content_type == :bookmark)
-      manager = FeedManager::Offset.new
+      manager = FeedManager::TimeBasedOffset.new
       manager.url = user.bookmark_feed_url
     else
       manager = FeedManager.factory(user)
@@ -271,14 +271,8 @@ class TimelineViewController < HBFav2::UITableViewController
 
   def trigger_auto_update(&block)
     self.prepare_to_load_bookmarks if @bookmarks.nil?
-    case content_type
-    when :timeline then
-      if self.home? and @bookmarks.timebased?
-        _update_bookmarks(block)
-      end
-    when :bookmark then
-      ## 自分のブックマークは timebased じゃないので保留
-      # _update_bookmarks(block) if self.home?
+    if self.home? and @bookmarks.timebased?
+      _update_bookmarks(block)
     end
   end
 
