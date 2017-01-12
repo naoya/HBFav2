@@ -2,10 +2,10 @@
 module Readability
   class Parser
     attr_accessor :api_token
-    API = "https://www.readability.com/api/content/v1/parser"
+    API = "https://mercury.postlight.com/parser"
 
     def parse_url(url, &cb)
-      query = BW::HTTP.get(API, {payload: {url: url, token: api_token}}) do |response|
+      query = BW::HTTP.get(API, {payload: {url: url}, headers: {:"x-api-key" => api_token}}) do |response|
         if response.ok?
           data = BW::JSON.parse(response.body.to_str)
           cb.call(response, html(data)) if cb
