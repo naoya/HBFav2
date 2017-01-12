@@ -57,7 +57,7 @@ GEM
     fuzzy_match (2.0.4)
     gh_inspector (1.0.2)
     i18n (0.7.0)
-    json (1.8.3)
+    json (1.8.5)
     minitest (5.10.1)
     molinillo (0.5.5)
     motion-cocoapods (1.8.1)
