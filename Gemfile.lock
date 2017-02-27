@@ -68,6 +68,8 @@ GEM
     nap (1.1.0)
     netrc (0.7.8)
     rake (10.3.2)
+    rake-hooks (1.2.3)
+      rake
     sugarcube (0.20.25)
     thread_safe (0.3.5)
     tzinfo (1.2.2)
@@ -90,4 +92,5 @@ DEPENDENCIES
   motion-require
   motion-testflight
   rake
+  rake-hooks
   sugarcube

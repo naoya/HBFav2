@@ -145,3 +145,19 @@ Motion::Project::App.setup do |app|
     :headers_dir => 'Headers'
   )
 end
+
+# Workaround for https://github.com/HipByte/motion-cocoapods/issues/122
+after :'build:simulator' do
+  app_path = App.config.app_bundle('iPhoneSimulator')
+  unless File.exist?(File.join(app_path, 'TUSafariActivity.bundle'))
+    App.info 'Copy', 'TUSafariActivity.bundle'
+    cp_r './vendor/Pods/.build/TUSafariActivity.bundle', app_path
+  end
+end
+after :'build:device' do
+  app_path = App.config.app_bundle('iPhoneOS')
+  unless File.exist?(File.join(app_path, 'TUSafariActivity.bundle'))
+    App.info 'Copy', 'TUSafariActivity.bundle'
+    cp_r './vendor/Pods/.build/TUSafariActivity.bundle', app_path
+  end
+end
