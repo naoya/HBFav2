@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+$:.unshift("/Library/RubyMotion/lib")
+require 'motion/project/template/ios-extension'
+
+begin
+  require 'bundler'
+  Bundler.require
+rescue LoadError
+end
+
+Motion::Project::App.setup do |app|
+  # Use `rake config' to see complete project settings.
+  app.name = 'HBFavAction'
+  app.deployment_target = '7.0'
+  app.frameworks << 'MobileCoreServices'
+  app.info_plist['NSExtension'] = {
+    'NSExtensionAttributes' => {
+      'NSExtensionActivationRule' => {
+        'NSExtensionActivationSupportsFileWithMaxCount' => 0,
+        'NSExtensionActivationSupportsImageWithMaxCount' => 0,
+        'NSExtensionActivationSupportsMovieWithMaxCount' => 0,
+        'NSExtensionActivationSupportsText' => false, 
+        'NSExtensionActivationSupportsWebURLWithMaxCount' => 1
+      },
+      'NSExtensionJavaScriptPreprocessingFile' => 'Action',
+    },
+    'NSExtensionPrincipalClass' => 'ActionRequestHandler',
+    'NSExtensionPointIdentifier' => 'com.apple.services'
+  }
+  app.info_plist['CFBundleDisplayName'] = 'HBFavで開く'
+  app.icons = ['Icon-60x60@2x']
+end
